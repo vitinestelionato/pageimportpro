@@ -128,7 +128,7 @@ export function TestimonialsMarquee() {
         </p>
       </div>
 
-      <div className="relative mt-16 flex flex-col gap-5">
+      <div className="relative mt-12 flex flex-col gap-4 sm:mt-16 sm:gap-5">
         <MarqueeRow items={ROW_A} direction="left" duration={95} />
         <MarqueeRow items={ROW_B} direction="right" duration={110} />
       </div>
