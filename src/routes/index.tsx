@@ -512,7 +512,7 @@ function LandingPage() {
             </p>
 
             <div
-              className="animate-rise mt-10 flex flex-col items-start gap-3 sm:flex-row sm:items-center"
+              className="animate-rise mt-8 flex w-full flex-col items-stretch gap-3 sm:mt-10 sm:w-auto sm:flex-row sm:items-center"
               style={{ animationDelay: "240ms" }}
             >
               <a href="#precos">
