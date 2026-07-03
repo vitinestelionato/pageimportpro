@@ -20,6 +20,50 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CommunityChat } from "@/components/CommunityChat";
+import { useMemo } from "react";
+
+function DashParticles({ count = 60 }: { count?: number }) {
+  const dashes = useMemo(
+    () =>
+      Array.from({ length: count }).map(() => ({
+        left: Math.random() * 100,
+        top: Math.random() * 100,
+        len: 6 + Math.random() * 14,
+        rot: -20 + Math.random() * 60,
+        dx: -60 + Math.random() * 120,
+        dy: -180 + Math.random() * 120,
+        dur: 5 + Math.random() * 6,
+        delay: -Math.random() * 8,
+        opacity: 0.35 + Math.random() * 0.55,
+        glow: Math.random() > 0.6,
+      })),
+    [count],
+  );
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {dashes.map((d, i) => (
+        <span
+          key={i}
+          className="absolute block animate-dash rounded-full"
+          style={{
+            left: `${d.left}%`,
+            top: `${d.top}%`,
+            width: `${d.len}px`,
+            height: "2px",
+            background: d.glow ? "oklch(0.78 0.18 235)" : "oklch(0.65 0.2 255)",
+            boxShadow: d.glow ? "0 0 12px oklch(0.75 0.2 235 / 0.9)" : "none",
+            opacity: d.opacity,
+            ["--r" as string]: `${d.rot}deg`,
+            ["--dx" as string]: `${d.dx}px`,
+            ["--dy" as string]: `${d.dy}px`,
+            animationDuration: `${d.dur}s`,
+            animationDelay: `${d.delay}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
 export const Route = createFileRoute("/")({
   component: LandingPage,
@@ -76,88 +120,160 @@ function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section className="relative pt-40 pb-24">
-        <div className="absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_at_top,black_20%,transparent_70%)]" />
-        <div className="absolute inset-x-0 top-0 h-[700px] bg-radial-glow" />
-        <div className="absolute left-1/2 top-24 -z-10 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-brand/25 blur-3xl animate-pulse-glow" />
+      <section className="relative overflow-hidden pt-32 pb-24 lg:pt-40">
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_20%_10%,oklch(0.35_0.18_255/0.35),transparent_60%),radial-gradient(ellipse_40%_40%_at_90%_20%,oklch(0.55_0.2_235/0.25),transparent_70%)]" />
+        <DashParticles count={80} />
 
-        <div className="relative mx-auto max-w-5xl px-6 text-center">
-          <div className="animate-rise inline-flex items-center gap-2 rounded-full glass px-4 py-1.5 text-xs text-muted-foreground">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-brand" />
-            </span>
-            Novo · IA especialista em importação disponível
+        <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-6 lg:grid-cols-[1.05fr_1fr]">
+          {/* Left content */}
+          <div className="relative">
+            <div className="animate-rise inline-flex items-center gap-2 rounded-full border border-brand/40 bg-brand/10 px-4 py-1.5 text-xs font-medium text-brand-glow backdrop-blur">
+              <span className="h-1.5 w-1.5 rounded-full bg-brand-glow shadow-[0_0_10px_oklch(0.75_0.18_235)]" />
+              O 1º sistema completo para importadores
+            </div>
+
+            <h1
+              className="animate-rise mt-6 font-display text-5xl font-bold leading-[1.02] tracking-tight text-foreground sm:text-6xl lg:text-[68px]"
+              style={{ animationDelay: "80ms" }}
+            >
+              A plataforma completa
+              <br />
+              para <span className="text-gradient">importar da China</span>
+            </h1>
+
+            <p
+              className="animate-rise mt-6 max-w-xl text-base text-muted-foreground sm:text-lg"
+              style={{ animationDelay: "160ms" }}
+            >
+              Encontre fornecedores verificados, calcule impostos automaticamente, descubra produtos em alta e conte com uma IA que te acompanha em cada pedido — tudo em um só lugar.
+            </p>
+
+            <div
+              className="animate-rise mt-10 flex flex-col items-start gap-3 sm:flex-row sm:items-center"
+              style={{ animationDelay: "240ms" }}
+            >
+              <a href="#precos">
+                <Button
+                  size="lg"
+                  className="group h-12 rounded-full bg-gradient-to-r from-brand to-brand-glow px-7 text-base font-semibold text-primary-foreground shadow-xl shadow-brand/40 transition-all hover:-translate-y-0.5 hover:shadow-brand/60"
+                >
+                  Ativar ImportPro
+                  <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </a>
+              <a href="#recursos">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="group h-12 rounded-full border-border bg-transparent px-7 text-base font-medium hover:bg-accent"
+                >
+                  Testar IA de importação
+                  <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </a>
+            </div>
+
+            <p
+              className="animate-rise mt-10 font-mono text-xs text-muted-foreground/80"
+              style={{ animationDelay: "320ms" }}
+            >
+              &gt; Criado por importadores que já movimentaram +R$ 180M em pedidos.
+            </p>
           </div>
 
-          <h1 className="animate-rise mt-6 text-5xl font-bold leading-[1.05] tracking-tight text-gradient sm:text-6xl md:text-7xl" style={{ animationDelay: "80ms" }}>
-            Importe da China<br />como um profissional.
-          </h1>
+          {/* Right: tilted dashboard mockup */}
+          <div
+            className="animate-rise relative mx-auto w-full max-w-[680px] lg:mr-[-6rem]"
+            style={{ animationDelay: "400ms" }}
+          >
+            <div className="absolute -inset-6 -z-10 rounded-[2rem] bg-gradient-to-tr from-brand/30 via-brand-glow/20 to-transparent blur-3xl" />
 
-          <p className="animate-rise mx-auto mt-6 max-w-2xl text-lg text-muted-foreground" style={{ animationDelay: "160ms" }}>
-            A plataforma completa para revendedores: fornecedores verificados, cálculo automático de impostos, radar de tendências e uma IA que te acompanha em cada pedido.
-          </p>
-
-          <div className="animate-rise mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row" style={{ animationDelay: "240ms" }}>
-            <a href="#precos">
-              <Button size="lg" className="group h-12 rounded-full bg-gradient-to-r from-brand to-brand-glow px-7 text-base font-semibold text-primary-foreground shadow-xl shadow-brand/30 transition-all hover:shadow-brand/50 hover:-translate-y-0.5">
-                Quero acesso agora
-                <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Button>
-            </a>
-            <a href="#recursos">
-              <Button size="lg" variant="outline" className="h-12 rounded-full border-border bg-transparent px-7 text-base font-medium hover:bg-accent">
-                Ver recursos
-              </Button>
-            </a>
-          </div>
-
-          <div className="animate-rise mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground" style={{ animationDelay: "320ms" }}>
-            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-brand" /> 7 dias de garantia</span>
-            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-brand" /> Sem fidelidade</span>
-            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-brand" /> Suporte humano</span>
-          </div>
-
-          {/* Dashboard mockup */}
-          <div className="animate-rise mt-16" style={{ animationDelay: "400ms" }}>
-            <div className="relative mx-auto max-w-4xl">
-              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-brand/20 via-brand-glow/20 to-brand/20 blur-2xl" />
-              <div className="relative overflow-hidden rounded-2xl glass glow-border p-2 shadow-2xl">
-                <div className="rounded-xl bg-background/60 p-6">
-                  <div className="flex items-center gap-2 border-b border-border pb-3">
-                    <span className="h-2.5 w-2.5 rounded-full bg-destructive/70" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-yellow-500/70" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-green-500/70" />
-                    <span className="ml-3 text-xs text-muted-foreground">app.importpro.com/dashboard</span>
+            <div className="animate-tilt-float will-change-transform">
+              <div className="overflow-hidden rounded-2xl glass glow-border p-2 shadow-[0_40px_80px_-20px_oklch(0.2_0.15_260/0.6)]">
+                <div className="rounded-xl bg-background/70 p-5">
+                  <div className="flex items-center justify-between border-b border-border pb-3">
+                    <div className="flex items-center gap-2">
+                      <Radar className="h-4 w-4 text-brand-glow" />
+                      <div>
+                        <div className="text-sm font-semibold text-foreground">Radar de Produtos</div>
+                        <div className="text-[10px] text-muted-foreground">3.240 produtos · atualizado agora</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1.5 rounded-full border border-brand/40 bg-brand/10 px-2.5 py-1 text-[10px] font-medium text-brand-glow">
+                      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-brand-glow" />
+                      Analisando ao vivo
+                    </div>
                   </div>
-                  <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+
+                  <div className="mt-4 grid grid-cols-3 gap-3">
                     {[
-                      { l: "Pedidos em trânsito", v: "24", d: "+12% esta semana" },
-                      { l: "Margem média", v: "148%", d: "acima da meta" },
-                      { l: "Tendências novas", v: "37", d: "nas últimas 24h" },
-                    ].map((s) => (
-                      <div key={s.l} className="rounded-xl border border-border bg-card/50 p-4 text-left transition-all hover:-translate-y-1 hover:border-brand/50">
-                        <div className="text-xs text-muted-foreground">{s.l}</div>
-                        <div className="mt-1 font-display text-2xl font-bold text-foreground">{s.v}</div>
-                        <div className="mt-1 text-xs text-brand-glow">{s.d}</div>
+                      { flag: "🇨🇳", name: "Mini Projetor 4K", margin: "182%", trend: "+312%" },
+                      { flag: "🇧🇷", name: "Fone TWS Pro", margin: "148%", trend: "+96%" },
+                      { flag: "🇺🇸", name: "Smartwatch S9", margin: "215%", trend: "+240%" },
+                      { flag: "🇰🇷", name: "Luminária LED", margin: "168%", trend: "+128%" },
+                      { flag: "🇯🇵", name: "Umidificador", margin: "134%", trend: "+72%" },
+                      { flag: "🇫🇷", name: "Câmera Mini HD", margin: "192%", trend: "+156%" },
+                    ].map((p) => (
+                      <div
+                        key={p.name}
+                        className="rounded-lg border border-border bg-card/50 p-3"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-base leading-none">{p.flag}</span>
+                          <span className="text-[9px] font-medium text-brand-glow">{p.trend}</span>
+                        </div>
+                        <div className="mt-2 h-12 rounded-md bg-gradient-to-br from-brand/20 to-brand-glow/10 ring-1 ring-brand/20" />
+                        <div className="mt-2 truncate text-[10px] font-medium text-foreground">{p.name}</div>
+                        <div className="mt-1 flex items-baseline gap-1">
+                          <span className="text-[9px] text-muted-foreground">margem</span>
+                          <span className="text-[10px] font-semibold text-foreground">{p.margin}</span>
+                        </div>
                       </div>
                     ))}
                   </div>
-                  <div className="mt-4 flex h-32 items-end gap-2 rounded-xl border border-border bg-card/30 p-4">
-                    {[40, 62, 55, 78, 65, 88, 72, 95, 82, 100, 90, 110].map((h, i) => (
+
+                  <div className="mt-4 flex h-16 items-end gap-1.5 rounded-lg border border-border bg-card/30 p-2">
+                    {[35, 52, 44, 68, 58, 78, 62, 88, 72, 96, 82, 112, 90, 128].map((h, i) => (
                       <div
                         key={i}
-                        className="flex-1 rounded-t bg-gradient-to-t from-brand/40 to-brand-glow transition-all hover:from-brand hover:to-brand-glow"
-                        style={{ height: `${h}%` }}
+                        className="flex-1 rounded-t bg-gradient-to-t from-brand/40 to-brand-glow"
+                        style={{ height: `${(h / 128) * 100}%` }}
                       />
                     ))}
                   </div>
                 </div>
               </div>
             </div>
+
+            {/* Floating pills */}
+            <div className="absolute -left-4 top-1/3 flex items-center gap-2 rounded-full border border-border bg-background/80 px-3 py-2 shadow-xl backdrop-blur animate-float">
+              <TrendingUp className="h-4 w-4 text-brand-glow" />
+              <div>
+                <div className="text-xs font-semibold text-foreground">+312% em alta</div>
+                <div className="text-[10px] text-muted-foreground">últimos 7 dias</div>
+              </div>
+            </div>
+
+            <div
+              className="absolute -bottom-2 left-6 flex items-center gap-2 rounded-full border border-brand/40 bg-brand/10 px-3 py-2 shadow-xl backdrop-blur animate-float"
+              style={{ animationDelay: "1.2s" }}
+            >
+              <Sparkles className="h-4 w-4 text-brand-glow" />
+              <div>
+                <div className="text-xs font-semibold text-brand-glow">Oportunidade detectada</div>
+                <div className="text-[10px] text-muted-foreground">baixo volume, alta demanda</div>
+              </div>
+            </div>
           </div>
         </div>
+
+        <div className="relative mx-auto mt-16 flex max-w-5xl flex-wrap items-center justify-center gap-x-6 gap-y-2 px-6 text-xs text-muted-foreground">
+          <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-brand-glow" /> 7 dias de garantia</span>
+          <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-brand-glow" /> Sem fidelidade</span>
+          <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-brand-glow" /> Suporte humano</span>
+        </div>
       </section>
+
 
       {/* Stats */}
       <section className="relative border-y border-border/60 bg-card/30 py-10">
