@@ -105,8 +105,8 @@ export function TestimonialsMarquee() {
     <section id="depoimentos" className="relative overflow-hidden bg-background py-32">
       {/* Ambient brand glow */}
       <div
-        className="pointer-events-none absolute left-1/2 top-32 -z-0 h-[520px] w-[900px] -translate-x-1/2 rounded-full blur-3xl"
-        style={{ background: "radial-gradient(50% 50% at 50% 50%, oklch(0.55 0.24 255 / 0.28), transparent 70%)" }}
+        className="pointer-events-none absolute left-1/2 -top-40 -z-0 h-[700px] w-[1200px] -translate-x-1/2 rounded-full blur-[120px]"
+        style={{ background: "radial-gradient(50% 50% at 50% 50%, oklch(0.55 0.24 255 / 0.22), transparent 72%)" }}
       />
       <div
         className="pointer-events-none absolute inset-0 -z-0 opacity-[0.06]"
