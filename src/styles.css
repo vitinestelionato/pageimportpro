@@ -164,6 +164,11 @@
 @utility animate-marquee { animation: marquee 30s linear infinite; }
 @utility animate-rise { animation: rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
 @utility animate-dash { animation: dash-drift 7s linear infinite; }
+@keyframes particle-float {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: var(--fx, 0) var(--fy, 0); }
+}
+@utility animate-particle-float { animation: particle-float var(--pdur, 8s) ease-in-out infinite; }
 @utility animate-tilt-float { animation: tilt-float 8s ease-in-out infinite; }
 @utility animate-step-glow { animation: step-glow 8s ease-in-out infinite; }
 @utility animate-line-fill { animation: line-fill 8s ease-in-out infinite; transform-origin: left center; }
