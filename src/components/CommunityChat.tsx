@@ -179,6 +179,7 @@ export function CommunityChat() {
 
           {/* Messages */}
           <div
+            ref={listRef}
             className="relative flex min-h-0 flex-1 flex-col justify-end gap-2 overflow-hidden px-2.5 py-3"
             style={{
               backgroundColor: "#0b141a",
