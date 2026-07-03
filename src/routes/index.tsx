@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CommunityChat } from "@/components/CommunityChat";
-import { CustomCursor } from "@/components/CustomCursor";
+
 import productIphone from "@/assets/products/iphone14.jpg";
 import productTws from "@/assets/products/tws-pro.jpg";
 import productSmartwatch from "@/assets/products/smartwatch.jpg";
@@ -481,7 +481,7 @@ function FaqSection() {
 function LandingPage() {
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
-      <CustomCursor />
+      
       {/* Nav */}
       <header className="fixed inset-x-0 top-0 z-50">
         <div className="mx-auto mt-4 flex max-w-6xl items-center justify-between rounded-full glass px-5 py-3">
