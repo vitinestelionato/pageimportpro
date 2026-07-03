@@ -118,8 +118,8 @@ export function TestimonialsMarquee() {
         }}
       />
 
-      <div className="relative mx-auto max-w-3xl px-6 text-center">
-        <h2 className="mt-6 text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
+      <div className="relative mx-auto max-w-3xl px-5 text-center sm:px-6">
+        <h2 className="text-3xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
           Quem começa a importar,{" "}
           <span className="text-gradient">recomenda.</span>
         </h2>
