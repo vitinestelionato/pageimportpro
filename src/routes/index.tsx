@@ -262,6 +262,131 @@ const stats = [
   { v: "4.9/5", l: "avaliação média" },
 ];
 
+const faqCategories = [
+  {
+    key: "sistema",
+    label: "Sistema",
+    items: [
+      { q: "O que é o ImportPro?", a: "É a plataforma completa para importadores: fornecedores curados, calculadora de impostos, precificação inteligente, gestão de pedidos e IA especialista em importação — tudo num só lugar." },
+      { q: "Para quem é a plataforma?", a: "Para revendedores, dropshippers, donos de e-commerce e importadores iniciantes ou avançados que querem escalar operação com segurança e previsibilidade." },
+      { q: "Preciso ter experiência para usar?", a: "Não. A IA especialista e a comunidade te guiam do primeiro pedido ao operacional recorrente, mesmo que você nunca tenha importado antes." },
+      { q: "Funciona em qualquer dispositivo?", a: "Sim, a plataforma é 100% web e responsiva — funciona no computador, tablet e celular sem instalar nada." },
+      { q: "Meus dados ficam seguros?", a: "Sim. Usamos criptografia, autenticação segura e boas práticas de proteção de dados em toda a operação." },
+    ],
+  },
+  {
+    key: "como",
+    label: "Como funciona",
+    items: [
+      { q: "Como encontro fornecedores confiáveis?", a: "Nossa rede curada exibe histórico, avaliações e catálogo dos fornecedores já verificados, para você escolher com segurança." },
+      { q: "Como funciona a calculadora de impostos?", a: "Você informa o produto e o valor; nós calculamos automaticamente II, ICMS, IPI, taxas alfandegárias e o custo final desembarcado." },
+      { q: "Consigo acompanhar meus pedidos?", a: "Sim. A gestão de pedidos mostra o status de cada importação em tempo real, com rastreio ponta a ponta." },
+      { q: "O radar de tendências mostra o quê?", a: "Produtos em alta de acordo com dados de mercado, para você antecipar demanda antes da concorrência." },
+    ],
+  },
+  {
+    key: "planos",
+    label: "Planos e pagamento",
+    items: [
+      { q: "Quais formas de pagamento são aceitas?", a: "Aceitamos cartão de crédito e Pix, com renovação automática conforme a frequência escolhida (mensal, trimestral ou anual)." },
+      { q: "Qual a diferença entre mensal, trimestral e anual?", a: "O conteúdo é o mesmo. A frequência anual tem o menor preço por mês, e a trimestral é o meio-termo entre economia e flexibilidade." },
+      { q: "Tem período de teste ou garantia?", a: "Sim. Oferecemos garantia de satisfação nos primeiros dias — se não fizer sentido pra você, devolvemos o valor." },
+    ],
+  },
+  {
+    key: "assinatura",
+    label: "Assinatura",
+    items: [
+      { q: "Posso cancelar quando quiser?", a: "Sim. O cancelamento é feito direto no painel, sem burocracia e sem multa." },
+      { q: "Consigo mudar de plano depois?", a: "Sim, você pode alternar entre mensal, trimestral e anual quando quiser dentro da sua conta." },
+      { q: "O que acontece se eu cancelar?", a: "Você continua com acesso até o fim do período já pago e depois a conta é encerrada automaticamente." },
+    ],
+  },
+];
+
+function FaqSection() {
+  const [cat, setCat] = useState(faqCategories[0].key);
+  const [open, setOpen] = useState<string | null>(null);
+  const active = faqCategories.find((c) => c.key === cat) ?? faqCategories[0];
+
+  return (
+    <section id="faq" className="relative py-24">
+      <div className="mx-auto max-w-4xl px-6">
+        <div className="mx-auto max-w-2xl text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/60 px-3 py-1 text-xs text-brand-glow">
+            <span className="h-1.5 w-1.5 rounded-full bg-brand-glow" /> FAQ
+          </span>
+          <h2 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
+            Tem dúvidas? <span className="text-gradient">Temos as respostas.</span>
+          </h2>
+          <p className="mt-3 text-muted-foreground">
+            Tudo o que você precisa saber antes de começar a importar com o ImportPro.
+          </p>
+        </div>
+
+        <div className="mt-8 flex flex-wrap justify-center gap-2">
+          {faqCategories.map((c) => (
+            <button
+              key={c.key}
+              onClick={() => { setCat(c.key); setOpen(null); }}
+              className={`rounded-full px-4 py-2 text-sm transition-all ${
+                cat === c.key
+                  ? "bg-gradient-to-r from-brand to-brand-glow text-primary-foreground shadow-lg shadow-brand/30"
+                  : "border border-border/60 bg-card/50 text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {c.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-8 space-y-3">
+          {active.items.map((item, i) => {
+            const id = `${active.key}-${i}`;
+            const isOpen = open === id;
+            return (
+              <div
+                key={id}
+                className="rounded-2xl border border-border/60 bg-card/40 transition-colors hover:border-border"
+              >
+                <button
+                  onClick={() => setOpen(isOpen ? null : id)}
+                  className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
+                >
+                  <span className="text-sm font-medium sm:text-base">{item.q}</span>
+                  <span
+                    className={`grid h-7 w-7 shrink-0 place-items-center rounded-full border border-border/60 bg-background/60 transition-transform ${
+                      isOpen ? "rotate-45" : ""
+                    }`}
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                  </span>
+                </button>
+                {isOpen && (
+                  <div className="px-5 pb-5 text-sm text-muted-foreground">{item.a}</div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="mt-10 rounded-2xl border border-border/60 bg-card/40 p-8 text-center">
+          <div className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-brand to-brand-glow shadow-lg shadow-brand/30">
+            <MessageCircle className="h-5 w-5 text-primary-foreground" />
+          </div>
+          <h3 className="mt-4 text-lg font-semibold">Não sabe qual plano combina com você?</h3>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Confira os planos e veja qual encaixa na sua operação.
+          </p>
+          <a href="#precos" className="mt-5 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand to-brand-glow px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-lg shadow-brand/30 hover:opacity-90">
+            Ver planos <ArrowRight className="h-4 w-4" />
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function LandingPage() {
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
