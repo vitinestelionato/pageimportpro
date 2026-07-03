@@ -72,7 +72,7 @@ export function CommunityChat() {
         setMessages((prev) => {
           const msg: Msg = { ...next, id: Date.now() + Math.random(), time: `${pad(now.getHours())}:${pad(now.getMinutes())}` };
           const arr = [...prev, msg];
-          return arr.length > 4 ? arr.slice(arr.length - 4) : arr;
+          return arr.length > 3 ? arr.slice(arr.length - 3) : arr;
         });
         const t = window.setTimeout(push, 2800 + Math.random() * 1200);
         timeouts.push(t);
@@ -89,13 +89,13 @@ export function CommunityChat() {
 
     const now = new Date();
     setMessages(
-      SCRIPT.slice(0, 3).map((m, i) => ({
+      SCRIPT.slice(0, 2).map((m, i) => ({
         ...m,
         id: i,
-        time: `${pad(now.getHours())}:${pad(Math.max(0, now.getMinutes() - (3 - i)))}`,
+        time: `${pad(now.getHours())}:${pad(Math.max(0, now.getMinutes() - (2 - i)))}`,
       })),
     );
-    idxRef.current = 3;
+    idxRef.current = 2;
     const start = window.setTimeout(push, 2400);
     timeouts.push(start);
 
@@ -147,9 +147,9 @@ export function CommunityChat() {
 
           {/* Messages */}
           <div
-            className="relative flex flex-col justify-end gap-2 overflow-hidden px-2.5 py-3"
+            className="relative flex flex-col justify-end gap-2 overflow-y-auto px-2.5 py-3 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
             style={{
-              height: "calc(100% - 148px)",
+              height: "calc(100% - 138px)",
               backgroundColor: "#0b141a",
               backgroundImage: `url("${DOODLE_BG}")`,
               backgroundSize: "200px 200px",
