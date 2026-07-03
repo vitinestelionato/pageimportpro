@@ -15,6 +15,7 @@ import {
   Star,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { CommunityChat } from "@/components/CommunityChat";
 
 export const Route = createFileRoute("/")({
   component: LandingPage,
@@ -223,6 +224,46 @@ function LandingPage() {
                 <p className="mt-2 text-sm text-muted-foreground">{s.d}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Community */}
+      <section id="comunidade" className="relative py-28">
+        <div className="absolute left-1/2 top-1/2 -z-10 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/10 blur-3xl" />
+        <div className="mx-auto grid max-w-6xl items-center gap-16 px-6 lg:grid-cols-2">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs text-brand-glow">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+              </span>
+              Comunidade ativa 24/7
+            </div>
+            <h2 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
+              Uma <span className="text-gradient">comunidade viva</span> de importadores.
+            </h2>
+            <p className="mt-5 text-muted-foreground">
+              Mais de 1.200 revendedores trocando fornecedores, produtos em alta, estratégias de precificação e fechando containers juntos — em tempo real, direto no seu WhatsApp.
+            </p>
+            <ul className="mt-8 space-y-3 text-sm">
+              {[
+                "Grupo exclusivo com importadores verificados",
+                "Alertas de tendências e fornecedores em primeira mão",
+                "Networking real para fechar cargas compartilhadas",
+                "Suporte da equipe e da IA integrada",
+              ].map((f) => (
+                <li key={f} className="flex items-center gap-3">
+                  <div className="grid h-5 w-5 place-items-center rounded-full bg-brand/20 text-brand-glow">
+                    <Check className="h-3 w-3" />
+                  </div>
+                  <span className="text-foreground/90">{f}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="flex justify-center">
+            <CommunityChat />
           </div>
         </div>
       </section>
