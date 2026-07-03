@@ -97,7 +97,7 @@ export function CommunityChat() {
   }, [messages]);
 
   return (
-    <div className="relative mx-auto w-full max-w-[380px]">
+    <div className="relative mx-auto w-full max-w-[300px]">
       {/* Ambient glow */}
       <div className="absolute -inset-8 -z-10 rounded-[3.5rem] bg-gradient-to-b from-brand/40 via-brand-glow/20 to-transparent blur-3xl" />
 
