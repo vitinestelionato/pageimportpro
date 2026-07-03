@@ -515,20 +515,20 @@ function LandingPage() {
               className="animate-rise mt-8 flex w-full flex-col items-stretch gap-3 sm:mt-10 sm:w-auto sm:flex-row sm:items-center"
               style={{ animationDelay: "240ms" }}
             >
-              <a href="#precos">
+              <a href="#precos" className="w-full sm:w-auto">
                 <Button
                   size="lg"
-                  className="group h-12 rounded-full bg-gradient-to-r from-brand to-brand-glow px-7 text-base font-semibold text-primary-foreground shadow-xl shadow-brand/40 transition-all hover:-translate-y-0.5 hover:shadow-brand/60"
+                  className="group h-12 w-full rounded-full bg-gradient-to-r from-brand to-brand-glow px-7 text-base font-semibold text-primary-foreground shadow-xl shadow-brand/40 transition-all hover:-translate-y-0.5 hover:shadow-brand/60 sm:w-auto"
                 >
                   Ativar ImportPro
                   <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </a>
-              <a href="#recursos">
+              <a href="#recursos" className="w-full sm:w-auto">
                 <Button
                   size="lg"
                   variant="outline"
-                  className="group h-12 rounded-full border-border bg-transparent px-7 text-base font-medium hover:bg-accent"
+                  className="group h-12 w-full rounded-full border-border bg-transparent px-7 text-base font-medium hover:bg-accent sm:w-auto"
                 >
                   Testar IA de importação
                   <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
