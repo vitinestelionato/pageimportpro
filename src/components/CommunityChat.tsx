@@ -15,13 +15,20 @@ type Msg = {
 
 // Sequence mimics the reference: msg, msg+image, self, typing, reply — then loops
 const SCRIPT: Omit<Msg, "id" | "time">[] = [
-  { author: "Lucas", color: "text-sky-400", avatarBg: "bg-sky-500", text: "Gente, esse fornecedor tá enviando em 12 dias 🔥" },
-  { author: "Lucas", color: "text-sky-400", avatarBg: "bg-sky-500", text: "aproveitei o Radar do ImportPro, já fechei 3 produtos 🚀", image: chatChart },
-  { author: "Você", color: "text-white", avatarBg: "", text: "Boa, parabéns! qual foi a margem?", self: true },
-  { author: "Marina", color: "text-pink-400", avatarBg: "bg-pink-500", text: "Fechei 200un, margem de 180% garantida" },
-  { author: "Bruno", color: "text-amber-400", avatarBg: "bg-amber-500", text: "IA calculou o imposto certinho, sem surpresa 👌" },
-  { author: "Você", color: "text-white", avatarBg: "", text: "Bora fechar container juntos mês que vem?", self: true },
+  { author: "Marina", color: "text-pink-400", avatarBg: "bg-pink-500", text: "Gente, alguém já importou eletrônico pela Yiwu? Vale a pena?" },
+  { author: "Lucas", color: "text-sky-400", avatarBg: "bg-sky-500", text: "Vale demais! Trouxe fones bluetooth e vendi tudo em 2 semanas 🔥" },
+  { author: "Lucas", color: "text-sky-400", avatarBg: "bg-sky-500", text: "Olha o gráfico de vendas do último lote 📈", image: chatChart },
+  { author: "Você", color: "text-white", avatarBg: "", text: "Boa Lucas! Qual foi a margem depois do imposto?", self: true },
+  { author: "Lucas", color: "text-sky-400", avatarBg: "bg-sky-500", text: "180% líquido, a calculadora do ImportPro acertou tudo 👌" },
+  { author: "Bruno", color: "text-amber-400", avatarBg: "bg-amber-500", text: "Pessoal, o fornecedor que a Camila indicou é sério mesmo, acabei de receber meu pedido ✅" },
+  { author: "Camila", color: "text-emerald-400", avatarBg: "bg-emerald-500", text: "Falei! Já são 4 pedidos com ele, nunca atrasou 🚀" },
+  { author: "Você", color: "text-white", avatarBg: "", text: "Bora montar uma lista de fornecedores TOP da comunidade?", self: true },
+  { author: "Marina", color: "text-pink-400", avatarBg: "bg-pink-500", text: "Assino embaixo! Isso salva muito tempo de pesquisa 🙌" },
+  { author: "Rafael", color: "text-violet-400", avatarBg: "bg-violet-500", text: "Dúvida rápida: qual NCM vocês usam pra caixa de som portátil?" },
+  { author: "Bruno", color: "text-amber-400", avatarBg: "bg-amber-500", text: "8518.22.00, confere na IA do ImportPro que ela puxa certinho" },
+  { author: "Você", color: "text-white", avatarBg: "", text: "Acabei de rodar aqui, bateu 👍", self: true },
 ];
+
 
 function pad(n: number) { return n.toString().padStart(2, "0"); }
 
@@ -57,42 +64,12 @@ export function CommunityChat() {
   const idxRef = useRef(0);
   const listRef = useRef<HTMLDivElement>(null);
 
-  // Auto-trim: remove oldest messages whenever content doesn't fit the screen
-  useEffect(() => {
-    const el = listRef.current;
-    if (!el) return;
-    const contentOverflows = () => {
-      const style = getComputedStyle(el);
-      const padY = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
-      const gap = parseFloat(style.rowGap) || 0;
-      const children = Array.from(el.children) as HTMLElement[];
-      const total =
-        children.reduce((sum, c) => sum + c.offsetHeight, 0) +
-        gap * Math.max(0, children.length - 1) +
-        padY;
-      return total > el.clientHeight + 2;
-    };
-    const trim = () => {
-      if (contentOverflows()) {
-        setMessages((prev) => (prev.length > 1 ? prev.slice(1) : prev));
-      }
-    };
-    trim();
-    // re-check after images load / layout settles
-    const t = window.setTimeout(trim, 120);
-    const imgs = el.querySelectorAll("img");
-    imgs.forEach((img) => img.addEventListener("load", trim));
-    return () => {
-      clearTimeout(t);
-      imgs.forEach((img) => img.removeEventListener("load", trim));
-    };
-  }, [messages, typing]);
-
   useEffect(() => {
     let cancelled = false;
     const timeouts: number[] = [];
 
     const push = () => {
+
       if (cancelled) return;
       const next = SCRIPT[idxRef.current % SCRIPT.length];
       idxRef.current += 1;
@@ -101,11 +78,11 @@ export function CommunityChat() {
         if (cancelled) return;
         setTyping(null);
         const now = new Date();
-        setMessages((prev) => {
-          const msg: Msg = { ...next, id: Date.now() + Math.random(), time: `${pad(now.getHours())}:${pad(now.getMinutes())}` };
-          const arr = [...prev, msg];
-          return arr.length > 3 ? arr.slice(arr.length - 3) : arr;
-        });
+        setMessages((prev) => [
+          ...prev,
+          { ...next, id: Date.now() + Math.random(), time: `${pad(now.getHours())}:${pad(now.getMinutes())}` },
+        ]);
+
         const t = window.setTimeout(push, 2800 + Math.random() * 1200);
         timeouts.push(t);
       };
