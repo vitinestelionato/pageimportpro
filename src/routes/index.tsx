@@ -666,61 +666,18 @@ function LandingPage() {
       {/* Pricing */}
       <section id="precos" className="relative py-28">
         <div className="absolute left-1/2 top-1/2 -z-10 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/20 blur-3xl" />
-        <div className="mx-auto max-w-4xl px-6 text-center">
-          <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
-            Comece <span className="text-gradient">hoje mesmo.</span>
-          </h2>
-          <p className="mt-4 text-muted-foreground">Um único plano, tudo incluído. Sem letras miúdas.</p>
-
-          <div className="relative mx-auto mt-12 max-w-md">
-            <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-brand via-brand-glow to-brand opacity-60 blur-xl animate-pulse-glow" />
-            <div className="relative rounded-3xl glass glow-border p-8 text-left">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-sm font-medium text-brand-glow">Plano Pro</div>
-                  <div className="mt-1 text-xs text-muted-foreground">Acesso completo à plataforma</div>
-                </div>
-                <div className="rounded-full bg-brand/20 px-3 py-1 text-xs font-medium text-brand-glow ring-1 ring-brand/30">
-                  -50% hoje
-                </div>
-              </div>
-              <div className="mt-6 flex items-baseline gap-2">
-                <span className="font-display text-5xl font-bold text-gradient">R$ 97</span>
-                <span className="text-sm text-muted-foreground">/mês</span>
-              </div>
-              <div className="mt-1 text-xs text-muted-foreground line-through">de R$ 197/mês</div>
-
-              <ul className="mt-8 space-y-3 text-sm">
-                {[
-                  "Fornecedores da China verificados",
-                  "Calculadora de impostos completa",
-                  "Precificação inteligente",
-                  "Gestão de pedidos + rastreamento",
-                  "IA especialista 24/7",
-                  "Radar de produtos em alta",
-                  "Calculadora de viabilidade",
-                  "Suporte prioritário",
-                ].map((f) => (
-                  <li key={f} className="flex items-center gap-3">
-                    <div className="grid h-5 w-5 place-items-center rounded-full bg-brand/20 text-brand-glow">
-                      <Check className="h-3 w-3" />
-                    </div>
-                    <span className="text-foreground/90">{f}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <Button size="lg" className="group mt-8 h-12 w-full rounded-xl bg-gradient-to-r from-brand to-brand-glow text-base font-semibold text-primary-foreground shadow-lg shadow-brand/30 transition-all hover:shadow-brand/50 hover:-translate-y-0.5">
-                Garantir minha vaga
-                <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Button>
-              <p className="mt-4 text-center text-xs text-muted-foreground">
-                7 dias de garantia incondicional · cancele quando quiser
-              </p>
-            </div>
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
+              Escolha seu <span className="text-gradient">nível de operação</span>
+            </h2>
+            <p className="mt-4 text-muted-foreground">Um único plano, com tudo incluído. Escolha a frequência que combina com você.</p>
           </div>
+
+          <PricingBlock />
         </div>
       </section>
+
 
       {/* Footer */}
       <footer className="border-t border-border py-10">
