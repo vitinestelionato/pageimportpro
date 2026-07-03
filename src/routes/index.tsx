@@ -182,13 +182,13 @@ function PricingBlock() {
         <div className="relative">
           {/* Economize badge */}
           <div className="absolute -top-3 left-1/2 z-10 -translate-x-1/2 rounded-full bg-gradient-to-r from-brand to-brand-glow px-4 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-foreground shadow-lg shadow-brand/40">
-            Economize
+            Vitalício
           </div>
 
           <div className="relative rounded-3xl border border-brand/50 bg-[oklch(0.16_0.03_260)] p-7 text-left shadow-2xl shadow-brand/10">
             {/* Title row */}
             <div className="flex items-center justify-between">
-              <div className="font-display text-xl font-semibold text-foreground">Vitalício</div>
+              <div className="font-display text-xl font-semibold text-foreground">Acesso permanente</div>
               <span className="rounded-md bg-brand/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-glow">
                 Pro
               </span>
