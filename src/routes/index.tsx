@@ -496,7 +496,7 @@ function LandingPage() {
 
 
             <h1
-              className="animate-rise mt-6 font-display text-5xl font-bold leading-[1.02] tracking-tight text-foreground sm:text-6xl lg:text-[68px]"
+              className="animate-rise font-display text-[40px] font-bold leading-[1.05] tracking-tight text-foreground sm:text-6xl lg:text-[68px]"
               style={{ animationDelay: "80ms" }}
             >
               A plataforma completa
