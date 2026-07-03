@@ -175,169 +175,72 @@ const PLAN_FEATURES = [
   "Suporte prioritário",
 ];
 
-const BONUSES = [
-  { t: "BÔNUS #1 · Playbook de negociação com fornecedores chineses", v: "R$ 197", d: "Scripts prontos em inglês e mandarim para conseguir descontos, brindes e amostras grátis." },
-  { t: "BÔNUS #2 · Lista de 50 produtos vencedores atualizada", v: "R$ 297", d: "Curadoria mensal dos produtos que estão explodindo em Shopee, Meli e e-commerces próprios." },
-  { t: "BÔNUS #3 · Aula ao vivo mensal com nosso time", v: "R$ 497", d: "Bastidores de operações reais, análise de casos e correção de erros com quem importa há anos." },
-];
-
 function PricingBlock() {
   return (
     <div className="mt-12">
-      <div className="mx-auto max-w-xl">
+      <div className="mx-auto max-w-sm">
         <div className="relative">
-          {/* Outer glow */}
-          <div className="pointer-events-none absolute -inset-4 -z-10 rounded-[32px] bg-gradient-to-br from-brand/40 via-brand-glow/20 to-transparent opacity-70 blur-2xl" />
+          {/* Economize badge */}
+          <div className="absolute -top-3 left-1/2 z-10 -translate-x-1/2 rounded-full bg-gradient-to-r from-brand to-brand-glow px-4 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-foreground shadow-lg shadow-brand/40">
+            Economize
+          </div>
 
-          <div className="relative overflow-hidden rounded-[28px] border border-brand/40 bg-[oklch(0.16_0.03_260)] p-8 text-left shadow-2xl shadow-brand/20 sm:p-10">
-            {/* Corner shine */}
-            <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-brand/30 blur-3xl" />
-            <div className="pointer-events-none absolute -bottom-24 -left-24 h-56 w-56 rounded-full bg-brand-glow/20 blur-3xl" />
+          <div className="relative rounded-3xl border border-brand/50 bg-[oklch(0.16_0.03_260)] p-7 text-left shadow-2xl shadow-brand/10">
+            {/* Title row */}
+            <div className="flex items-center justify-between">
+              <div className="font-display text-xl font-semibold text-foreground">Vitalício</div>
+              <span className="rounded-md bg-brand/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-glow">
+                Pro
+              </span>
+            </div>
 
-            {/* Header badges */}
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-brand to-brand-glow px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-foreground shadow-lg shadow-brand/50">
-                <Sparkles className="h-3 w-3" />
-                Acesso vitalício
+            {/* Price */}
+            <div className="mt-4">
+              <div className="flex items-baseline gap-1.5">
+                <span className="font-display text-4xl font-bold text-foreground">R$ 47,90</span>
+                <span className="text-sm text-muted-foreground">único</span>
               </div>
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[10.5px] font-medium text-white/70">
-                <Flame className="h-3 w-3 text-brand-glow" />
-                Últimas vagas dessa condição
+              <div className="mt-1 text-[13px] text-muted-foreground">
+                <span className="text-white/40 line-through">R$ 497</span> · pagamento único, acesso para sempre
               </div>
             </div>
 
-            <div className="mt-6">
-              <div className="font-display text-xl font-semibold text-foreground">
-                ImportPro <span className="text-gradient">Completo</span>
-              </div>
-              <div className="mt-1 text-sm text-muted-foreground">
-                A plataforma completa para importar da China com segurança e lucro.
-              </div>
-            </div>
-
-            {/* Price stack */}
-            <div className="relative mt-8 rounded-2xl border border-white/10 bg-[oklch(0.12_0.02_260)] p-6">
-              <div className="flex items-center gap-3">
-                <span className="text-sm text-white/40 line-through">De R$ 497</span>
-                <span className="rounded-md bg-brand/15 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-brand-glow">
-                  -90% hoje
-                </span>
-              </div>
-              <div className="mt-1 flex items-end gap-2">
-                <span className="font-display text-2xl font-semibold text-white/70">R$</span>
-                <span className="font-display text-6xl font-bold leading-none text-gradient">47,90</span>
-                <span className="mb-1 text-sm text-white/50">à vista</span>
-              </div>
-              <div className="mt-2 text-sm text-white/70">
-                ou <span className="font-semibold text-foreground">12x de R$ 4,79</span> no cartão
-              </div>
-              <div className="mt-3 flex items-center gap-1.5 text-xs text-brand-glow">
-                <Zap className="h-3.5 w-3.5" />
-                Pagamento único · nunca mais cobrado
+            {/* Highlight box */}
+            <div className="mt-5 flex items-start gap-3 rounded-xl border border-brand/25 bg-brand/[0.08] p-3.5">
+              <Zap className="mt-0.5 h-4 w-4 shrink-0 text-brand-glow" />
+              <div className="text-[13px] leading-relaxed text-foreground/90">
+                Acesso ilimitado a todas as ferramentas
+                <div className="mt-0.5 text-[12px] text-brand-glow">sem mensalidade · sem renovação</div>
               </div>
             </div>
 
+            {/* CTA */}
             <Button
               size="lg"
-              className="group mt-6 h-14 w-full rounded-2xl bg-gradient-to-r from-brand to-brand-glow text-base font-bold text-primary-foreground shadow-xl shadow-brand/40 transition-all hover:-translate-y-0.5 hover:shadow-brand/60"
+              className="group mt-5 h-12 w-full rounded-xl bg-gradient-to-r from-brand to-brand-glow text-sm font-semibold text-primary-foreground shadow-lg shadow-brand/30 transition-all hover:-translate-y-0.5 hover:shadow-brand/50"
             >
-              QUERO GARANTIR MEU ACESSO
-              <ArrowRight className="ml-1 h-5 w-5 transition-transform group-hover:translate-x-1" />
+              Garantir acesso
+              <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Button>
 
-            {/* Payment methods */}
-            <div className="mt-4 flex items-center justify-center gap-4 text-[11px] text-white/50">
-              <div className="inline-flex items-center gap-1.5">
-                <Lock className="h-3 w-3" />
-                Pagamento 100% seguro
-              </div>
-              <span className="text-white/20">•</span>
-              <div className="inline-flex items-center gap-2">
-                <span className="rounded bg-white/10 px-1.5 py-0.5 text-[10px] font-bold">PIX</span>
-                <span className="rounded bg-white/10 px-1.5 py-0.5 text-[10px] font-bold">VISA</span>
-                <span className="rounded bg-white/10 px-1.5 py-0.5 text-[10px] font-bold">MASTER</span>
-                <span className="rounded bg-white/10 px-1.5 py-0.5 text-[10px] font-bold">ELO</span>
-              </div>
-            </div>
-
-            {/* Divider */}
-            <div className="my-7 h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-
-            <div className="mb-4 text-[12.5px] font-semibold uppercase tracking-wider text-white/60">
-              Tudo que está incluso
-            </div>
-            <ul className="grid gap-2.5 text-sm sm:grid-cols-2">
+            {/* Features */}
+            <ul className="mt-6 space-y-3 text-sm">
               {PLAN_FEATURES.map((f) => (
-                <li key={f} className="flex items-start gap-2.5">
-                  <div className="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-brand/25 text-brand-glow">
-                    <Check className="h-2.5 w-2.5" />
+                <li key={f} className="flex items-center gap-2.5">
+                  <div className="grid h-4 w-4 shrink-0 place-items-center rounded-full bg-brand text-primary-foreground">
+                    <Check className="h-2.5 w-2.5" strokeWidth={3} />
                   </div>
                   <span className="text-foreground/90">{f}</span>
                 </li>
               ))}
             </ul>
-
-            {/* Bonuses */}
-            <div className="mt-8 rounded-2xl border border-brand/30 bg-brand/[0.06] p-5">
-              <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-brand/20 px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-wider text-brand-glow">
-                <Sparkles className="h-3 w-3" />
-                Bônus exclusivos incluídos
-              </div>
-              <ul className="space-y-3">
-                {BONUSES.map((b) => (
-                  <li key={b.t} className="flex items-start gap-3">
-                    <div className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-brand to-brand-glow text-primary-foreground">
-                      <Check className="h-3.5 w-3.5" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-baseline gap-2">
-                        <span className="text-[13px] font-semibold text-foreground">{b.t}</span>
-                        <span className="text-[11px] font-medium text-white/40 line-through">{b.v}</span>
-                      </div>
-                      <p className="mt-0.5 text-[12.5px] leading-relaxed text-muted-foreground">{b.d}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-4 flex items-center justify-between rounded-xl border border-white/10 bg-black/30 px-4 py-3">
-                <span className="text-[12px] font-medium text-white/60">Valor real do pacote completo</span>
-                <span className="text-sm font-bold text-white/70 line-through">R$ 1.488</span>
-              </div>
-            </div>
-
-            {/* Guarantee */}
-            <div className="mt-6 flex items-start gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-brand/40 bg-brand/15 text-brand-glow">
-                <ShieldCheck className="h-6 w-6" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-sm font-semibold text-foreground">Garantia incondicional de 7 dias</div>
-                <p className="mt-1 text-[12.5px] leading-relaxed text-muted-foreground">
-                  Testa por 7 dias, usa cada ferramenta sem limite. Se não fizer sentido pra você, devolvemos 100% do valor. O risco é todo nosso.
-                </p>
-              </div>
-            </div>
-
-            {/* Social proof */}
-            <div className="mt-6 flex items-center justify-center gap-3 text-[12px] text-muted-foreground">
-              <div className="flex -space-x-2">
-                {["A","M","J","R","L"].map((l) => (
-                  <div key={l} className="grid h-6 w-6 place-items-center rounded-full border-2 border-[oklch(0.16_0.03_260)] bg-gradient-to-br from-brand to-brand-glow text-[10px] font-bold text-primary-foreground">
-                    {l}
-                  </div>
-                ))}
-              </div>
-              <div className="flex items-center gap-1 text-brand-glow">
-                {Array.from({length:5}).map((_,i)=>(<Star key={i} className="h-3 w-3 fill-current" />))}
-              </div>
-              <span className="text-white/70"><span className="font-semibold text-foreground">+12.000</span> importadores já garantiram</span>
-            </div>
           </div>
         </div>
       </div>
     </div>
   );
 }
+
 
 
 
