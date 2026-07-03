@@ -219,12 +219,36 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
           `https://${request.headers.get("host") ?? "importpro.com.br"}`;
         activationUrl = `${origin}/ativar?token=${rawToken}`;
 
+        // Send activation email via Brevo
+        let emailStatus = "not_sent";
+        let emailError: string | undefined;
+        try {
+          const { sendBrevoEmail, renderActivationEmail } = await import("@/lib/email.server");
+          const { subject, html, text } = renderActivationEmail({
+            name,
+            activationUrl,
+            plan: productName,
+          });
+          const result = await sendBrevoEmail({
+            to: email,
+            toName: name,
+            subject,
+            html,
+            text,
+          });
+          emailStatus = result.ok ? "sent" : `failed:${result.status}`;
+          if (!result.ok) emailError = result.error;
+        } catch (e) {
+          emailStatus = "exception";
+          emailError = e instanceof Error ? e.message : String(e);
+        }
+
         await supabaseAdmin.from("webhook_logs").insert({
           provider: "cakto",
           event_type: event || "approved",
           external_id: externalId,
           status: "processed",
-          message: `Ativação: ${activationUrl}`,
+          message: `Ativação enviada (${emailStatus})${emailError ? ` | ${emailError}` : ""} | ${activationUrl}`,
           payload: payload as any,
         });
 
