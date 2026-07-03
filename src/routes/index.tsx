@@ -13,6 +13,10 @@ import {
   Zap,
   Globe2,
   Star,
+  Users,
+  MessagesSquare,
+  Lightbulb,
+  Lock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CommunityChat } from "@/components/CommunityChat";
@@ -233,34 +237,37 @@ function LandingPage() {
         <div className="absolute left-1/2 top-1/2 -z-10 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/10 blur-3xl" />
         <div className="mx-auto grid max-w-6xl items-center gap-16 px-6 lg:grid-cols-2">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs text-brand-glow">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-              </span>
-              Comunidade ativa 24/7
+            <div className="inline-flex items-center gap-2 rounded-full border border-brand/40 bg-brand/10 px-4 py-1.5 text-xs font-medium text-brand-glow">
+              <span className="tracking-widest">•••</span>
+              Comunidade
             </div>
-            <h2 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
-              Uma <span className="text-gradient">comunidade viva</span> de importadores.
+            <h2 className="mt-6 text-5xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-6xl">
+              Você não importa <span className="text-gradient">sozinho.</span>
             </h2>
-            <p className="mt-5 text-muted-foreground">
-              Mais de 1.200 revendedores trocando fornecedores, produtos em alta, estratégias de precificação e fechando containers juntos — em tempo real, direto no seu WhatsApp.
+            <p className="mt-6 max-w-lg text-base text-muted-foreground">
+              Networking de verdade com quem leva importação a sério. Troque fornecedores, acompanhe o que está bombando agora e evolua muito mais rápido.
             </p>
-            <ul className="mt-8 space-y-3 text-sm">
+            <ul className="mt-10 space-y-6">
               {[
-                "Grupo exclusivo com importadores verificados",
-                "Alertas de tendências e fornecedores em primeira mão",
-                "Networking real para fechar cargas compartilhadas",
-                "Suporte da equipe e da IA integrada",
+                { icon: Users, t: "Networking real", d: "Conecte-se com importadores que já faturam alto e troque estratégias que dão resultado." },
+                { icon: MessagesSquare, t: "Troca de ideias ativa", d: "Tire dúvidas, compartilhe testes e aprenda com quem está na operação todos os dias." },
+                { icon: Lightbulb, t: "Suas sugestões viram features", d: "A gente ouve a comunidade: ideias de melhoria entram no roadmap e são implementadas." },
               ].map((f) => (
-                <li key={f} className="flex items-center gap-3">
-                  <div className="grid h-5 w-5 place-items-center rounded-full bg-brand/20 text-brand-glow">
-                    <Check className="h-3 w-3" />
+                <li key={f.t} className="flex items-start gap-4">
+                  <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand/15 text-brand-glow ring-1 ring-brand/30">
+                    <f.icon className="h-5 w-5" />
                   </div>
-                  <span className="text-foreground/90">{f}</span>
+                  <div>
+                    <div className="text-base font-semibold text-foreground">{f.t}</div>
+                    <p className="mt-1 text-sm text-muted-foreground">{f.d}</p>
+                  </div>
                 </li>
               ))}
             </ul>
+            <a href="#precos" className="mt-10 inline-flex items-center gap-2 rounded-full border border-brand/50 bg-brand/10 px-5 py-2.5 text-sm font-medium text-brand-glow transition-all hover:bg-brand/20 hover:-translate-y-0.5">
+              <Lock className="h-4 w-4" />
+              Acesso exclusivo para assinantes
+            </a>
           </div>
           <div className="flex justify-center">
             <CommunityChat />
