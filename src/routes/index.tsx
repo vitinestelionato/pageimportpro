@@ -26,6 +26,12 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CommunityChat } from "@/components/CommunityChat";
+import productIphone from "@/assets/products/iphone14.jpg";
+import productTws from "@/assets/products/tws-pro.jpg";
+import productSmartwatch from "@/assets/products/smartwatch.jpg";
+import productLed from "@/assets/products/led-lamp.jpg";
+import productHumidifier from "@/assets/products/humidifier.jpg";
+import productCamera from "@/assets/products/mini-camera.jpg";
 import { useMemo, useState } from "react";
 
 function DashParticles({ count = 60 }: { count?: number }) {
@@ -501,12 +507,12 @@ function LandingPage() {
 
                   <div className="mt-4 grid grid-cols-3 gap-3">
                     {[
-                      { flag: "🇨🇳", name: "Mini Projetor 4K", margin: "182%", trend: "+312%" },
-                      { flag: "🇧🇷", name: "Fone TWS Pro", margin: "148%", trend: "+96%" },
-                      { flag: "🇺🇸", name: "Smartwatch S9", margin: "215%", trend: "+240%" },
-                      { flag: "🇰🇷", name: "Luminária LED", margin: "168%", trend: "+128%" },
-                      { flag: "🇯🇵", name: "Umidificador", margin: "134%", trend: "+72%" },
-                      { flag: "🇫🇷", name: "Câmera Mini HD", margin: "192%", trend: "+156%" },
+                      { flag: "🇨🇳", name: "iPhone 14", margin: "182%", trend: "+312%", img: productIphone },
+                      { flag: "🇧🇷", name: "Fone TWS Pro", margin: "148%", trend: "+96%", img: productTws },
+                      { flag: "🇺🇸", name: "Smartwatch S9", margin: "215%", trend: "+240%", img: productSmartwatch },
+                      { flag: "🇰🇷", name: "Luminária LED", margin: "168%", trend: "+128%", img: productLed },
+                      { flag: "🇯🇵", name: "Umidificador", margin: "134%", trend: "+72%", img: productHumidifier },
+                      { flag: "🇫🇷", name: "Câmera Mini HD", margin: "192%", trend: "+156%", img: productCamera },
                     ].map((p) => (
                       <div
                         key={p.name}
@@ -516,7 +522,16 @@ function LandingPage() {
                           <span className="text-base leading-none">{p.flag}</span>
                           <span className="text-[9px] font-medium text-brand-glow">{p.trend}</span>
                         </div>
-                        <div className="mt-2 h-12 rounded-md bg-gradient-to-br from-brand/20 to-brand-glow/10 ring-1 ring-brand/20" />
+                        <div className="mt-2 h-16 overflow-hidden rounded-md bg-white ring-1 ring-brand/20">
+                          <img
+                            src={p.img}
+                            alt={p.name}
+                            loading="lazy"
+                            width={1024}
+                            height={1024}
+                            className="h-full w-full object-contain"
+                          />
+                        </div>
                         <div className="mt-2 truncate text-[10px] font-medium text-foreground">{p.name}</div>
                         <div className="mt-1 flex items-baseline gap-1">
                           <span className="text-[9px] text-muted-foreground">margem</span>
