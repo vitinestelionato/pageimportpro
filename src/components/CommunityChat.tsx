@@ -67,7 +67,7 @@ export function CommunityChat() {
       setMessages((prev) => {
         const msg: Msg = { ...next, id: Date.now() + Math.random(), time: `${pad(now.getHours())}:${pad(now.getMinutes())}` };
         const arr = [...prev, msg];
-        return arr.length > 14 ? arr.slice(arr.length - 14) : arr;
+        return arr.length > 5 ? arr.slice(arr.length - 5) : arr;
       });
       const t = window.setTimeout(push, 2400 + Math.random() * 1400);
       timeouts.push(t);
