@@ -55,6 +55,27 @@ export function CommunityChat() {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [typing, setTyping] = useState<{ author: string; color: string; avatarBg: string } | null>(null);
   const idxRef = useRef(0);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  // Auto-trim: remove oldest messages whenever content doesn't fit the screen
+  useEffect(() => {
+    const el = listRef.current;
+    if (!el) return;
+    const trim = () => {
+      if (el.scrollHeight > el.clientHeight + 2) {
+        setMessages((prev) => (prev.length > 1 ? prev.slice(1) : prev));
+      }
+    };
+    trim();
+    // re-check after images load / layout settles
+    const t = window.setTimeout(trim, 120);
+    const imgs = el.querySelectorAll("img");
+    imgs.forEach((img) => img.addEventListener("load", trim));
+    return () => {
+      clearTimeout(t);
+      imgs.forEach((img) => img.removeEventListener("load", trim));
+    };
+  }, [messages, typing]);
 
   useEffect(() => {
     let cancelled = false;
