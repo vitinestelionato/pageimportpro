@@ -29,45 +29,46 @@ export function CustomCursor() {
     let raf = 0;
     const s = stateRef.current;
 
-    const onMove = (e: MouseEvent) => {
-      s.x = e.clientX;
-      s.y = e.clientY;
-    };
-    const onDown = () => (s.down = true);
-    const onUp = () => (s.down = false);
-
     const isInteractive = (el: Element | null) => {
       if (!el) return false;
       return !!el.closest(
         'a, button, [role="button"], input, select, textarea, label, summary, [data-cursor="hover"]',
       );
     };
-    const onOver = (e: MouseEvent) => {
-      s.hover = isInteractive(e.target as Element);
-    };
 
-    const tick = () => {
-      s.rx += (s.x - s.rx) * 0.35;
-      s.ry += (s.y - s.ry) * 0.35;
+    const onFrame = () => {
+      raf = 0;
       if (dotRef.current) {
         dotRef.current.style.transform = `translate3d(${s.x}px, ${s.y}px, 0) rotate(-18deg) scale(${s.down ? 0.85 : 1})`;
       }
       if (ringRef.current) {
         const scale = s.hover ? 1.9 : 1;
-        ringRef.current.style.transform = `translate3d(${s.rx}px, ${s.ry}px, 0) translate(-50%, -50%) scale(${scale})`;
-        ringRef.current.style.opacity = s.hover ? "1" : "0.55";
+        ringRef.current.style.transform = `translate3d(${s.x}px, ${s.y}px, 0) translate(-50%, -50%) scale(${scale})`;
       }
-      raf = requestAnimationFrame(tick);
+    };
+    const schedule = () => {
+      if (!raf) raf = requestAnimationFrame(onFrame);
+    };
+
+    const onMove = (e: MouseEvent) => {
+      s.x = e.clientX;
+      s.y = e.clientY;
+      schedule();
+    };
+    const onDown = () => { s.down = true; schedule(); };
+    const onUp = () => { s.down = false; schedule(); };
+    const onOver = (e: MouseEvent) => {
+      const h = isInteractive(e.target as Element);
+      if (h !== s.hover) { s.hover = h; schedule(); }
     };
 
     window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("mousedown", onDown);
     window.addEventListener("mouseup", onUp);
     window.addEventListener("mouseover", onOver);
-    raf = requestAnimationFrame(tick);
 
     return () => {
-      cancelAnimationFrame(raf);
+      if (raf) cancelAnimationFrame(raf);
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mousedown", onDown);
       window.removeEventListener("mouseup", onUp);
@@ -80,22 +81,18 @@ export function CustomCursor() {
 
   return (
     <>
-      {/* Trailing ring */}
+      {/* Ring */}
       <div
         ref={ringRef}
         aria-hidden
-        className="pointer-events-none fixed left-0 top-0 z-[9999] h-8 w-8 rounded-full border border-brand-glow/70 mix-blend-screen"
-        style={{
-          boxShadow: "0 0 20px oklch(0.72 0.22 240 / 0.55)",
-          transition: "opacity 0.2s ease, background-color 0.2s ease",
-        }}
+        className="pointer-events-none fixed left-0 top-0 z-[9999] h-8 w-8 rounded-full border border-brand-glow/70 will-change-transform"
+        style={{ boxShadow: "0 0 18px oklch(0.72 0.22 240 / 0.5)" }}
       />
       {/* Arrow pointer */}
       <div
         ref={dotRef}
         aria-hidden
-        className="pointer-events-none fixed left-0 top-0 z-[10000]"
-        style={{ transition: "transform 0.08s ease-out" }}
+        className="pointer-events-none fixed left-0 top-0 z-[10000] will-change-transform"
       >
         <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
           <path
@@ -104,7 +101,6 @@ export function CustomCursor() {
             stroke="white"
             strokeWidth="1.2"
             strokeLinejoin="round"
-            style={{ filter: "drop-shadow(0 4px 10px oklch(0.55 0.22 255 / 0.55))" }}
           />
         </svg>
       </div>
