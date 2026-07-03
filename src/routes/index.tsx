@@ -32,42 +32,104 @@ import productSmartwatch from "@/assets/products/smartwatch.jpg";
 import productLed from "@/assets/products/led-lamp.jpg";
 import productHumidifier from "@/assets/products/humidifier.jpg";
 import productCamera from "@/assets/products/mini-camera.jpg";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
-function DashParticles({ count = 60 }: { count?: number }) {
+// Gaussian-ish sample around a center, mirrors the clustered "swarm" reference
+function gauss(mean: number, spread: number) {
+  const u1 = Math.random() || 1e-6;
+  const u2 = Math.random();
+  const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+  return mean + z * spread;
+}
+
+function DashParticles({ count = 90 }: { count?: number }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const dashes = useMemo(
     () =>
-      Array.from({ length: count }).map(() => ({
-        left: Math.random() * 100,
-        top: Math.random() * 100,
-        len: 6 + Math.random() * 14,
-        rot: -20 + Math.random() * 60,
-        dx: -60 + Math.random() * 120,
-        dy: -180 + Math.random() * 120,
-        dur: 5 + Math.random() * 6,
-        delay: -Math.random() * 8,
-        opacity: 0.35 + Math.random() * 0.55,
-        glow: Math.random() > 0.6,
-      })),
+      Array.from({ length: count }).map(() => {
+        // Cluster mostly toward center-top with organic spread
+        const left = Math.max(-5, Math.min(105, gauss(50, 22)));
+        const top = Math.max(-5, Math.min(105, gauss(40, 26)));
+        const bright = Math.random() > 0.55;
+        return {
+          left,
+          top,
+          len: bright ? 8 + Math.random() * 10 : 3 + Math.random() * 5,
+          rot: -30 + Math.random() * 90,
+          depth: 12 + Math.random() * 42, // parallax strength
+          floatX: -14 + Math.random() * 28,
+          floatY: -18 + Math.random() * 36,
+          dur: 6 + Math.random() * 8,
+          delay: -Math.random() * 10,
+          opacity: bright ? 0.75 + Math.random() * 0.25 : 0.25 + Math.random() * 0.35,
+          bright,
+        };
+      }),
     [count],
   );
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    let raf = 0;
+    let targetX = 0;
+    let targetY = 0;
+    let curX = 0;
+    let curY = 0;
+
+    const onMove = (e: MouseEvent) => {
+      const rect = el.getBoundingClientRect();
+      // -1 .. 1 relative to element center
+      targetX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+      targetY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+    };
+    const onLeave = () => {
+      targetX = 0;
+      targetY = 0;
+    };
+
+    const tick = () => {
+      curX += (targetX - curX) * 0.08;
+      curY += (targetY - curY) * 0.08;
+      el.style.setProperty("--mx", curX.toFixed(3));
+      el.style.setProperty("--my", curY.toFixed(3));
+      raf = requestAnimationFrame(tick);
+    };
+
+    window.addEventListener("mousemove", onMove);
+    el.addEventListener("mouseleave", onLeave);
+    raf = requestAnimationFrame(tick);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      el.removeEventListener("mouseleave", onLeave);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+    <div
+      ref={containerRef}
+      className="pointer-events-none absolute inset-0 overflow-hidden"
+      style={{ ["--mx" as string]: 0, ["--my" as string]: 0 }}
+    >
       {dashes.map((d, i) => (
         <span
           key={i}
-          className="absolute block animate-dash rounded-full"
+          className="absolute block animate-particle-float rounded-full will-change-transform"
           style={{
             left: `${d.left}%`,
             top: `${d.top}%`,
             width: `${d.len}px`,
-            height: "2px",
-            background: d.glow ? "oklch(0.78 0.18 235)" : "oklch(0.65 0.2 255)",
-            boxShadow: d.glow ? "0 0 12px oklch(0.75 0.2 235 / 0.9)" : "none",
+            height: d.bright ? "3px" : "2px",
+            background: d.bright ? "oklch(0.72 0.19 245)" : "oklch(0.58 0.16 255)",
+            boxShadow: d.bright ? "0 0 10px oklch(0.72 0.22 240 / 0.85)" : "none",
             opacity: d.opacity,
+            transform: `translate(calc(var(--mx) * ${-d.depth}px), calc(var(--mx) * ${-d.depth * 0.6}px + var(--my) * ${-d.depth}px)) rotate(${d.rot}deg)`,
+            transition: "transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)",
+            ["--fx" as string]: `${d.floatX}px`,
+            ["--fy" as string]: `${d.floatY}px`,
             ["--r" as string]: `${d.rot}deg`,
-            ["--dx" as string]: `${d.dx}px`,
-            ["--dy" as string]: `${d.dy}px`,
             animationDuration: `${d.dur}s`,
             animationDelay: `${d.delay}s`,
           }}
