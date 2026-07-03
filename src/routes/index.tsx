@@ -257,42 +257,104 @@ const faqCategories = [
     key: "sistema",
     label: "Sistema",
     items: [
-      { q: "O que é o ImportPro?", a: "É a plataforma completa para importadores: fornecedores curados, calculadora de impostos, precificação inteligente, gestão de pedidos e IA especialista em importação — tudo num só lugar." },
-      { q: "Para quem é a plataforma?", a: "Para revendedores, dropshippers, donos de e-commerce e importadores iniciantes ou avançados que querem escalar operação com segurança e previsibilidade." },
-      { q: "Preciso ter experiência para usar?", a: "Não. A IA especialista e a comunidade te guiam do primeiro pedido ao operacional recorrente, mesmo que você nunca tenha importado antes." },
-      { q: "Funciona em qualquer dispositivo?", a: "Sim, a plataforma é 100% web e responsiva — funciona no computador, tablet e celular sem instalar nada." },
-      { q: "Meus dados ficam seguros?", a: "Sim. Usamos criptografia, autenticação segura e boas práticas de proteção de dados em toda a operação." },
+      {
+        q: "O que é o ImportPro?",
+        a: "O ImportPro é uma plataforma completa criada para quem quer importar produtos da China de forma segura, organizada e lucrativa. Reunimos em um só lugar tudo que você precisa: uma rede de fornecedores já verificados, calculadora de impostos e frete, precificação inteligente para revenda, gestão de pedidos com rastreamento ponta a ponta, radar de tendências e uma IA especialista em importação disponível 24 horas por dia. É a estrutura que a maioria dos importadores só monta depois de perder muito dinheiro tentando por conta própria.",
+      },
+      {
+        q: "Para quem é a plataforma?",
+        a: "Para revendedores de Shopee, Mercado Livre e outros marketplaces, donos de e-commerce próprio, dropshippers, criadores de conteúdo que querem lançar produto físico e principalmente para importadores iniciantes que ainda não sabem por onde começar. Também atende importadores mais avançados que querem parar de depender de planilhas, grupos de WhatsApp e informações soltas espalhadas pela internet.",
+      },
+      {
+        q: "Preciso ter experiência para usar?",
+        a: "Não precisa de nenhuma experiência prévia. A plataforma foi desenhada para que qualquer pessoa consiga entender o processo desde o primeiro dia. Nossa IA especialista te guia em cada etapa — desde escolher o produto certo, negociar com fornecedor, calcular o custo final e colocar o produto à venda com margem saudável. Mesmo que você nunca tenha comprado nada fora do Brasil, consegue começar com segurança.",
+      },
+      {
+        q: "Funciona em qualquer dispositivo?",
+        a: "Sim. O ImportPro é 100% web, roda direto no navegador e é totalmente responsivo. Você acessa do computador, notebook, tablet ou celular sem precisar instalar nada, sem downloads, sem atualizações manuais. Basta fazer login e continuar exatamente de onde parou em qualquer aparelho.",
+      },
+      {
+        q: "Meus dados ficam seguros?",
+        a: "Sim. Utilizamos criptografia de ponta a ponta, autenticação segura, servidores protegidos e boas práticas de proteção de dados em toda a operação. Nenhum dado seu é vendido ou compartilhado com terceiros. Suas informações de pedidos, fornecedores e cálculos ficam disponíveis apenas para você, dentro da sua conta.",
+      },
     ],
   },
   {
     key: "como",
     label: "Como funciona",
     items: [
-      { q: "Como encontro fornecedores confiáveis?", a: "Nossa rede curada exibe histórico, avaliações e catálogo dos fornecedores já verificados, para você escolher com segurança." },
-      { q: "Como funciona a calculadora de impostos?", a: "Você informa o produto e o valor; nós calculamos automaticamente II, ICMS, IPI, taxas alfandegárias e o custo final desembarcado." },
-      { q: "Consigo acompanhar meus pedidos?", a: "Sim. A gestão de pedidos mostra o status de cada importação em tempo real, com rastreio ponta a ponta." },
-      { q: "O radar de tendências mostra o quê?", a: "Produtos em alta de acordo com dados de mercado, para você antecipar demanda antes da concorrência." },
+      {
+        q: "Como encontro fornecedores confiáveis?",
+        a: "Nossa rede de fornecedores é curada manualmente pelo nosso time. Cada fornecedor listado passa por uma triagem de histórico, tempo de mercado, avaliação de compradores brasileiros, tempo médio de envio e qualidade dos produtos. Dentro da plataforma você vê tudo isso de forma clara antes de fechar qualquer negócio, evitando cair naqueles fornecedores fantasmas que somem depois do pagamento.",
+      },
+      {
+        q: "Como funciona a calculadora de impostos?",
+        a: "Você informa o produto, o valor de compra e o modo de envio. A calculadora aplica automaticamente Imposto de Importação, ICMS do seu estado, IPI quando aplicável, taxa dos Correios, taxa de câmbio atualizada e possíveis custos de despacho. No final você vê o custo real desembarcado do produto no Brasil, sem surpresas depois que a encomenda chega.",
+      },
+      {
+        q: "Consigo acompanhar meus pedidos?",
+        a: "Sim. A gestão de pedidos mostra o status de cada importação em tempo real, do pagamento ao fornecedor até a entrega no seu endereço. Você vê o código de rastreio, a etapa atual (pagamento, produção, envio, alfândega, transporte nacional, entrega) e recebe alertas quando algo importante acontece, sem precisar ficar caçando essa informação em vários sites.",
+      },
+      {
+        q: "O radar de tendências mostra o quê?",
+        a: "O radar cruza dados de marketplaces, redes sociais e buscas para mostrar quais produtos estão bombando de verdade e quais estão perdendo força. Assim você deixa de importar produto no fim do ciclo e passa a entrar cedo em oportunidades reais, antes da concorrência inundar o mercado.",
+      },
+      {
+        q: "Como a IA de importação me ajuda no dia a dia?",
+        a: "A IA funciona como um consultor especialista disponível 24 horas. Você pode perguntar de tudo: se um produto vale a pena, como negociar com um fornecedor específico, qual o melhor modo de envio para determinado peso, como precificar para revenda, o que fazer se sua encomenda travou na alfândega, entre outros. As respostas são baseadas em dados reais de importação e no seu próprio histórico dentro da plataforma.",
+      },
     ],
   },
   {
-    key: "planos",
-    label: "Planos e pagamento",
+    key: "pagamento",
+    label: "Preço e pagamento",
     items: [
-      { q: "Quais formas de pagamento são aceitas?", a: "Aceitamos cartão de crédito e Pix, com renovação automática conforme a frequência escolhida (mensal, trimestral ou anual)." },
-      { q: "Qual a diferença entre mensal, trimestral e anual?", a: "O conteúdo é o mesmo. A frequência anual tem o menor preço por mês, e a trimestral é o meio-termo entre economia e flexibilidade." },
-      { q: "Tem período de teste ou garantia?", a: "Sim. Oferecemos garantia de satisfação nos primeiros dias — se não fizer sentido pra você, devolvemos o valor." },
+      {
+        q: "Quanto custa o ImportPro?",
+        a: "O ImportPro tem um valor único e definitivo de R$ 47,90. Não é mensalidade, não é assinatura e não vai renovar depois. Você paga uma única vez e libera acesso vitalício a todas as ferramentas da plataforma, incluindo atualizações futuras. Foi assim que decidimos vender para deixar de fora aquela sensação chata de estar pagando todo mês por algo que já deveria ser seu.",
+      },
+      {
+        q: "Quais formas de pagamento são aceitas?",
+        a: "Aceitamos cartão de crédito (com parcelamento em várias vezes conforme a bandeira) e Pix (com liberação praticamente imediata assim que o pagamento é confirmado). Não usamos débito automático nem cobrança recorrente, justamente porque o pagamento é único.",
+      },
+      {
+        q: "Vou ser cobrado de novo depois?",
+        a: "Não. Como o valor é único e vitalício, não existe cobrança recorrente. Nunca vai aparecer um valor do ImportPro na sua fatura sem você autorizar. O acesso comprado hoje é seu para sempre, ponto.",
+      },
+      {
+        q: "Tem garantia?",
+        a: "Sim. Você tem 7 dias de garantia incondicional. Nesse período pode testar a plataforma inteira, usar todas as ferramentas, conversar com a IA, explorar a rede de fornecedores e a calculadora. Se por qualquer motivo achar que não é para você, é só pedir o reembolso dentro do prazo e devolvemos 100% do valor pago, sem burocracia e sem perguntas insistentes.",
+      },
+      {
+        q: "A nota fiscal é emitida?",
+        a: "Sim. Após a confirmação do pagamento a nota fiscal é emitida automaticamente e enviada para o e-mail cadastrado na compra. Serve para reembolso em empresa, controle contábil ou dedução conforme o seu regime tributário.",
+      },
     ],
   },
   {
-    key: "assinatura",
-    label: "Assinatura",
+    key: "acesso",
+    label: "Acesso e suporte",
     items: [
-      { q: "Posso cancelar quando quiser?", a: "Sim. O cancelamento é feito direto no painel, sem burocracia e sem multa." },
-      { q: "Consigo mudar de plano depois?", a: "Sim, você pode alternar entre mensal, trimestral e anual quando quiser dentro da sua conta." },
-      { q: "O que acontece se eu cancelar?", a: "Você continua com acesso até o fim do período já pago e depois a conta é encerrada automaticamente." },
+      {
+        q: "Como recebo meu acesso após a compra?",
+        a: "Assim que o pagamento é confirmado, você recebe no e-mail cadastrado os dados de acesso e um link direto para o painel. No Pix a liberação é praticamente instantânea. No cartão costuma sair em poucos minutos, dependendo do processamento da operadora. Depois disso é só entrar e começar a usar.",
+      },
+      {
+        q: "Posso usar em mais de um dispositivo?",
+        a: "Sim. Você pode acessar sua conta do computador, do celular e do tablet ao mesmo tempo, sem limite de dispositivo. Tudo sincroniza automaticamente: seus pedidos, cálculos, fornecedores favoritos e conversas com a IA ficam disponíveis em qualquer aparelho.",
+      },
+      {
+        q: "Como funciona o suporte?",
+        a: "O suporte é humano, feito por pessoas que realmente importam produtos. Você fala com nosso time por chat direto no painel e por e-mail, em horário comercial de segunda a sexta. Além disso, dentro da plataforma você tem a IA especialista disponível 24 horas para dúvidas técnicas de importação, o que resolve grande parte das perguntas na hora.",
+      },
+      {
+        q: "E se eu tiver problema para acessar?",
+        a: "Se em algum momento você perder o acesso ao e-mail ou tiver qualquer problema para entrar, é só falar com o suporte informando o nome completo e o CPF usados na compra. Localizamos sua conta, validamos os dados e devolvemos o acesso rapidinho. Como o acesso é vitalício, nunca vai ser perdido por falta de renovação.",
+      },
     ],
   },
 ];
+
 
 function FaqSection() {
   const [cat, setCat] = useState(faqCategories[0].key);
