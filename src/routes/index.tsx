@@ -442,17 +442,6 @@ function LandingPage() {
       </section>
 
 
-      {/* Stats */}
-      <section className="relative border-y border-border/60 bg-card/30 py-10">
-        <div className="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-6 md:grid-cols-4">
-          {stats.map((s) => (
-            <div key={s.l} className="text-center">
-              <div className="font-display text-3xl font-bold text-gradient sm:text-4xl">{s.v}</div>
-              <div className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">{s.l}</div>
-            </div>
-          ))}
-        </div>
-      </section>
 
       {/* Stop guessing – Dashboards */}
       <section className="relative py-24">
