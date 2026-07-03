@@ -178,57 +178,57 @@ const PLAN_FEATURES = [
 function PricingBlock() {
   return (
     <div className="mt-12">
-      <div className="mx-auto max-w-md sm:max-w-lg">
+      <div className="mx-auto max-w-md">
         <div className="relative">
           {/* Economize badge */}
-          <div className="absolute -top-3.5 left-1/2 z-10 -translate-x-1/2 rounded-full bg-gradient-to-r from-brand to-brand-glow px-5 py-1.5 text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-lg shadow-brand/40">
+          <div className="absolute -top-3 left-1/2 z-10 -translate-x-1/2 rounded-full bg-gradient-to-r from-brand to-brand-glow px-4 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-foreground shadow-lg shadow-brand/40">
             Vitalício
           </div>
 
-          <div className="relative rounded-3xl border border-brand/50 bg-[oklch(0.16_0.03_260)] p-8 text-left shadow-2xl shadow-brand/10 sm:p-10">
+          <div className="relative rounded-3xl border border-brand/50 bg-[oklch(0.16_0.03_260)] p-7 text-left shadow-2xl shadow-brand/10 sm:p-8">
             {/* Title row */}
             <div className="flex items-center justify-between">
-              <div className="font-display text-2xl font-semibold text-foreground sm:text-3xl">Acesso permanente</div>
-              <span className="rounded-md bg-brand/15 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-brand-glow">
+              <div className="font-display text-xl font-semibold text-foreground sm:text-2xl">Acesso permanente</div>
+              <span className="rounded-md bg-brand/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-glow">
                 Pro
               </span>
             </div>
 
             {/* Price */}
-            <div className="mt-5">
-              <div className="flex items-baseline gap-2">
-                <span className="font-display text-5xl font-bold text-foreground sm:text-6xl">R$ 47,90</span>
-                <span className="text-base text-muted-foreground">único</span>
+            <div className="mt-4">
+              <div className="flex items-baseline gap-1.5">
+                <span className="font-display text-4xl font-bold text-foreground sm:text-5xl">R$ 47,90</span>
+                <span className="text-sm text-muted-foreground">único</span>
               </div>
-              <div className="mt-2 text-sm text-muted-foreground">
+              <div className="mt-1.5 text-[13px] text-muted-foreground">
                 <span className="text-white/40 line-through">R$ 497</span> · pagamento único, acesso para sempre
               </div>
             </div>
 
             {/* Highlight box */}
-            <div className="mt-6 flex items-start gap-3 rounded-xl border border-brand/25 bg-brand/[0.08] p-4">
-              <Zap className="mt-0.5 h-5 w-5 shrink-0 text-brand-glow" />
-              <div className="text-sm leading-relaxed text-foreground/90">
+            <div className="mt-5 flex items-start gap-3 rounded-xl border border-brand/25 bg-brand/[0.08] p-3.5">
+              <Zap className="mt-0.5 h-4 w-4 shrink-0 text-brand-glow" />
+              <div className="text-[13px] leading-relaxed text-foreground/90">
                 Acesso ilimitado a todas as ferramentas
-                <div className="mt-0.5 text-[13px] text-brand-glow">sem mensalidade · sem renovação</div>
+                <div className="mt-0.5 text-[12px] text-brand-glow">sem mensalidade · sem renovação</div>
               </div>
             </div>
 
             {/* CTA */}
             <Button
               size="lg"
-              className="group mt-6 h-14 w-full rounded-xl bg-gradient-to-r from-brand to-brand-glow text-base font-semibold text-primary-foreground shadow-lg shadow-brand/30 transition-all hover:-translate-y-0.5 hover:shadow-brand/50"
+              className="group mt-5 h-12 w-full rounded-xl bg-gradient-to-r from-brand to-brand-glow text-sm font-semibold text-primary-foreground shadow-lg shadow-brand/30 transition-all hover:-translate-y-0.5 hover:shadow-brand/50"
             >
               Garantir acesso
-              <ArrowRight className="ml-1.5 h-5 w-5 transition-transform group-hover:translate-x-1" />
+              <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Button>
 
             {/* Features */}
-            <ul className="mt-7 space-y-3.5 text-[15px]">
+            <ul className="mt-6 space-y-3 text-sm">
               {PLAN_FEATURES.map((f) => (
-                <li key={f} className="flex items-center gap-3">
-                  <div className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-brand text-primary-foreground">
-                    <Check className="h-3 w-3" strokeWidth={3} />
+                <li key={f} className="flex items-center gap-2.5">
+                  <div className="grid h-4 w-4 shrink-0 place-items-center rounded-full bg-brand text-primary-foreground">
+                    <Check className="h-2.5 w-2.5" strokeWidth={3} />
                   </div>
                   <span className="text-foreground/90">{f}</span>
                 </li>
