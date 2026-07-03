@@ -910,41 +910,54 @@ function LandingPage() {
 
           {/* Process steps */}
           <div className="mt-16 hidden md:block">
-            <div className="relative mx-auto grid max-w-5xl grid-cols-4 gap-4">
-              {/* Connector lines */}
-              <div className="pointer-events-none absolute inset-x-0 top-10 -z-10 flex items-center justify-between px-[12.5%]">
-                {[0, 1, 2].map((i) => (
-                  <div key={i} className="relative mx-6 h-px flex-1 bg-border">
-                    <div
-                      className="absolute inset-0 animate-line-fill bg-gradient-to-r from-brand to-brand-glow shadow-[0_0_10px_oklch(0.65_0.2_255)]"
-                      style={{ animationDelay: `${i * 1.2}s` }}
-                    />
+            <div className="relative mx-auto max-w-5xl px-16">
+              {/* Base line */}
+              <div className="pointer-events-none absolute left-16 right-16 top-10 h-px -translate-y-1/2 bg-border" />
+              {/* Progress fill line */}
+              <div className="pointer-events-none absolute left-16 right-16 top-10 h-[2px] -translate-y-1/2 overflow-hidden">
+                <div className="h-full w-full origin-left animate-line-progress bg-gradient-to-r from-brand to-brand-glow shadow-[0_0_14px_oklch(0.72_0.22_240)]" />
+              </div>
+
+              <div className="relative grid grid-cols-4 gap-4">
+                {[
+                  { n: "01", icon: Radar, title: "Descubra", sub: "Radar de produtos" },
+                  { n: "02", icon: Calculator, title: "Valide", sub: "Impostos + margem" },
+                  { n: "03", icon: Package, title: "Importe", sub: "Fornecedores verificados" },
+                  { n: "04", icon: TrendingUp, title: "Lucre", sub: "Precifique e escale" },
+                ].map((s, i) => (
+                  <div key={s.n} className="flex flex-col items-center text-center">
+                    <div className="relative h-20 w-20">
+                      {/* Rotating loading ring — visible only during this step's active window */}
+                      <div
+                        className="absolute -inset-1.5 animate-step-window"
+                        style={{ animationDelay: `${-(8 - i * 2)}s` }}
+                      >
+                        <div
+                          className="h-full w-full animate-spin-fast rounded-full"
+                          style={{
+                            background:
+                              "conic-gradient(from 0deg, transparent 0deg, oklch(0.75 0.22 240) 110deg, transparent 200deg)",
+                            WebkitMask:
+                              "radial-gradient(circle, transparent 62%, black 63%)",
+                            mask: "radial-gradient(circle, transparent 62%, black 63%)",
+                            filter:
+                              "drop-shadow(0 0 8px oklch(0.72 0.22 240 / 0.9))",
+                          }}
+                        />
+                      </div>
+                      {/* Node */}
+                      <div className="relative grid h-20 w-20 place-items-center rounded-full border-2 border-brand/40 bg-brand/15 text-brand-glow shadow-[0_0_30px_-8px_oklch(0.65_0.22_255_/_0.5)]">
+                        <s.icon className="h-7 w-7" />
+                      </div>
+                      <div className="absolute -top-1 right-0 rounded-md bg-background/90 px-1.5 py-0.5 text-[10px] font-mono font-medium text-muted-foreground ring-1 ring-border">
+                        {s.n}
+                      </div>
+                    </div>
+                    <div className="mt-3 font-display text-sm font-semibold text-foreground">{s.title}</div>
+                    <div className="text-[11px] text-muted-foreground">{s.sub}</div>
                   </div>
                 ))}
               </div>
-
-              {[
-                { n: "01", icon: Radar, title: "Descubra", sub: "Radar de produtos" },
-                { n: "02", icon: Calculator, title: "Valide", sub: "Impostos + margem" },
-                { n: "03", icon: Package, title: "Importe", sub: "Fornecedores verificados" },
-                { n: "04", icon: TrendingUp, title: "Lucre", sub: "Precifique e escale" },
-              ].map((s, i) => (
-                <div key={s.n} className="flex flex-col items-center text-center">
-                  <div className="relative">
-                    <div
-                      className="grid h-20 w-20 animate-step-glow place-items-center rounded-full border-2 transition-colors"
-                      style={{ animationDelay: `${i * 1.2}s` }}
-                    >
-                      <s.icon className="h-7 w-7" />
-                    </div>
-                    <div className="absolute -top-1 right-0 rounded-md bg-background/90 px-1.5 py-0.5 text-[10px] font-mono font-medium text-muted-foreground ring-1 ring-border">
-                      {s.n}
-                    </div>
-                  </div>
-                  <div className="mt-3 font-display text-sm font-semibold text-foreground">{s.title}</div>
-                  <div className="text-[11px] text-muted-foreground">{s.sub}</div>
-                </div>
-              ))}
             </div>
           </div>
 
