@@ -46,25 +46,33 @@ export function CustomCursor() {
       s.hover = isInteractive(e.target as Element);
     };
 
-    const tick = () => {
-      s.rx += (s.x - s.rx) * 0.35;
-      s.ry += (s.y - s.ry) * 0.35;
+    const onFrame = () => {
       if (dotRef.current) {
         dotRef.current.style.transform = `translate3d(${s.x}px, ${s.y}px, 0) rotate(-18deg) scale(${s.down ? 0.85 : 1})`;
       }
       if (ringRef.current) {
         const scale = s.hover ? 1.9 : 1;
-        ringRef.current.style.transform = `translate3d(${s.rx}px, ${s.ry}px, 0) translate(-50%, -50%) scale(${scale})`;
-        ringRef.current.style.opacity = s.hover ? "1" : "0.55";
+        ringRef.current.style.transform = `translate3d(${s.x}px, ${s.y}px, 0) translate(-50%, -50%) scale(${scale})`;
       }
-      raf = requestAnimationFrame(tick);
+      raf = 0;
+    };
+    const schedule = () => {
+      if (!raf) raf = requestAnimationFrame(onFrame);
     };
 
-    window.addEventListener("mousemove", onMove, { passive: true });
-    window.addEventListener("mousedown", onDown);
-    window.addEventListener("mouseup", onUp);
-    window.addEventListener("mouseover", onOver);
-    raf = requestAnimationFrame(tick);
+    const onMoveFast = (e: MouseEvent) => {
+      s.x = e.clientX;
+      s.y = e.clientY;
+      schedule();
+    };
+
+    window.addEventListener("mousemove", onMoveFast, { passive: true });
+    window.addEventListener("mousedown", () => { s.down = true; schedule(); });
+    window.addEventListener("mouseup", () => { s.down = false; schedule(); });
+    window.addEventListener("mouseover", (e) => {
+      const h = isInteractive(e.target as Element);
+      if (h !== s.hover) { s.hover = h; schedule(); }
+    });
 
     return () => {
       cancelAnimationFrame(raf);
