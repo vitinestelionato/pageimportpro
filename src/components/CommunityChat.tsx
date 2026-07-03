@@ -140,7 +140,7 @@ export function CommunityChat() {
           {/* Messages */}
           <div
             ref={scrollRef}
-            className="relative flex-1 overflow-y-auto px-2.5 py-3"
+            className="relative flex-1 overflow-hidden px-2.5 py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             style={{
               height: "calc(100% - 148px)",
               backgroundColor: "#0b141a",
