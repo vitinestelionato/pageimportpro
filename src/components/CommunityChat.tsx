@@ -15,19 +15,21 @@ type Msg = {
 
 // Sequence mimics the reference: msg, msg+image, self, typing, reply — then loops
 const SCRIPT: Omit<Msg, "id" | "time">[] = [
-  { author: "Marina", color: "text-pink-400", avatarBg: "bg-pink-500", text: "Gente, alguém já importou eletrônico pela Yiwu? Vale a pena?" },
-  { author: "Lucas", color: "text-sky-400", avatarBg: "bg-sky-500", text: "Vale demais! Trouxe fones bluetooth e vendi tudo em 2 semanas 🔥" },
-  { author: "Lucas", color: "text-sky-400", avatarBg: "bg-sky-500", text: "Olha o gráfico de vendas do último lote 📈", image: chatChart },
-  { author: "Você", color: "text-white", avatarBg: "", text: "Boa Lucas! Qual foi a margem depois do imposto?", self: true },
-  { author: "Lucas", color: "text-sky-400", avatarBg: "bg-sky-500", text: "180% líquido, a calculadora do ImportPro acertou tudo 👌" },
-  { author: "Bruno", color: "text-amber-400", avatarBg: "bg-amber-500", text: "Pessoal, o fornecedor que a Camila indicou é sério mesmo, acabei de receber meu pedido ✅" },
-  { author: "Camila", color: "text-emerald-400", avatarBg: "bg-emerald-500", text: "Falei! Já são 4 pedidos com ele, nunca atrasou 🚀" },
-  { author: "Você", color: "text-white", avatarBg: "", text: "Bora montar uma lista de fornecedores TOP da comunidade?", self: true },
-  { author: "Marina", color: "text-pink-400", avatarBg: "bg-pink-500", text: "Assino embaixo! Isso salva muito tempo de pesquisa 🙌" },
-  { author: "Rafael", color: "text-violet-400", avatarBg: "bg-violet-500", text: "Dúvida rápida: qual NCM vocês usam pra caixa de som portátil?" },
-  { author: "Bruno", color: "text-amber-400", avatarBg: "bg-amber-500", text: "8518.22.00, confere na IA do ImportPro que ela puxa certinho" },
-  { author: "Você", color: "text-white", avatarBg: "", text: "Acabei de rodar aqui, bateu 👍", self: true },
+  { author: "Marina", color: "text-pink-400", avatarBg: "bg-pink-500", text: "Gente, vocês compram direto no 1688 ou usam agente tipo CSSBuy?" },
+  { author: "Lucas", color: "text-sky-400", avatarBg: "bg-sky-500", text: "Uso CSSBuy pra consolidar. No 1688 o frete direto pro BR é caro demais 😅" },
+  { author: "Bruno", color: "text-amber-400", avatarBg: "bg-amber-500", text: "Taobao também só vai via agente, senão nem envia pra cá" },
+  { author: "Você", color: "text-white", avatarBg: "", text: "Qual agente vocês recomendam além do CSSBuy?", self: true },
+  { author: "Camila", color: "text-emerald-400", avatarBg: "bg-emerald-500", text: "Superbuy e Basetao também são ótimos, depende do produto" },
+  { author: "Lucas", color: "text-sky-400", avatarBg: "bg-sky-500", text: "Acabou de chegar meu QC do CSSBuy 🚀", image: chatChart },
+  { author: "Lucas", color: "text-sky-400", avatarBg: "bg-sky-500", text: "Produto do 1688 chegando perfeito, sem defeito 👌" },
+  { author: "Rafael", color: "text-violet-400", avatarBg: "bg-violet-500", text: "Dúvida: no 1688 preciso de CNPJ chinês pra comprar direto?" },
+  { author: "Bruno", color: "text-amber-400", avatarBg: "bg-amber-500", text: "Não, o agente resolve isso pra você. É por isso que o CSSBuy é tão usado" },
+  { author: "Você", color: "text-white", avatarBg: "", text: "A IA do ImportPro traduz a página do Taobao direto, ajuda muito", self: true },
+  { author: "Marina", color: "text-pink-400", avatarBg: "bg-pink-500", text: "Sério?? Vou testar agora, tô cansada de Google Tradutor 😂" },
+  { author: "Camila", color: "text-emerald-400", avatarBg: "bg-emerald-500", text: "1688 tem preço de fábrica, mas MOQ alto. Taobao é bom pra amostra 💡" },
+  { author: "Você", color: "text-white", avatarBg: "", text: "Boa dica! Vou pedir amostra no Taobao antes de fechar lote no 1688", self: true },
 ];
+
 
 
 function pad(n: number) { return n.toString().padStart(2, "0"); }
