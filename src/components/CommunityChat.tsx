@@ -147,9 +147,9 @@ export function CommunityChat() {
 
           {/* Messages */}
           <div
-            className="relative flex flex-col justify-end gap-2 overflow-hidden px-2.5 py-3"
+            className="relative flex flex-col justify-end gap-2 overflow-y-auto px-2.5 py-3 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
             style={{
-              height: "calc(100% - 148px)",
+              height: "calc(100% - 138px)",
               backgroundColor: "#0b141a",
               backgroundImage: `url("${DOODLE_BG}")`,
               backgroundSize: "200px 200px",
