@@ -21,6 +21,8 @@ import {
   Flame,
   Filter,
   Play,
+  Plus,
+  MessageCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CommunityChat } from "@/components/CommunityChat";
