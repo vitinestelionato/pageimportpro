@@ -753,23 +753,50 @@ function LandingPage() {
 
               <div className="mt-4 space-y-3">
                 {[
-                  { name: "Luminária LED RGB", cat: "Casa", vol: "1.4M", margin: "+210%", score: 96 },
-                  { name: "Câmera Mini Wi-Fi", cat: "Segurança", vol: "1.1M", margin: "+176%", score: 93 },
-                  { name: "Umidificador Aroma", cat: "Bem-estar", vol: "870K", margin: "+150%", score: 90 },
+                  { name: "Luminária LED RGB", cat: "Casa", vol: "1.4M", margin: "+210%", score: 96, yuan: "¥ 38,50", brl: "R$ 28,90", moq: "10 un", rating: "4.9", img: productLed },
+                  { name: "Câmera Mini Wi-Fi", cat: "Segurança", vol: "1.1M", margin: "+176%", score: 93, yuan: "¥ 62,00", brl: "R$ 46,50", moq: "5 un", rating: "4.8", img: productCamera },
+                  { name: "Umidificador Aroma", cat: "Bem-estar", vol: "870K", margin: "+150%", score: 90, yuan: "¥ 54,80", brl: "R$ 41,10", moq: "20 un", rating: "4.7", img: productHumidifier },
                 ].map((p) => (
-                  <div key={p.name} className="flex items-center gap-3 rounded-xl border border-border bg-background/40 p-2.5">
-                    <div className="relative h-14 w-20 shrink-0 overflow-hidden rounded-lg bg-gradient-to-br from-brand/30 to-brand-glow/10 ring-1 ring-brand/20">
-                      <div className="absolute left-1 top-1 flex items-center gap-1 rounded bg-background/80 px-1 py-0.5 text-[9px] font-medium text-brand-glow">
+                  <div key={p.name} className="flex gap-3 rounded-xl border border-border bg-background/40 p-2.5">
+                    <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg bg-white ring-1 ring-brand/20">
+                      <img
+                        src={p.img}
+                        alt={p.name}
+                        loading="lazy"
+                        width={1024}
+                        height={1024}
+                        className="h-full w-full object-contain p-1"
+                      />
+                      <div className="absolute left-1 top-1 flex items-center gap-1 rounded bg-background/85 px-1.5 py-0.5 text-[9px] font-medium text-brand-glow backdrop-blur">
                         <Flame className="h-2.5 w-2.5" /> {p.score}
                       </div>
-                      <Play className="absolute left-1/2 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 text-foreground/80" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="truncate text-sm font-semibold text-foreground">{p.name}</div>
-                      <div className="mt-1 flex items-center gap-2 text-[11px]">
-                        <span className="rounded bg-muted px-1.5 py-0.5 text-muted-foreground">{p.cat}</span>
-                        <span className="text-muted-foreground">👁 {p.vol}</span>
-                        <span className="text-brand-glow">📈 {p.margin}</span>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <div className="truncate text-sm font-semibold text-foreground">{p.name}</div>
+                          <div className="mt-0.5 flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                            <span className="rounded bg-muted px-1.5 py-0.5">{p.cat}</span>
+                            <span>★ {p.rating}</span>
+                          </div>
+                        </div>
+                        <span className="shrink-0 rounded-md bg-brand/15 px-1.5 py-0.5 text-[10px] font-semibold text-brand-glow ring-1 ring-brand/30">
+                          {p.margin}
+                        </span>
+                      </div>
+                      <div className="mt-1.5 flex items-baseline gap-1.5">
+                        <span className="font-display text-base font-bold text-foreground">{p.yuan}</span>
+                        <span className="text-[10px] text-muted-foreground">≈ {p.brl}</span>
+                      </div>
+                      <div className="mt-1.5 grid grid-cols-2 gap-1 text-[10px]">
+                        <div className="flex items-center gap-1 text-muted-foreground">
+                          <TrendingUp className="h-2.5 w-2.5 text-brand-glow" />
+                          <span>{p.vol}/mês</span>
+                        </div>
+                        <div className="flex items-center gap-1 text-muted-foreground">
+                          <Package className="h-2.5 w-2.5 text-brand-glow" />
+                          <span>MOQ {p.moq}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
