@@ -1113,7 +1113,7 @@ function LandingPage() {
 
           <div className="mt-12 h-px w-full bg-gradient-to-r from-transparent via-border to-transparent" />
 
-          <div className="mt-6 flex flex-col items-center justify-between gap-3 text-xs text-muted-foreground md:flex-row">
+          <div className="mt-6 flex flex-col items-center justify-between gap-3 text-center text-xs text-muted-foreground md:flex-row md:text-left">
             <div>© {new Date().getFullYear()} ImportPro · Todos os direitos reservados</div>
             <div className="flex items-center gap-2">
               <Lock className="h-3 w-3" />
