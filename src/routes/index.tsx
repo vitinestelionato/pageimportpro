@@ -675,11 +675,8 @@ function LandingPage() {
       <section className="relative py-24">
         <div className="mx-auto max-w-7xl px-6">
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="flex items-center justify-center gap-3 text-4xl font-bold tracking-tight sm:text-5xl">
-              <span className="grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-brand to-brand-glow shadow-lg shadow-brand/30">
-                <Radar className="h-5 w-5 text-primary-foreground" />
-              </span>
-              Pare de importar no escuro.
+            <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
+              Pare de tentar a sorte.
             </h2>
             <p className="mt-4 text-muted-foreground">
               O ImportPro mostra fornecedores verificados, produtos com demanda ativa e oportunidades reais para escalar sua loja com segurança.
