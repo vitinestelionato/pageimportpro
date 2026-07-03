@@ -172,3 +172,10 @@
 @utility animate-tilt-float { animation: tilt-float 8s ease-in-out infinite; }
 @utility animate-step-glow { animation: step-glow 8s ease-in-out infinite; }
 @utility animate-line-fill { animation: line-fill 8s ease-in-out infinite; transform-origin: left center; }
+
+@media (hover: hover) and (pointer: fine) {
+  .cursor-none-root,
+  .cursor-none-root * {
+    cursor: none !important;
+  }
+}
