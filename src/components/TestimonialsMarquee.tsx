@@ -87,7 +87,7 @@ function ReviewCard({ r }: { r: Review }) {
 function MarqueeRow({ items, direction = "left", duration = 90 }: { items: Review[]; direction?: "left" | "right"; duration?: number }) {
   const anim = direction === "left" ? "marquee-x" : "marquee-x-reverse";
   return (
-    <div className="group/row relative overflow-x-hidden py-6 [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
+    <div className="group/row relative overflow-x-clip overflow-y-visible py-10 [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
       <div
         className="flex w-max gap-5 will-change-transform group-hover/row:[animation-duration:280s]"
         style={{ animation: `${anim} ${duration}s linear infinite` }}
