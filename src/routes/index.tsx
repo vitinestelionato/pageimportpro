@@ -485,7 +485,7 @@ function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section className="relative overflow-hidden pt-32 pb-24 lg:pt-40">
+      <section className="relative overflow-hidden pt-24 pb-16 sm:pt-32 sm:pb-24 lg:pt-40">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_20%_10%,oklch(0.35_0.18_255/0.35),transparent_60%),radial-gradient(ellipse_40%_40%_at_90%_20%,oklch(0.55_0.2_235/0.25),transparent_70%)]" />
         <DashParticles count={80} />
 
