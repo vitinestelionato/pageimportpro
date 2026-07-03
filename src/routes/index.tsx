@@ -317,9 +317,6 @@ function PricingBlock() {
         })}
       </div>
 
-      <p className="mx-auto mt-8 max-w-lg text-center text-xs text-muted-foreground">
-        7 dias de garantia incondicional · cancele quando quiser · sem taxas escondidas
-      </p>
     </div>
   );
 }
