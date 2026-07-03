@@ -48,22 +48,26 @@ function DashParticles({ count = 90 }: { count?: number }) {
   const dashes = useMemo(
     () =>
       Array.from({ length: count }).map(() => {
-        // Cluster mostly toward center-top with organic spread
         const left = Math.max(-5, Math.min(105, gauss(50, 22)));
         const top = Math.max(-5, Math.min(105, gauss(40, 26)));
         const bright = Math.random() > 0.55;
+        // Reaction mode: 0 repel, 1 attract, 2 orbit (perpendicular), 3 vertical-only, 4 horizontal-only
+        const mode = Math.floor(Math.random() * 5);
+        const sign = Math.random() > 0.5 ? 1 : -1;
         return {
           left,
           top,
           len: bright ? 8 + Math.random() * 10 : 3 + Math.random() * 5,
           rot: -30 + Math.random() * 90,
-          depth: 12 + Math.random() * 42, // parallax strength
-          floatX: -14 + Math.random() * 28,
-          floatY: -18 + Math.random() * 36,
-          dur: 6 + Math.random() * 8,
-          delay: -Math.random() * 10,
+          depth: 20 + Math.random() * 60,
+          floatX: -22 + Math.random() * 44,
+          floatY: -26 + Math.random() * 52,
+          dur: 1.6 + Math.random() * 2.4, // much faster
+          delay: -Math.random() * 4,
           opacity: bright ? 0.75 + Math.random() * 0.25 : 0.25 + Math.random() * 0.35,
           bright,
+          mode,
+          sign,
         };
       }),
     [count],
@@ -80,7 +84,6 @@ function DashParticles({ count = 90 }: { count?: number }) {
 
     const onMove = (e: MouseEvent) => {
       const rect = el.getBoundingClientRect();
-      // -1 .. 1 relative to element center
       targetX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
       targetY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
     };
@@ -90,8 +93,8 @@ function DashParticles({ count = 90 }: { count?: number }) {
     };
 
     const tick = () => {
-      curX += (targetX - curX) * 0.08;
-      curY += (targetY - curY) * 0.08;
+      curX += (targetX - curX) * 0.18;
+      curY += (targetY - curY) * 0.18;
       el.style.setProperty("--mx", curX.toFixed(3));
       el.style.setProperty("--my", curY.toFixed(3));
       raf = requestAnimationFrame(tick);
@@ -113,28 +116,50 @@ function DashParticles({ count = 90 }: { count?: number }) {
       className="pointer-events-none absolute inset-0 overflow-hidden"
       style={{ ["--mx" as string]: 0, ["--my" as string]: 0 }}
     >
-      {dashes.map((d, i) => (
-        <span
-          key={i}
-          className="absolute block animate-particle-float rounded-full will-change-transform"
-          style={{
-            left: `${d.left}%`,
-            top: `${d.top}%`,
-            width: `${d.len}px`,
-            height: d.bright ? "3px" : "2px",
-            background: d.bright ? "oklch(0.72 0.19 245)" : "oklch(0.58 0.16 255)",
-            boxShadow: d.bright ? "0 0 10px oklch(0.72 0.22 240 / 0.85)" : "none",
-            opacity: d.opacity,
-            transform: `translate(calc(var(--mx) * ${-d.depth}px), calc(var(--mx) * ${-d.depth * 0.6}px + var(--my) * ${-d.depth}px)) rotate(${d.rot}deg)`,
-            transition: "transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)",
-            ["--fx" as string]: `${d.floatX}px`,
-            ["--fy" as string]: `${d.floatY}px`,
-            ["--r" as string]: `${d.rot}deg`,
-            animationDuration: `${d.dur}s`,
-            animationDelay: `${d.delay}s`,
-          }}
-        />
-      ))}
+      {dashes.map((d, i) => {
+        // Map each mode to a different transform reaction
+        let tx = `calc(var(--mx) * ${-d.depth}px)`;
+        let ty = `calc(var(--my) * ${-d.depth}px)`;
+        if (d.mode === 1) {
+          // attract
+          tx = `calc(var(--mx) * ${d.depth}px)`;
+          ty = `calc(var(--my) * ${d.depth}px)`;
+        } else if (d.mode === 2) {
+          // orbit — perpendicular to cursor vector
+          tx = `calc(var(--my) * ${-d.depth * d.sign}px)`;
+          ty = `calc(var(--mx) * ${d.depth * d.sign}px)`;
+        } else if (d.mode === 3) {
+          tx = `0px`;
+          ty = `calc(var(--my) * ${-d.depth * 1.4}px)`;
+        } else if (d.mode === 4) {
+          tx = `calc(var(--mx) * ${-d.depth * 1.4}px)`;
+          ty = `0px`;
+        }
+        return (
+          <span
+            key={i}
+            className="absolute block animate-particle-float rounded-full will-change-transform"
+            style={{
+              left: `${d.left}%`,
+              top: `${d.top}%`,
+              width: `${d.len}px`,
+              height: d.bright ? "3px" : "2px",
+              background: d.bright ? "oklch(0.72 0.19 245)" : "oklch(0.58 0.16 255)",
+              boxShadow: d.bright ? "0 0 10px oklch(0.72 0.22 240 / 0.85)" : "none",
+              opacity: d.opacity,
+              transform: `translate(${tx}, ${ty}) rotate(${d.rot}deg)`,
+              transition: "transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)",
+              ["--fx" as string]: `${d.floatX}px`,
+              ["--fy" as string]: `${d.floatY}px`,
+              animationDuration: `${d.dur}s`,
+              animationDelay: `${d.delay}s`,
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+}
     </div>
   );
 }
