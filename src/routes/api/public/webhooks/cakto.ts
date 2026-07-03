@@ -71,7 +71,7 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
             provider: "cakto",
             status: "invalid_signature",
             message: "Assinatura inválida",
-            payload: safeParse(rawBody),
+            payload: safeParse(rawBody) as any,
           });
           return json(401, { error: "invalid signature" });
         }
@@ -104,7 +104,7 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
             external_id: externalId,
             status: "ignored",
             message: "Evento não é de pagamento aprovado",
-            payload,
+            payload: payload as any,
           });
           return json(200, { ok: true, ignored: true });
         }
@@ -116,7 +116,7 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
             external_id: externalId,
             status: "error",
             message: "E-mail do cliente ausente",
-            payload,
+            payload: payload as any,
           });
           return json(400, { error: "missing customer email" });
         }
@@ -181,7 +181,7 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
               external_id: externalId,
               status: "error",
               message: `Falha ao criar usuário: ${created.error?.message ?? "unknown"}`,
-              payload,
+              payload: payload as any,
             });
             return json(500, { error: "create user failed" });
           }
@@ -225,7 +225,7 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
           external_id: externalId,
           status: "processed",
           message: `Ativação: ${activationUrl}`,
-          payload,
+          payload: payload as any,
         });
 
         return json(200, {
