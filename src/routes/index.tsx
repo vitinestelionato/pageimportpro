@@ -17,6 +17,10 @@ import {
   MessagesSquare,
   Lightbulb,
   Lock,
+  Search,
+  Flame,
+  Filter,
+  Play,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CommunityChat } from "@/components/CommunityChat";
