@@ -786,9 +786,6 @@ function LandingPage() {
       <section id="recursos" className="relative py-28">
         <div className="mx-auto max-w-7xl px-6">
           <div className="mx-auto max-w-2xl text-center">
-            <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs text-brand-glow">
-              <Zap className="h-3 w-3" /> Tudo em um só lugar
-            </div>
             <h2 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
               A operação completa <span className="text-gradient">de importação.</span>
             </h2>
