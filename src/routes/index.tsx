@@ -162,8 +162,6 @@ function DashParticles({ count = 90 }: { count?: number }) {
   );
 }
 
-type BillingKey = "mensal" | "trimestral" | "anual";
-
 const PLAN_FEATURES = [
   "Fornecedores da China verificados",
   "Calculadora de impostos completa",
@@ -176,150 +174,53 @@ const PLAN_FEATURES = [
   "Suporte prioritário",
 ];
 
-const PLANS: {
-  key: BillingKey;
-  label: string;
-  perMonth: number;
-  totalLabel: string;
-  billed: string;
-  save?: string;
-  highlight?: boolean;
-  cta: string;
-}[] = [
-  {
-    key: "mensal",
-    label: "Mensal",
-    perMonth: 97,
-    totalLabel: "R$ 97",
-    billed: "cobrado mensalmente",
-    cta: "Começar mensal",
-  },
-  {
-    key: "trimestral",
-    label: "Trimestral",
-    perMonth: 87,
-    totalLabel: "R$ 87",
-    billed: "R$ 261 cobrados a cada 3 meses",
-    save: "-10%",
-    cta: "Garantir Trimestral",
-  },
-  {
-    key: "anual",
-    label: "Anual",
-    perMonth: 67,
-    totalLabel: "R$ 67",
-    billed: "R$ 804 cobrados anualmente",
-    save: "Economize 30%",
-    highlight: true,
-    cta: "Garantir Anual",
-  },
-];
-
 function PricingBlock() {
-  const [selected, setSelected] = useState<BillingKey>("anual");
-
   return (
     <div className="mt-10">
-      {/* Segmented toggle */}
-      <div className="mx-auto flex w-fit items-center gap-1 rounded-full border border-border bg-card/60 p-1 backdrop-blur">
-        {PLANS.map((p) => (
-          <button
-            key={p.key}
-            onClick={() => setSelected(p.key)}
-            className={`relative flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all ${
-              selected === p.key
-                ? "bg-gradient-to-r from-brand to-brand-glow text-primary-foreground shadow-lg shadow-brand/30"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            {p.label}
-            {p.save && (
-              <span
-                className={`rounded-full px-1.5 py-0.5 text-[10px] font-semibold ${
-                  selected === p.key
-                    ? "bg-white/20 text-primary-foreground"
-                    : "bg-brand/20 text-brand-glow"
-                }`}
-              >
-                {p.save}
-              </span>
-            )}
-          </button>
-        ))}
-      </div>
+      <div className="mx-auto max-w-md">
+        <div className="relative rounded-2xl border border-brand/60 bg-card/70 p-8 text-left shadow-2xl shadow-brand/20">
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-brand to-brand-glow px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-primary-foreground shadow-lg shadow-brand/40">
+            Acesso vitalício
+          </div>
 
-      {/* Cards */}
-      <div className="mt-10 grid gap-6 md:grid-cols-3">
-        {PLANS.map((p) => {
-          const isActive = selected === p.key;
-          return (
-            <div
-              key={p.key}
-              className={`relative rounded-2xl border p-6 text-left transition-all ${
-                isActive
-                  ? "border-brand/60 bg-card/70 shadow-2xl shadow-brand/20 md:-translate-y-2"
-                  : "border-border bg-card/40"
-              }`}
-            >
-              {p.highlight && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-brand to-brand-glow px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-primary-foreground shadow-lg shadow-brand/40">
-                  Mais popular
-                </div>
-              )}
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-display text-base font-semibold text-foreground">
-                    ImportPro <span className="text-brand-glow">{p.label}</span>
-                  </div>
-                  <div className="mt-1 text-xs text-muted-foreground">Acesso completo à plataforma</div>
-                </div>
-                {p.save && (
-                  <span className="rounded-full bg-brand/20 px-2 py-0.5 text-[10px] font-medium text-brand-glow ring-1 ring-brand/30">
-                    {p.save}
-                  </span>
-                )}
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="font-display text-base font-semibold text-foreground">
+                ImportPro <span className="text-brand-glow">Completo</span>
               </div>
-
-              <div className="mt-6 flex items-baseline gap-1">
-                <span className={`font-display text-4xl font-bold ${isActive ? "text-gradient" : "text-foreground"}`}>
-                  {p.totalLabel}
-                </span>
-                <span className="text-sm text-muted-foreground">/mês</span>
-              </div>
-              <div className="mt-1 text-xs text-muted-foreground">{p.billed}</div>
-
-              <Button
-                size="lg"
-                onClick={() => setSelected(p.key)}
-                className={`group mt-6 h-11 w-full rounded-xl text-sm font-semibold transition-all ${
-                  isActive
-                    ? "bg-gradient-to-r from-brand to-brand-glow text-primary-foreground shadow-lg shadow-brand/30 hover:-translate-y-0.5 hover:shadow-brand/50"
-                    : "border border-border bg-background/40 text-foreground hover:bg-accent"
-                }`}
-              >
-                {p.cta}
-                <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Button>
-
-              <ul className="mt-6 space-y-2.5 text-sm">
-                {PLAN_FEATURES.map((f) => (
-                  <li key={f} className="flex items-center gap-2.5">
-                    <div className="grid h-4 w-4 shrink-0 place-items-center rounded-full bg-brand/20 text-brand-glow">
-                      <Check className="h-2.5 w-2.5" />
-                    </div>
-                    <span className="text-foreground/90">{f}</span>
-                  </li>
-                ))}
-              </ul>
+              <div className="mt-1 text-xs text-muted-foreground">Acesso completo à plataforma</div>
             </div>
-          );
-        })}
-      </div>
+          </div>
 
+          <div className="mt-6 flex items-baseline gap-1">
+            <span className="font-display text-5xl font-bold text-gradient">R$ 47,90</span>
+          </div>
+          <div className="mt-1 text-xs text-muted-foreground">Pagamento único · sem mensalidade</div>
+
+          <Button
+            size="lg"
+            className="group mt-6 h-11 w-full rounded-xl bg-gradient-to-r from-brand to-brand-glow text-sm font-semibold text-primary-foreground shadow-lg shadow-brand/30 transition-all hover:-translate-y-0.5 hover:shadow-brand/50"
+          >
+            Quero garantir agora
+            <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Button>
+
+          <ul className="mt-6 space-y-2.5 text-sm">
+            {PLAN_FEATURES.map((f) => (
+              <li key={f} className="flex items-center gap-2.5">
+                <div className="grid h-4 w-4 shrink-0 place-items-center rounded-full bg-brand/20 text-brand-glow">
+                  <Check className="h-2.5 w-2.5" />
+                </div>
+                <span className="text-foreground/90">{f}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }
+
 
 
 export const Route = createFileRoute("/")({
