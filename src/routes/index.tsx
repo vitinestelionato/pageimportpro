@@ -303,9 +303,6 @@ function FaqSection() {
     <section id="faq" className="relative py-24">
       <div className="mx-auto max-w-4xl px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/60 px-3 py-1 text-xs text-brand-glow">
-            <span className="h-1.5 w-1.5 rounded-full bg-brand-glow" /> FAQ
-          </span>
           <h2 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
             Tem dúvidas? <span className="text-gradient">Temos as respostas.</span>
           </h2>
@@ -786,9 +783,6 @@ function LandingPage() {
       <section id="recursos" className="relative py-28">
         <div className="mx-auto max-w-7xl px-6">
           <div className="mx-auto max-w-2xl text-center">
-            <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs text-brand-glow">
-              <Zap className="h-3 w-3" /> Tudo em um só lugar
-            </div>
             <h2 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
               A operação completa <span className="text-gradient">de importação.</span>
             </h2>

@@ -119,10 +119,6 @@ export function TestimonialsMarquee() {
       />
 
       <div className="relative mx-auto max-w-3xl px-6 text-center">
-        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-1.5 text-[11px] font-medium text-white/70 backdrop-blur">
-          <span className="text-[oklch(0.78_0.16_235)]">★★★★★</span>
-          <span>+12.000 Importadores</span>
-        </div>
         <h2 className="mt-6 text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
           Quem começa a importar,{" "}
           <span className="text-gradient">recomenda.</span>
