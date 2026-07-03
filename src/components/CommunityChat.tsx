@@ -89,13 +89,13 @@ export function CommunityChat() {
 
     const now = new Date();
     setMessages(
-      SCRIPT.slice(0, 3).map((m, i) => ({
+      SCRIPT.slice(0, 2).map((m, i) => ({
         ...m,
         id: i,
-        time: `${pad(now.getHours())}:${pad(Math.max(0, now.getMinutes() - (3 - i)))}`,
+        time: `${pad(now.getHours())}:${pad(Math.max(0, now.getMinutes() - (2 - i)))}`,
       })),
     );
-    idxRef.current = 3;
+    idxRef.current = 2;
     const start = window.setTimeout(push, 2400);
     timeouts.push(start);
 
