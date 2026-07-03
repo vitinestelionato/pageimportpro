@@ -92,8 +92,12 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
         const email = (customer.email ?? "").trim().toLowerCase();
         const name = customer.name ?? null;
         const phone = customer.phone ?? null;
-        const productName =
+        const rawProductName =
           payload.data?.product?.name ?? payload.product?.name ?? payload.data?.offer?.name ?? null;
+        // Normaliza qualquer variação vinda da Cakto ("Anual", "Mensal", etc.) para "Permanente"
+        const productName = rawProductName
+          ? rawProductName.replace(/\b(anual|mensal|trimestral|semestral|vital[íi]cio)\b/gi, "Permanente")
+          : "ImportPro Permanente";
         const externalId =
           payload.data?.id ?? payload.data?.ref ?? (payload as { id?: string }).id ?? null;
 
