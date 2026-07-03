@@ -16,19 +16,19 @@ type Msg = {
 // Sequence mimics the reference: msg, msg+image, self, typing, reply — then loops
 const SCRIPT: Omit<Msg, "id" | "time">[] = [
   { author: "Marina", color: "text-pink-400", avatarBg: "bg-pink-500", text: "Gente, vocês compram direto no 1688 ou usam agente tipo CSSBuy?" },
-  { author: "Lucas", color: "text-sky-400", avatarBg: "bg-sky-500", text: "Uso CSSBuy pra consolidar. No 1688 o frete direto pro BR é caro demais 😅" },
-  { author: "Bruno", color: "text-amber-400", avatarBg: "bg-amber-500", text: "Taobao também só vai via agente, senão nem envia pra cá" },
-  { author: "Você", color: "text-white", avatarBg: "", text: "Qual agente vocês recomendam além do CSSBuy?", self: true },
-  { author: "Camila", color: "text-emerald-400", avatarBg: "bg-emerald-500", text: "Superbuy e Basetao também são ótimos, depende do produto" },
-  { author: "Lucas", color: "text-sky-400", avatarBg: "bg-sky-500", text: "Acabou de chegar meu QC do CSSBuy 🚀", image: chatChart },
-  { author: "Lucas", color: "text-sky-400", avatarBg: "bg-sky-500", text: "Produto do 1688 chegando perfeito, sem defeito 👌" },
-  { author: "Rafael", color: "text-violet-400", avatarBg: "bg-violet-500", text: "Dúvida: no 1688 preciso de CNPJ chinês pra comprar direto?" },
-  { author: "Bruno", color: "text-amber-400", avatarBg: "bg-amber-500", text: "Não, o agente resolve isso pra você. É por isso que o CSSBuy é tão usado" },
-  { author: "Você", color: "text-white", avatarBg: "", text: "A IA do ImportPro traduz a página do Taobao direto, ajuda muito", self: true },
-  { author: "Marina", color: "text-pink-400", avatarBg: "bg-pink-500", text: "Sério?? Vou testar agora, tô cansada de Google Tradutor 😂" },
-  { author: "Camila", color: "text-emerald-400", avatarBg: "bg-emerald-500", text: "1688 tem preço de fábrica, mas MOQ alto. Taobao é bom pra amostra 💡" },
-  { author: "Você", color: "text-white", avatarBg: "", text: "Boa dica! Vou pedir amostra no Taobao antes de fechar lote no 1688", self: true },
+  { author: "Lucas", color: "text-sky-400", avatarBg: "bg-sky-500", text: "Achei um fornecedor TOP na Central de Fornecedores do ImportPro 🔥" },
+  { author: "Bruno", color: "text-amber-400", avatarBg: "bg-amber-500", text: "A Central é ouro, todos já vêm auditados. Nunca mais caí em golpe do 1688" },
+  { author: "Você", color: "text-white", avatarBg: "", text: "Rodei a Calculadora de Lucro aqui, 172% de margem 🤑", self: true },
+  { author: "Camila", color: "text-emerald-400", avatarBg: "bg-emerald-500", text: "A calculadora salva demais, já vem com II, ICMS e frete do CSSBuy embutido" },
+  { author: "Lucas", color: "text-sky-400", avatarBg: "bg-sky-500", text: "Olha o resultado do Radar de Produtos dessa semana 📈", image: chatChart },
+  { author: "Rafael", color: "text-violet-400", avatarBg: "bg-violet-500", text: "O Radar tá insano, achei 3 produtos bombando no Taobao que ninguém tá vendendo aqui" },
+  { author: "Bruno", color: "text-amber-400", avatarBg: "bg-amber-500", text: "A IA do ImportPro traduz página do 1688 e ainda sugere NCM certinho 👌" },
+  { author: "Você", color: "text-white", avatarBg: "", text: "Isso me economizou umas 4h de pesquisa hoje 😅", self: true },
+  { author: "Marina", color: "text-pink-400", avatarBg: "bg-pink-500", text: "Gestão de pedidos rastreando meu container em tempo real, que sonho 🚢" },
+  { author: "Camila", color: "text-emerald-400", avatarBg: "bg-emerald-500", text: "Simulei viabilidade antes de comprar e evitei um mico de R$ 8k 🙌" },
+  { author: "Você", color: "text-white", avatarBg: "", text: "ImportPro pagou a assinatura só com o primeiro pedido kkk", self: true },
 ];
+
 
 
 
