@@ -677,22 +677,18 @@ function LandingPage() {
                       </div>
                       <span className="rounded-full bg-destructive/20 px-2 py-0.5 text-[10px] font-medium text-destructive">Explodindo</span>
                     </div>
-                    <div className="mt-3 grid grid-cols-3 gap-1.5">
-                      {[0, 1, 2].map((i) => (
-                        <div key={i} className="relative aspect-video overflow-hidden rounded-md bg-white ring-1 ring-brand/20">
-                          <img
-                            src={p.img}
-                            alt={p.name}
-                            loading="lazy"
-                            width={1024}
-                            height={1024}
-                            className="h-full w-full object-contain"
-                          />
-                          <div className="absolute bottom-1 left-1 rounded bg-background/80 px-1 text-[9px] text-foreground">
-                            {["1.2M", "840K", "2.1M"][i]}
-                          </div>
-                        </div>
-                      ))}
+                    <div className="relative mt-3 aspect-[4/3] overflow-hidden rounded-md bg-white ring-1 ring-brand/20">
+                      <img
+                        src={p.img}
+                        alt={p.name}
+                        loading="lazy"
+                        width={1024}
+                        height={1024}
+                        className="h-full w-full object-contain p-2"
+                      />
+                      <div className="absolute bottom-1.5 left-1.5 rounded bg-background/85 px-1.5 py-0.5 text-[10px] font-medium text-foreground backdrop-blur">
+                        2.1M views
+                      </div>
                     </div>
                     <div className="mt-3 grid grid-cols-4 gap-1 text-center">
                       {[
