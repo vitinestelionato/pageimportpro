@@ -274,7 +274,7 @@ function LandingPage() {
           </div>
           <nav className="hidden items-center gap-8 text-sm text-muted-foreground md:flex">
             <a href="#recursos" className="transition-colors hover:text-foreground">Recursos</a>
-            <a href="#como-funciona" className="transition-colors hover:text-foreground">Como funciona</a>
+            <a href="#comunidade" className="transition-colors hover:text-foreground">Comunidade</a>
             <a href="#depoimentos" className="transition-colors hover:text-foreground">Depoimentos</a>
             <a href="#precos" className="transition-colors hover:text-foreground">Planos</a>
           </nav>
@@ -768,32 +768,6 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* How it works */}
-      <section id="como-funciona" className="relative py-28">
-        <div className="absolute inset-0 bg-grid opacity-40 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_70%)]" />
-        <div className="relative mx-auto max-w-6xl px-6">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
-              Como <span className="text-gradient">funciona</span>
-            </h2>
-            <p className="mt-4 text-muted-foreground">Três passos para começar a lucrar importando com inteligência.</p>
-          </div>
-
-          <div className="mt-16 grid gap-6 md:grid-cols-3">
-            {[
-              { n: "01", t: "Descubra", d: "Use o radar para achar produtos em alta e valide viabilidade em segundos." },
-              { n: "02", t: "Importe", d: "Escolha o fornecedor verificado e a plataforma calcula tudo — impostos, frete, margem." },
-              { n: "03", t: "Lucre", d: "Precificação inteligente e rastreio ponta a ponta. Foco no que importa: vender mais." },
-            ].map((s) => (
-              <div key={s.n} className="relative rounded-2xl glass p-8 transition-all hover:-translate-y-1">
-                <div className="font-display text-6xl font-bold text-brand/30">{s.n}</div>
-                <h3 className="mt-2 font-display text-xl font-semibold">{s.t}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{s.d}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
 
       {/* Testimonials */}
