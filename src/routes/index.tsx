@@ -463,7 +463,7 @@ function LandingPage() {
       
       {/* Nav */}
       <header className="fixed inset-x-0 top-0 z-50">
-        <div className="mx-auto mt-4 flex max-w-6xl items-center justify-between rounded-full glass px-5 py-3">
+        <div className="mx-auto mt-3 flex max-w-6xl items-center justify-between rounded-full glass px-3 py-2 sm:mt-4 sm:px-5 sm:py-3 mx-3 sm:mx-auto">
           <div className="flex items-center gap-2">
             <div className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-brand to-brand-glow shadow-lg shadow-brand/30">
               <Globe2 className="h-4 w-4 text-primary-foreground" />
