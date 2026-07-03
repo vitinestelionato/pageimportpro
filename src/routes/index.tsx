@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CommunityChat } from "@/components/CommunityChat";
+import { TestimonialsMarquee } from "@/components/TestimonialsMarquee";
 
 import productIphone from "@/assets/products/iphone14.jpg";
 import productTws from "@/assets/products/tws-pro.jpg";
