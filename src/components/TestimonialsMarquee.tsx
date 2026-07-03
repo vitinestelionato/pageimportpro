@@ -42,7 +42,7 @@ const ROW_B = REVIEWS.slice(13);
 function ReviewCard({ r }: { r: Review }) {
   return (
     <article
-      className="group/card relative flex h-[220px] w-[380px] shrink-0 flex-col justify-between rounded-[22px] border border-white/[0.08] bg-[oklch(0.18_0.025_260)] p-7 shadow-[0_1px_0_0_oklch(1_0_0/0.04)_inset] transition-all duration-500 ease-out will-change-transform hover:-translate-y-2 hover:border-[oklch(0.65_0.19_255/0.45)] hover:shadow-[0_20px_60px_-20px_oklch(0.65_0.2_255/0.45)]"
+      className="group/card relative flex h-[220px] w-[300px] shrink-0 flex-col justify-between rounded-[22px] border border-white/[0.08] bg-[oklch(0.18_0.025_260)] p-5 shadow-[0_1px_0_0_oklch(1_0_0/0.04)_inset] transition-all duration-500 ease-out will-change-transform hover:-translate-y-2 hover:border-[oklch(0.65_0.19_255/0.45)] hover:shadow-[0_20px_60px_-20px_oklch(0.65_0.2_255/0.45)] sm:w-[380px] sm:p-7"
     >
       <div
         className="pointer-events-none absolute inset-0 rounded-[22px] opacity-0 transition-opacity duration-500 group-hover/card:opacity-100"
