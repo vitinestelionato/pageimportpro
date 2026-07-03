@@ -1035,7 +1035,7 @@ function LandingPage() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="grid grid-cols-2 gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:gap-12">
             {/* Brand column */}
-            <div>
+            <div className="col-span-2 md:col-span-1">
               <div className="flex items-center gap-2">
                 <div className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-brand to-brand-glow shadow-lg shadow-brand/30">
                   <Globe2 className="h-4 w-4 text-primary-foreground" />
