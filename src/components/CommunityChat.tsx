@@ -55,6 +55,38 @@ export function CommunityChat() {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [typing, setTyping] = useState<{ author: string; color: string; avatarBg: string } | null>(null);
   const idxRef = useRef(0);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  // Auto-trim: remove oldest messages whenever content doesn't fit the screen
+  useEffect(() => {
+    const el = listRef.current;
+    if (!el) return;
+    const contentOverflows = () => {
+      const style = getComputedStyle(el);
+      const padY = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+      const gap = parseFloat(style.rowGap) || 0;
+      const children = Array.from(el.children) as HTMLElement[];
+      const total =
+        children.reduce((sum, c) => sum + c.offsetHeight, 0) +
+        gap * Math.max(0, children.length - 1) +
+        padY;
+      return total > el.clientHeight + 2;
+    };
+    const trim = () => {
+      if (contentOverflows()) {
+        setMessages((prev) => (prev.length > 1 ? prev.slice(1) : prev));
+      }
+    };
+    trim();
+    // re-check after images load / layout settles
+    const t = window.setTimeout(trim, 120);
+    const imgs = el.querySelectorAll("img");
+    imgs.forEach((img) => img.addEventListener("load", trim));
+    return () => {
+      clearTimeout(t);
+      imgs.forEach((img) => img.removeEventListener("load", trim));
+    };
+  }, [messages, typing]);
 
   useEffect(() => {
     let cancelled = false;
@@ -147,6 +179,7 @@ export function CommunityChat() {
 
           {/* Messages */}
           <div
+            ref={listRef}
             className="relative flex min-h-0 flex-1 flex-col justify-end gap-2 overflow-hidden px-2.5 py-3"
             style={{
               backgroundColor: "#0b141a",
