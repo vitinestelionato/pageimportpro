@@ -274,7 +274,7 @@ function LandingPage() {
           </div>
           <nav className="hidden items-center gap-8 text-sm text-muted-foreground md:flex">
             <a href="#recursos" className="transition-colors hover:text-foreground">Recursos</a>
-            <a href="#como-funciona" className="transition-colors hover:text-foreground">Como funciona</a>
+            <a href="#comunidade" className="transition-colors hover:text-foreground">Comunidade</a>
             <a href="#depoimentos" className="transition-colors hover:text-foreground">Depoimentos</a>
             <a href="#precos" className="transition-colors hover:text-foreground">Planos</a>
           </nav>
