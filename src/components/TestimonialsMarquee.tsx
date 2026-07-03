@@ -42,7 +42,7 @@ const ROW_B = REVIEWS.slice(13);
 function ReviewCard({ r }: { r: Review }) {
   return (
     <article
-      className="group/card relative flex h-[220px] w-[380px] shrink-0 flex-col justify-between rounded-[22px] border border-white/[0.08] bg-[oklch(0.18_0.025_260)] p-7 shadow-[0_1px_0_0_oklch(1_0_0/0.04)_inset] transition-all duration-500 ease-out will-change-transform hover:-translate-y-2 hover:border-[oklch(0.65_0.19_255/0.45)] hover:shadow-[0_20px_60px_-20px_oklch(0.65_0.2_255/0.45)]"
+      className="group/card relative flex h-[220px] w-[300px] shrink-0 flex-col justify-between rounded-[22px] border border-white/[0.08] bg-[oklch(0.18_0.025_260)] p-5 shadow-[0_1px_0_0_oklch(1_0_0/0.04)_inset] transition-all duration-500 ease-out will-change-transform hover:-translate-y-2 hover:border-[oklch(0.65_0.19_255/0.45)] hover:shadow-[0_20px_60px_-20px_oklch(0.65_0.2_255/0.45)] sm:w-[380px] sm:p-7"
     >
       <div
         className="pointer-events-none absolute inset-0 rounded-[22px] opacity-0 transition-opacity duration-500 group-hover/card:opacity-100"
@@ -102,7 +102,7 @@ function MarqueeRow({ items, direction = "left", duration = 90 }: { items: Revie
 
 export function TestimonialsMarquee() {
   return (
-    <section id="depoimentos" className="relative overflow-hidden bg-background py-32">
+    <section id="depoimentos" className="relative overflow-hidden bg-background py-20 sm:py-28 md:py-32">
       {/* Ambient brand glow */}
       <div
         className="pointer-events-none absolute left-1/2 -top-40 -z-0 h-[700px] w-[1200px] -translate-x-1/2 rounded-full blur-[120px]"
@@ -118,8 +118,8 @@ export function TestimonialsMarquee() {
         }}
       />
 
-      <div className="relative mx-auto max-w-3xl px-6 text-center">
-        <h2 className="mt-6 text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
+      <div className="relative mx-auto max-w-3xl px-5 text-center sm:px-6">
+        <h2 className="text-3xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
           Quem começa a importar,{" "}
           <span className="text-gradient">recomenda.</span>
         </h2>
@@ -128,7 +128,7 @@ export function TestimonialsMarquee() {
         </p>
       </div>
 
-      <div className="relative mt-16 flex flex-col gap-5">
+      <div className="relative mt-12 flex flex-col gap-4 sm:mt-16 sm:gap-5">
         <MarqueeRow items={ROW_A} direction="left" duration={95} />
         <MarqueeRow items={ROW_B} direction="right" duration={110} />
       </div>

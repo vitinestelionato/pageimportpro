@@ -383,7 +383,7 @@ function FaqSection() {
   const active = faqCategories.find((c) => c.key === cat) ?? faqCategories[0];
 
   return (
-    <section id="faq" className="relative py-24">
+    <section id="faq" className="relative py-16 sm:py-20 md:py-24">
       <div className="mx-auto max-w-4xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
@@ -463,7 +463,7 @@ function LandingPage() {
       
       {/* Nav */}
       <header className="fixed inset-x-0 top-0 z-50">
-        <div className="mx-auto mt-4 flex max-w-6xl items-center justify-between rounded-full glass px-5 py-3">
+        <div className="mx-auto mt-3 flex max-w-6xl items-center justify-between rounded-full glass px-3 py-2 sm:mt-4 sm:px-5 sm:py-3 mx-3 sm:mx-auto">
           <div className="flex items-center gap-2">
             <div className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-brand to-brand-glow shadow-lg shadow-brand/30">
               <Globe2 className="h-4 w-4 text-primary-foreground" />
@@ -485,18 +485,18 @@ function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section className="relative overflow-hidden pt-32 pb-24 lg:pt-40">
+      <section className="relative overflow-hidden pt-24 pb-16 sm:pt-32 sm:pb-24 lg:pt-40">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_20%_10%,oklch(0.35_0.18_255/0.35),transparent_60%),radial-gradient(ellipse_40%_40%_at_90%_20%,oklch(0.55_0.2_235/0.25),transparent_70%)]" />
         <DashParticles count={80} />
 
-        <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-6 lg:grid-cols-[1.05fr_1fr]">
+        <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 sm:gap-12 sm:px-6 lg:grid-cols-[1.05fr_1fr]">
           {/* Left content */}
           <div className="relative">
 
 
 
             <h1
-              className="animate-rise mt-6 font-display text-5xl font-bold leading-[1.02] tracking-tight text-foreground sm:text-6xl lg:text-[68px]"
+              className="animate-rise font-display text-[40px] font-bold leading-[1.05] tracking-tight text-foreground sm:text-6xl lg:text-[68px]"
               style={{ animationDelay: "80ms" }}
             >
               A plataforma completa
@@ -512,23 +512,23 @@ function LandingPage() {
             </p>
 
             <div
-              className="animate-rise mt-10 flex flex-col items-start gap-3 sm:flex-row sm:items-center"
+              className="animate-rise mt-8 flex w-full flex-col items-stretch gap-3 sm:mt-10 sm:w-auto sm:flex-row sm:items-center"
               style={{ animationDelay: "240ms" }}
             >
-              <a href="#precos">
+              <a href="#precos" className="block w-full sm:inline-block sm:w-auto">
                 <Button
                   size="lg"
-                  className="group h-12 rounded-full bg-gradient-to-r from-brand to-brand-glow px-7 text-base font-semibold text-primary-foreground shadow-xl shadow-brand/40 transition-all hover:-translate-y-0.5 hover:shadow-brand/60"
+                  className="group h-12 w-full rounded-full bg-gradient-to-r from-brand to-brand-glow px-7 text-base font-semibold text-primary-foreground shadow-xl shadow-brand/40 transition-all hover:-translate-y-0.5 hover:shadow-brand/60 sm:w-auto"
                 >
                   Ativar ImportPro
                   <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </a>
-              <a href="#recursos">
+              <a href="#recursos" className="block w-full sm:inline-block sm:w-auto">
                 <Button
                   size="lg"
                   variant="outline"
-                  className="group h-12 rounded-full border-border bg-transparent px-7 text-base font-medium hover:bg-accent"
+                  className="group h-12 w-full rounded-full border-border bg-transparent px-7 text-base font-medium hover:bg-accent sm:w-auto"
                 >
                   Testar IA de importação
                   <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -644,7 +644,7 @@ function LandingPage() {
 
 
       {/* Stop guessing – Dashboards */}
-      <section className="relative py-24">
+      <section className="relative py-16 sm:py-20 md:py-24">
         <div className="mx-auto max-w-7xl px-6">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
@@ -863,7 +863,7 @@ function LandingPage() {
       </section>
 
       {/* Features */}
-      <section id="recursos" className="relative py-28">
+      <section id="recursos" className="relative py-20 sm:py-24 md:py-28">
         <div className="mx-auto max-w-7xl px-6">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
@@ -953,7 +953,7 @@ function LandingPage() {
 
 
       {/* Community */}
-      <section id="comunidade" className="relative py-28">
+      <section id="comunidade" className="relative py-20 sm:py-24 md:py-28">
         <div className="absolute left-1/2 top-1/2 -z-10 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/10 blur-3xl" />
         <div className="mx-auto grid max-w-6xl items-center gap-16 px-6 lg:grid-cols-2">
           <div>
@@ -1007,7 +1007,7 @@ function LandingPage() {
 
 
       {/* Pricing */}
-      <section id="precos" className="relative py-28">
+      <section id="precos" className="relative py-20 sm:py-24 md:py-28">
         <div className="absolute left-1/2 top-1/2 -z-10 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/20 blur-3xl" />
         <div className="mx-auto max-w-6xl px-6">
           <div className="mx-auto max-w-2xl text-center">
@@ -1033,9 +1033,9 @@ function LandingPage() {
       <footer className="relative border-t border-border/60 bg-[oklch(0.12_0.02_260)]/60 pt-16 pb-8">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent" />
         <div className="mx-auto max-w-6xl px-6">
-          <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+          <div className="grid grid-cols-2 gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:gap-12">
             {/* Brand column */}
-            <div>
+            <div className="col-span-2 md:col-span-1">
               <div className="flex items-center gap-2">
                 <div className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-brand to-brand-glow shadow-lg shadow-brand/30">
                   <Globe2 className="h-4 w-4 text-primary-foreground" />
@@ -1113,7 +1113,7 @@ function LandingPage() {
 
           <div className="mt-12 h-px w-full bg-gradient-to-r from-transparent via-border to-transparent" />
 
-          <div className="mt-6 flex flex-col items-center justify-between gap-3 text-xs text-muted-foreground md:flex-row">
+          <div className="mt-6 flex flex-col items-center justify-between gap-3 text-center text-xs text-muted-foreground md:flex-row md:text-left">
             <div>© {new Date().getFullYear()} ImportPro · Todos os direitos reservados</div>
             <div className="flex items-center gap-2">
               <Lock className="h-3 w-3" />
