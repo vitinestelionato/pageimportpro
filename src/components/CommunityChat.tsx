@@ -117,7 +117,7 @@ export function CommunityChat() {
         <div className="absolute -left-[3px] top-44 h-10 w-[3px] rounded-l bg-neutral-800" />
         <div className="absolute -right-[3px] top-32 h-20 w-[3px] rounded-r bg-neutral-800" />
 
-        <div className="relative overflow-hidden rounded-[2.4rem] bg-[#0b141a]" style={{ aspectRatio: "9 / 19.5" }}>
+        <div className="relative flex flex-col overflow-hidden rounded-[2.4rem] bg-[#0b141a]" style={{ aspectRatio: "9 / 19.5" }}>
           {/* Dynamic Island */}
           <div className="absolute left-1/2 top-2 z-30 h-7 w-24 -translate-x-1/2 rounded-full bg-black" />
 
@@ -147,16 +147,15 @@ export function CommunityChat() {
 
           {/* Messages */}
           <div
-            className="relative flex flex-col justify-end gap-2 overflow-y-auto px-2.5 py-3 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+            className="relative flex min-h-0 flex-1 flex-col justify-end gap-2 overflow-hidden px-2.5 py-3"
             style={{
-              height: "calc(100% - 138px)",
               backgroundColor: "#0b141a",
               backgroundImage: `url("${DOODLE_BG}")`,
               backgroundSize: "200px 200px",
             }}
           >
             {messages.map((m) => (
-              <div key={m.id} className={`flex w-full items-end gap-1.5 animate-rise ${m.self ? "justify-end" : "justify-start"}`}>
+              <div key={m.id} className={`flex w-full shrink-0 items-end gap-1.5 animate-rise ${m.self ? "justify-end" : "justify-start"}`}>
                 {!m.self && (
                   <div className={`grid h-7 w-7 shrink-0 place-items-center rounded-full ${m.avatarBg} text-[11px] font-bold text-white shadow`}>
                     {m.author[0]}
@@ -190,7 +189,7 @@ export function CommunityChat() {
             ))}
 
             {typing && (
-              <div className="flex w-full items-end gap-1.5 animate-rise">
+              <div className="flex w-full shrink-0 items-end gap-1.5 animate-rise">
                 <div className={`grid h-7 w-7 shrink-0 place-items-center rounded-full ${typing.avatarBg} text-[11px] font-bold text-white shadow`}>
                   {typing.author[0]}
                 </div>
@@ -206,7 +205,7 @@ export function CommunityChat() {
           </div>
 
           {/* Composer */}
-          <div className="absolute inset-x-0 bottom-0 z-10 bg-[#0b141a] px-3 pb-6 pt-2">
+          <div className="relative z-10 shrink-0 bg-[#0b141a] px-3 pb-6 pt-2">
             <div className="flex items-center gap-2">
               <div className="h-11 flex-1 rounded-full bg-[#1f2c33]" />
               <button className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#00a884] shadow-lg transition-transform hover:scale-105">
