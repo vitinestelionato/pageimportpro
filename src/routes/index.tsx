@@ -17,6 +17,10 @@ import {
   MessagesSquare,
   Lightbulb,
   Lock,
+  Search,
+  Flame,
+  Filter,
+  Play,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CommunityChat } from "@/components/CommunityChat";
@@ -284,6 +288,197 @@ function LandingPage() {
               <div className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">{s.l}</div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Stop guessing – Dashboards */}
+      <section className="relative py-24">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="flex items-center justify-center gap-3 text-4xl font-bold tracking-tight sm:text-5xl">
+              <span className="grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-brand to-brand-glow shadow-lg shadow-brand/30">
+                <Radar className="h-5 w-5 text-primary-foreground" />
+              </span>
+              Pare de importar no escuro.
+            </h2>
+            <p className="mt-4 text-muted-foreground">
+              O ImportPro mostra fornecedores verificados, produtos com demanda ativa e oportunidades reais para escalar sua loja com segurança.
+            </p>
+          </div>
+
+          <div className="mt-14 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
+            {/* Left: Supplier Finder */}
+            <div className="rounded-2xl border border-border bg-card/40 p-5 backdrop-blur">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="grid h-10 w-10 place-items-center rounded-xl bg-brand/15 text-brand-glow ring-1 ring-brand/30">
+                    <Search className="h-4 w-4" />
+                  </span>
+                  <div>
+                    <div className="font-display text-base font-semibold">Buscador de Fornecedores</div>
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <span className="h-1.5 w-1.5 rounded-full bg-brand-glow" />
+                      Mapa de Oportunidades
+                    </div>
+                  </div>
+                </div>
+                <div className="hidden items-center gap-2 rounded-full border border-border bg-background/60 px-3 py-1.5 text-xs text-muted-foreground sm:flex">
+                  <span className="font-semibold text-foreground">3.240</span>
+                  fornecedores
+                  <span className="text-brand-glow">+128 esta semana</span>
+                </div>
+              </div>
+
+              <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {[
+                  { v: "3.240", l: "fornecedores verificados", icon: null },
+                  { v: "820", l: "categorias mapeadas", icon: null },
+                  { v: "+42%", l: "novos esta semana", icon: TrendingUp, up: true },
+                  { v: "12%", l: "baixa concorrência", icon: TrendingUp, up: false },
+                ].map((s) => (
+                  <div key={s.l} className="rounded-xl border border-border bg-background/40 p-3">
+                    <div className="flex items-center gap-1.5 font-display text-xl font-bold text-foreground">
+                      {s.icon && (
+                        <s.icon
+                          className={`h-4 w-4 ${s.up === false ? "rotate-180 text-destructive/80" : "text-brand-glow"}`}
+                        />
+                      )}
+                      {s.v}
+                    </div>
+                    <div className="mt-1 text-[11px] text-muted-foreground">{s.l}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-5 flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-destructive/40 bg-destructive/10 px-3 py-1 text-xs font-medium text-destructive-foreground">
+                  <Flame className="h-3 w-3 text-destructive" /> Explodindo
+                  <span className="rounded-full bg-destructive/30 px-1.5 py-0.5 text-[10px] text-destructive-foreground">342</span>
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-xs text-muted-foreground">
+                  <TrendingUp className="h-3 w-3" /> Subindo rápido
+                  <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px]">521</span>
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-xs text-muted-foreground">
+                  <Zap className="h-3 w-3" /> Alta tração
+                  <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px]">188</span>
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-xs text-muted-foreground">
+                  <Sparkles className="h-3 w-3" /> Potencial forte
+                  <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px]">274</span>
+                </span>
+              </div>
+
+              <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                {[
+                  { flag: "🇨🇳", name: "Mini Projetor 4K", cat: "Eletrônicos", sub: "12.4K", views: "2.8M", vids: "18", face: "96%", days: "12d listado", vol: "940K/mês" },
+                  { flag: "🇨🇳", name: "Fone TWS Pro", cat: "Áudio", sub: "8.1K", views: "1.9M", vids: "11", face: "92%", days: "9d listado", vol: "1.2M/mês" },
+                  { flag: "🇰🇷", name: "Smartwatch S9", cat: "Wearables", sub: "23.7K", views: "4.1M", vids: "27", face: "88%", days: "14d listado", vol: "1.6M/mês" },
+                ].map((p) => (
+                  <div key={p.name} className="rounded-xl border border-border bg-background/50 p-3">
+                    <div className="flex items-center justify-between">
+                      <div className="min-w-0">
+                        <div className="truncate text-sm font-semibold text-foreground">{p.name}</div>
+                        <div className="text-[11px] text-muted-foreground">{p.flag} {p.cat}</div>
+                      </div>
+                      <span className="rounded-full bg-destructive/20 px-2 py-0.5 text-[10px] font-medium text-destructive">Explodindo</span>
+                    </div>
+                    <div className="mt-3 grid grid-cols-3 gap-1.5">
+                      {[0, 1, 2].map((i) => (
+                        <div key={i} className="relative aspect-video overflow-hidden rounded-md bg-gradient-to-br from-brand/30 to-brand-glow/10 ring-1 ring-brand/20">
+                          <div className="absolute bottom-1 left-1 rounded bg-background/80 px-1 text-[9px] text-foreground">
+                            {["1.2M", "840K", "2.1M"][i]}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-3 grid grid-cols-4 gap-1 text-center">
+                      {[
+                        { v: p.sub, l: "vendas" },
+                        { v: p.views, l: "views" },
+                        { v: p.vids, l: "reviews" },
+                        { v: p.face, l: "margem" },
+                      ].map((k) => (
+                        <div key={k.l}>
+                          <div className="text-[11px] font-semibold text-foreground">{k.v}</div>
+                          <div className="text-[9px] uppercase tracking-wide text-muted-foreground">{k.l}</div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-3 flex items-center justify-between text-[10px] text-muted-foreground">
+                      <span>{p.days}</span>
+                      <span>{p.vol}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right: Trending Products */}
+            <div className="rounded-2xl border border-border bg-card/40 p-5 backdrop-blur">
+              <div className="flex items-center gap-3">
+                <span className="grid h-10 w-10 place-items-center rounded-xl bg-brand/15 text-brand-glow ring-1 ring-brand/30">
+                  <Flame className="h-4 w-4" />
+                </span>
+                <div>
+                  <div className="font-display text-base font-semibold">Produtos em Alta</div>
+                  <div className="text-xs text-muted-foreground">Descubra o que está vendendo agora.</div>
+                </div>
+              </div>
+
+              <div className="mt-5 flex flex-wrap gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-brand/20 px-3 py-1.5 text-xs font-medium text-brand-glow ring-1 ring-brand/40">
+                  <Radar className="h-3 w-3" /> Últimos 7 dias
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground">
+                  <TrendingUp className="h-3 w-3" /> +100K vendas
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground">
+                  <Globe2 className="h-3 w-3" /> Multi-nicho
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground">
+                  <Filter className="h-3 w-3" /> Todos
+                </span>
+              </div>
+
+              <div className="mt-4 flex items-center gap-2 rounded-xl border border-border bg-background/60 p-1.5">
+                <Search className="ml-2 h-4 w-4 text-muted-foreground" />
+                <input
+                  readOnly
+                  value="eletrônicos"
+                  className="flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
+                />
+                <button className="rounded-lg bg-gradient-to-r from-brand to-brand-glow px-4 py-1.5 text-xs font-semibold text-primary-foreground">
+                  Buscar
+                </button>
+              </div>
+
+              <div className="mt-4 space-y-3">
+                {[
+                  { name: "Luminária LED RGB", cat: "Casa", vol: "1.4M", margin: "+210%", score: 96 },
+                  { name: "Câmera Mini Wi-Fi", cat: "Segurança", vol: "1.1M", margin: "+176%", score: 93 },
+                  { name: "Umidificador Aroma", cat: "Bem-estar", vol: "870K", margin: "+150%", score: 90 },
+                ].map((p) => (
+                  <div key={p.name} className="flex items-center gap-3 rounded-xl border border-border bg-background/40 p-2.5">
+                    <div className="relative h-14 w-20 shrink-0 overflow-hidden rounded-lg bg-gradient-to-br from-brand/30 to-brand-glow/10 ring-1 ring-brand/20">
+                      <div className="absolute left-1 top-1 flex items-center gap-1 rounded bg-background/80 px-1 py-0.5 text-[9px] font-medium text-brand-glow">
+                        <Flame className="h-2.5 w-2.5" /> {p.score}
+                      </div>
+                      <Play className="absolute left-1/2 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 text-foreground/80" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate text-sm font-semibold text-foreground">{p.name}</div>
+                      <div className="mt-1 flex items-center gap-2 text-[11px]">
+                        <span className="rounded bg-muted px-1.5 py-0.5 text-muted-foreground">{p.cat}</span>
+                        <span className="text-muted-foreground">👁 {p.vol}</span>
+                        <span className="text-brand-glow">📈 {p.margin}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
