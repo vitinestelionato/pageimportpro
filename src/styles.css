@@ -173,6 +173,21 @@
 @utility animate-step-glow { animation: step-glow 8s ease-in-out infinite; }
 @utility animate-line-fill { animation: line-fill 8s ease-in-out infinite; transform-origin: left center; }
 
+@keyframes line-progress {
+  0%   { transform: scaleX(0); }
+  95%, 100% { transform: scaleX(1); }
+}
+@keyframes step-window {
+  0%, 24.9%  { opacity: 1; }
+  25%, 100%  { opacity: 0; }
+}
+@keyframes spin-fast {
+  to { transform: rotate(360deg); }
+}
+@utility animate-line-progress { animation: line-progress 8s linear infinite; }
+@utility animate-step-window   { animation: step-window 8s linear infinite; }
+@utility animate-spin-fast     { animation: spin-fast 1.4s linear infinite; }
+
 @media (hover: hover) and (pointer: fine) {
   .cursor-none-root,
   .cursor-none-root * {
