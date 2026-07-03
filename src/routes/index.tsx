@@ -665,9 +665,9 @@ function LandingPage() {
 
               <div className="mt-4 grid gap-3 sm:grid-cols-3">
                 {[
-                  { flag: "🇨🇳", name: "Mini Projetor 4K", cat: "Eletrônicos", sub: "12.4K", views: "2.8M", vids: "18", face: "96%", days: "12d listado", vol: "940K/mês" },
-                  { flag: "🇨🇳", name: "Fone TWS Pro", cat: "Áudio", sub: "8.1K", views: "1.9M", vids: "11", face: "92%", days: "9d listado", vol: "1.2M/mês" },
-                  { flag: "🇰🇷", name: "Smartwatch S9", cat: "Wearables", sub: "23.7K", views: "4.1M", vids: "27", face: "88%", days: "14d listado", vol: "1.6M/mês" },
+                  { flag: "🇨🇳", name: "iPhone 14", cat: "Eletrônicos", sub: "12.4K", views: "2.8M", vids: "18", face: "96%", days: "12d listado", vol: "940K/mês", img: productIphone },
+                  { flag: "🇨🇳", name: "Fone TWS Pro", cat: "Áudio", sub: "8.1K", views: "1.9M", vids: "11", face: "92%", days: "9d listado", vol: "1.2M/mês", img: productTws },
+                  { flag: "🇰🇷", name: "Smartwatch S9", cat: "Wearables", sub: "23.7K", views: "4.1M", vids: "27", face: "88%", days: "14d listado", vol: "1.6M/mês", img: productSmartwatch },
                 ].map((p) => (
                   <div key={p.name} className="rounded-xl border border-border bg-background/50 p-3">
                     <div className="flex items-center justify-between">
@@ -679,7 +679,15 @@ function LandingPage() {
                     </div>
                     <div className="mt-3 grid grid-cols-3 gap-1.5">
                       {[0, 1, 2].map((i) => (
-                        <div key={i} className="relative aspect-video overflow-hidden rounded-md bg-gradient-to-br from-brand/30 to-brand-glow/10 ring-1 ring-brand/20">
+                        <div key={i} className="relative aspect-video overflow-hidden rounded-md bg-white ring-1 ring-brand/20">
+                          <img
+                            src={p.img}
+                            alt={p.name}
+                            loading="lazy"
+                            width={1024}
+                            height={1024}
+                            className="h-full w-full object-contain"
+                          />
                           <div className="absolute bottom-1 left-1 rounded bg-background/80 px-1 text-[9px] text-foreground">
                             {["1.2M", "840K", "2.1M"][i]}
                           </div>
