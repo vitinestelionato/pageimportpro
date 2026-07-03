@@ -515,7 +515,7 @@ function LandingPage() {
               className="animate-rise mt-8 flex w-full flex-col items-stretch gap-3 sm:mt-10 sm:w-auto sm:flex-row sm:items-center"
               style={{ animationDelay: "240ms" }}
             >
-              <a href="#precos" className="w-full sm:w-auto">
+              <a href="#precos" className="block w-full sm:inline-block sm:w-auto">
                 <Button
                   size="lg"
                   className="group h-12 w-full rounded-full bg-gradient-to-r from-brand to-brand-glow px-7 text-base font-semibold text-primary-foreground shadow-xl shadow-brand/40 transition-all hover:-translate-y-0.5 hover:shadow-brand/60 sm:w-auto"
@@ -524,7 +524,7 @@ function LandingPage() {
                   <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </a>
-              <a href="#recursos" className="w-full sm:w-auto">
+              <a href="#recursos" className="block w-full sm:inline-block sm:w-auto">
                 <Button
                   size="lg"
                   variant="outline"
