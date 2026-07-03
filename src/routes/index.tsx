@@ -484,7 +484,7 @@ function LandingPage() {
 
       {/* Features */}
       <section id="recursos" className="relative py-28">
-        <div className="mx-auto max-w-6xl px-6">
+        <div className="mx-auto max-w-7xl px-6">
           <div className="mx-auto max-w-2xl text-center">
             <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs text-brand-glow">
               <Zap className="h-3 w-3" /> Tudo em um só lugar
@@ -497,24 +497,70 @@ function LandingPage() {
             </p>
           </div>
 
-          <div className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Process steps */}
+          <div className="mt-16 hidden md:block">
+            <div className="relative mx-auto grid max-w-5xl grid-cols-4 gap-4">
+              {/* Connector lines */}
+              <div className="pointer-events-none absolute inset-x-0 top-10 -z-10 flex items-center justify-between px-[12.5%]">
+                {[0, 1, 2].map((i) => (
+                  <div key={i} className="relative mx-6 h-px flex-1 bg-border">
+                    <div
+                      className="absolute inset-0 animate-line-fill bg-gradient-to-r from-brand to-brand-glow shadow-[0_0_10px_oklch(0.65_0.2_255)]"
+                      style={{ animationDelay: `${i * 1.2}s` }}
+                    />
+                  </div>
+                ))}
+              </div>
+
+              {[
+                { n: "01", icon: Radar, title: "Descubra", sub: "Radar de produtos" },
+                { n: "02", icon: Calculator, title: "Valide", sub: "Impostos + margem" },
+                { n: "03", icon: Package, title: "Importe", sub: "Fornecedores verificados" },
+                { n: "04", icon: TrendingUp, title: "Lucre", sub: "Precifique e escale" },
+              ].map((s, i) => (
+                <div key={s.n} className="flex flex-col items-center text-center">
+                  <div className="relative">
+                    <div
+                      className="grid h-20 w-20 animate-step-glow place-items-center rounded-full border-2 transition-colors"
+                      style={{ animationDelay: `${i * 1.2}s` }}
+                    >
+                      <s.icon className="h-7 w-7" />
+                    </div>
+                    <div className="absolute -top-1 right-0 rounded-md bg-background/90 px-1.5 py-0.5 text-[10px] font-mono font-medium text-muted-foreground ring-1 ring-border">
+                      {s.n}
+                    </div>
+                  </div>
+                  <div className="mt-3 font-display text-sm font-semibold text-foreground">{s.title}</div>
+                  <div className="text-[11px] text-muted-foreground">{s.sub}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Feature cards */}
+          <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {features.map((f, i) => (
               <div
                 key={f.title}
-                className="group relative overflow-hidden rounded-2xl border border-border bg-card/50 p-6 transition-all duration-500 hover:-translate-y-1 hover:border-brand/60 hover:shadow-2xl hover:shadow-brand/10"
+                className="group relative overflow-hidden rounded-2xl border border-border bg-card/40 p-6 transition-all duration-500 hover:-translate-y-1 hover:border-brand/60 hover:shadow-2xl hover:shadow-brand/10"
                 style={{ animationDelay: `${i * 60}ms` }}
               >
                 <div className="absolute inset-0 -z-10 bg-gradient-to-br from-brand/0 to-brand/0 opacity-0 transition-opacity duration-500 group-hover:from-brand/10 group-hover:to-transparent group-hover:opacity-100" />
-                <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand/20 to-brand-glow/10 text-brand-glow ring-1 ring-brand/30 transition-transform group-hover:scale-110">
+                <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-brand/90 text-primary-foreground shadow-lg shadow-brand/30 transition-transform group-hover:scale-110">
                   <f.icon className="h-5 w-5" />
                 </div>
-                <h3 className="font-display text-lg font-semibold">{f.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{f.desc}</p>
+                <h3 className="font-display text-base font-semibold">{f.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.desc}</p>
               </div>
             ))}
           </div>
+
+          <p className="mx-auto mt-12 max-w-3xl text-center text-xs italic text-muted-foreground">
+            Importante: para operar com segurança, o ImportPro conecta você apenas a fornecedores auditados e respeita as regras alfandegárias brasileiras, mantendo cada etapa da sua importação dentro da lei.
+          </p>
         </div>
       </section>
+
 
       {/* How it works */}
       <section id="como-funciona" className="relative py-28">

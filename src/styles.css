@@ -150,6 +150,14 @@
   0%, 100% { transform: perspective(1800px) rotateY(-14deg) rotateX(6deg) translateY(0); }
   50%      { transform: perspective(1800px) rotateY(-14deg) rotateX(6deg) translateY(-10px); }
 }
+@keyframes step-glow {
+  0%, 100% { background-color: oklch(0.22 0.03 260); box-shadow: none; color: oklch(0.7 0.02 255); border-color: oklch(1 0 0 / 0.08); }
+  30%, 70% { background-color: oklch(0.55 0.22 255); box-shadow: 0 0 40px oklch(0.65 0.22 255 / 0.55); color: white; border-color: oklch(0.75 0.18 235); }
+}
+@keyframes line-fill {
+  0%, 100% { transform: scaleX(0); }
+  30%, 70% { transform: scaleX(1); }
+}
 
 @utility animate-float { animation: float-slow 6s ease-in-out infinite; }
 @utility animate-pulse-glow { animation: pulse-glow 4s ease-in-out infinite; }
@@ -157,3 +165,5 @@
 @utility animate-rise { animation: rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
 @utility animate-dash { animation: dash-drift 7s linear infinite; }
 @utility animate-tilt-float { animation: tilt-float 8s ease-in-out infinite; }
+@utility animate-step-glow { animation: step-glow 8s ease-in-out infinite; }
+@utility animate-line-fill { animation: line-fill 8s ease-in-out infinite; transform-origin: left center; }
