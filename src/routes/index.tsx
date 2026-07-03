@@ -978,6 +978,12 @@ function LandingPage() {
 
       <TestimonialsMarquee />
 
+      {/* Section divider */}
+      <div aria-hidden className="relative mx-auto h-px w-full max-w-6xl px-6">
+        <div className="h-px w-full bg-[linear-gradient(90deg,transparent,oklch(0.65_0.2_255/0.6)_50%,transparent)]" />
+        <div className="absolute left-1/2 top-1/2 h-24 w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/20 blur-3xl" />
+      </div>
+
 
       {/* Pricing */}
       <section id="precos" className="relative py-28">
