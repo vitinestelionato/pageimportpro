@@ -806,8 +806,11 @@ function LandingPage() {
         </div>
       </section>
 
+      {/* FAQ */}
+      <FaqSection />
 
       {/* Footer */}
+
       <footer className="border-t border-border py-10">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 text-sm text-muted-foreground md:flex-row">
           <div className="flex items-center gap-2">
