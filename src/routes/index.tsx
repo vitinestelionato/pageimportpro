@@ -643,7 +643,7 @@ function LandingPage() {
       <section className="relative py-16 sm:py-20 md:py-24">
         <div className="mx-auto max-w-7xl px-6">
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
+            <h2 className="text-gradient text-4xl font-bold tracking-tight sm:text-5xl">
               Pare de tentar a sorte.
             </h2>
             <p className="mt-4 text-muted-foreground">
