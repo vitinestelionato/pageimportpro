@@ -78,11 +78,11 @@ export function CommunityChat() {
         if (cancelled) return;
         setTyping(null);
         const now = new Date();
-        setMessages((prev) => {
-          const msg: Msg = { ...next, id: Date.now() + Math.random(), time: `${pad(now.getHours())}:${pad(now.getMinutes())}` };
-          const arr = [...prev, msg];
-          return arr.length > 3 ? arr.slice(arr.length - 3) : arr;
-        });
+        setMessages((prev) => [
+          ...prev,
+          { ...next, id: Date.now() + Math.random(), time: `${pad(now.getHours())}:${pad(now.getMinutes())}` },
+        ]);
+
         const t = window.setTimeout(push, 2800 + Math.random() * 1200);
         timeouts.push(t);
       };
