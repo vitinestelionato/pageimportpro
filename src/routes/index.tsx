@@ -922,35 +922,8 @@ function LandingPage() {
 
 
 
-      {/* Testimonials */}
-      <section id="depoimentos" className="relative py-28">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
-              Quem usa, <span className="text-gradient">recomenda.</span>
-            </h2>
-          </div>
-          <div className="mt-14 grid gap-6 md:grid-cols-3">
-            {testimonials.map((t) => (
-              <div key={t.name} className="rounded-2xl border border-border bg-card/50 p-6 transition-all hover:-translate-y-1 hover:border-brand/50">
-                <div className="flex gap-0.5 text-brand-glow">
-                  {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-current" />)}
-                </div>
-                <p className="mt-4 text-sm leading-relaxed text-foreground/90">"{t.text}"</p>
-                <div className="mt-6 flex items-center gap-3">
-                  <div className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-brand to-brand-glow font-semibold text-primary-foreground">
-                    {t.name[0]}
-                  </div>
-                  <div>
-                    <div className="text-sm font-semibold">{t.name}</div>
-                    <div className="text-xs text-muted-foreground">{t.role}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <TestimonialsMarquee />
+
 
       {/* Pricing */}
       <section id="precos" className="relative py-28">
