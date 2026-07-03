@@ -1033,7 +1033,7 @@ function LandingPage() {
       <footer className="relative border-t border-border/60 bg-[oklch(0.12_0.02_260)]/60 pt-16 pb-8">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent" />
         <div className="mx-auto max-w-6xl px-6">
-          <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+          <div className="grid grid-cols-2 gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:gap-12">
             {/* Brand column */}
             <div>
               <div className="flex items-center gap-2">
