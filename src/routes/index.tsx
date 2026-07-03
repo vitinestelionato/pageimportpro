@@ -383,7 +383,7 @@ function FaqSection() {
   const active = faqCategories.find((c) => c.key === cat) ?? faqCategories[0];
 
   return (
-    <section id="faq" className="relative py-24">
+    <section id="faq" className="relative py-16 sm:py-20 md:py-24">
       <div className="mx-auto max-w-4xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
@@ -644,7 +644,7 @@ function LandingPage() {
 
 
       {/* Stop guessing – Dashboards */}
-      <section className="relative py-24">
+      <section className="relative py-16 sm:py-20 md:py-24">
         <div className="mx-auto max-w-7xl px-6">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
