@@ -67,7 +67,7 @@ export function CommunityChat() {
       setMessages((prev) => {
         const msg: Msg = { ...next, id: Date.now() + Math.random(), time: `${pad(now.getHours())}:${pad(now.getMinutes())}` };
         const arr = [...prev, msg];
-        return arr.length > 14 ? arr.slice(arr.length - 14) : arr;
+        return arr.length > 5 ? arr.slice(arr.length - 5) : arr;
       });
       const t = window.setTimeout(push, 2400 + Math.random() * 1400);
       timeouts.push(t);
@@ -140,7 +140,7 @@ export function CommunityChat() {
           {/* Messages */}
           <div
             ref={scrollRef}
-            className="relative flex-1 overflow-y-auto px-2.5 py-3"
+            className="relative flex-1 overflow-hidden px-2.5 py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             style={{
               height: "calc(100% - 148px)",
               backgroundColor: "#0b141a",
