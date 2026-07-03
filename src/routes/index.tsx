@@ -26,6 +26,12 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CommunityChat } from "@/components/CommunityChat";
+import productIphone from "@/assets/products/iphone14.jpg";
+import productTws from "@/assets/products/tws-pro.jpg";
+import productSmartwatch from "@/assets/products/smartwatch.jpg";
+import productLed from "@/assets/products/led-lamp.jpg";
+import productHumidifier from "@/assets/products/humidifier.jpg";
+import productCamera from "@/assets/products/mini-camera.jpg";
 import { useMemo, useState } from "react";
 
 function DashParticles({ count = 60 }: { count?: number }) {
