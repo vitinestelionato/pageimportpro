@@ -160,9 +160,6 @@ function DashParticles({ count = 90 }: { count?: number }) {
     </div>
   );
 }
-    </div>
-  );
-}
 
 type BillingKey = "mensal" | "trimestral" | "anual";
 
