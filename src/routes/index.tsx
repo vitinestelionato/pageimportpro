@@ -990,10 +990,14 @@ function LandingPage() {
         <div className="absolute left-1/2 top-1/2 -z-10 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/20 blur-3xl" />
         <div className="mx-auto max-w-6xl px-6">
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
-              Escolha seu <span className="text-gradient">nível de operação</span>
+            <div className="inline-flex items-center gap-2 rounded-full border border-brand/40 bg-brand/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-brand-glow">
+              <span className="h-1.5 w-1.5 rounded-full bg-brand-glow shadow-[0_0_10px_oklch(0.75_0.18_235)]" />
+              Oferta de lançamento
+            </div>
+            <h2 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
+              Tudo por <span className="text-gradient">um único pagamento.</span>
             </h2>
-            <p className="mt-4 text-muted-foreground">Um único plano, com tudo incluído. Escolha a frequência que combina com você.</p>
+            <p className="mt-4 text-muted-foreground">Sem mensalidade. Sem renovação. Sem letra miúda. Você paga uma vez e o acesso é seu para sempre.</p>
           </div>
 
           <PricingBlock />
