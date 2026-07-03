@@ -140,8 +140,20 @@
   from { opacity: 0; transform: translateY(24px); }
   to { opacity: 1; transform: translateY(0); }
 }
+@keyframes dash-drift {
+  0%   { transform: translate3d(0,0,0) rotate(var(--r,20deg)); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translate3d(var(--dx,40px), var(--dy,-140px), 0) rotate(var(--r,20deg)); opacity: 0; }
+}
+@keyframes tilt-float {
+  0%, 100% { transform: perspective(1800px) rotateY(-14deg) rotateX(6deg) translateY(0); }
+  50%      { transform: perspective(1800px) rotateY(-14deg) rotateX(6deg) translateY(-10px); }
+}
 
 @utility animate-float { animation: float-slow 6s ease-in-out infinite; }
 @utility animate-pulse-glow { animation: pulse-glow 4s ease-in-out infinite; }
 @utility animate-marquee { animation: marquee 30s linear infinite; }
 @utility animate-rise { animation: rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+@utility animate-dash { animation: dash-drift 7s linear infinite; }
+@utility animate-tilt-float { animation: tilt-float 8s ease-in-out infinite; }
