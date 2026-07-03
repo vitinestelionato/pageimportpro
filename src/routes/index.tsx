@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CommunityChat } from "@/components/CommunityChat";
-import { CustomCursor } from "@/components/CustomCursor";
+
 import productIphone from "@/assets/products/iphone14.jpg";
 import productTws from "@/assets/products/tws-pro.jpg";
 import productSmartwatch from "@/assets/products/smartwatch.jpg";
