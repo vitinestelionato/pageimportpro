@@ -189,9 +189,6 @@ function PricingBlock() {
             {/* Title row */}
             <div className="flex items-center justify-between">
               <div className="font-display text-xl font-semibold text-foreground sm:text-2xl">Acesso permanente</div>
-              <span className="rounded-md bg-brand/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-glow">
-                Pro
-              </span>
             </div>
 
             {/* Price */}
@@ -210,7 +207,6 @@ function PricingBlock() {
               <Zap className="mt-0.5 h-4 w-4 shrink-0 text-brand-glow" />
               <div className="text-[13px] leading-relaxed text-foreground/90">
                 Acesso ilimitado a todas as ferramentas
-                <div className="mt-0.5 text-[12px] text-brand-glow">sem mensalidade · sem renovação</div>
               </div>
             </div>
 
