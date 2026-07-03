@@ -69,7 +69,7 @@ export function CookieConsent() {
               e personalizar conteúdo. Você controla o que aceita, conforme a{" "}
               <span className="text-foreground/90">LGPD</span>. Veja nossa{" "}
               <a
-                href="#"
+                href="/privacidade"
                 className="font-medium text-brand-glow underline-offset-2 hover:underline"
               >
                 Política de Privacidade
