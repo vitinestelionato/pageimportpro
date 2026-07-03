@@ -1041,7 +1041,7 @@ function LandingPage() {
 
               <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-brand/40 bg-brand/10 px-3 py-1 text-[11px] font-medium text-brand-glow">
                 <span className="h-1.5 w-1.5 rounded-full bg-brand-glow shadow-[0_0_10px_oklch(0.75_0.18_235)]" />
-                Plataforma nº 1 de importação do Brasil · 2026
+                1 plataforma para importadores no Brasil
               </div>
 
               <p className="mt-5 max-w-sm text-sm leading-relaxed text-muted-foreground">
