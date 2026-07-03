@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CommunityChat } from "@/components/CommunityChat";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 function DashParticles({ count = 60 }: { count?: number }) {
   const dashes = useMemo(
