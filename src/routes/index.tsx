@@ -863,7 +863,7 @@ function LandingPage() {
       </section>
 
       {/* Features */}
-      <section id="recursos" className="relative py-28">
+      <section id="recursos" className="relative py-20 sm:py-24 md:py-28">
         <div className="mx-auto max-w-7xl px-6">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
@@ -953,7 +953,7 @@ function LandingPage() {
 
 
       {/* Community */}
-      <section id="comunidade" className="relative py-28">
+      <section id="comunidade" className="relative py-20 sm:py-24 md:py-28">
         <div className="absolute left-1/2 top-1/2 -z-10 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/10 blur-3xl" />
         <div className="mx-auto grid max-w-6xl items-center gap-16 px-6 lg:grid-cols-2">
           <div>
@@ -1007,7 +1007,7 @@ function LandingPage() {
 
 
       {/* Pricing */}
-      <section id="precos" className="relative py-28">
+      <section id="precos" className="relative py-20 sm:py-24 md:py-28">
         <div className="absolute left-1/2 top-1/2 -z-10 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/20 blur-3xl" />
         <div className="mx-auto max-w-6xl px-6">
           <div className="mx-auto max-w-2xl text-center">
