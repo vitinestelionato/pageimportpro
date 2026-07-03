@@ -102,7 +102,7 @@ function MarqueeRow({ items, direction = "left", duration = 90 }: { items: Revie
 
 export function TestimonialsMarquee() {
   return (
-    <section id="depoimentos" className="relative overflow-hidden bg-background py-32">
+    <section id="depoimentos" className="relative overflow-hidden bg-background py-20 sm:py-28 md:py-32">
       {/* Ambient brand glow */}
       <div
         className="pointer-events-none absolute left-1/2 -top-40 -z-0 h-[700px] w-[1200px] -translate-x-1/2 rounded-full blur-[120px]"
