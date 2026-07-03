@@ -42,16 +42,16 @@ const ROW_B = REVIEWS.slice(13);
 function ReviewCard({ r }: { r: Review }) {
   return (
     <article
-      className="group/card relative flex h-[220px] w-[380px] shrink-0 flex-col justify-between rounded-[22px] border border-[#232323] bg-[#101010] p-7 shadow-[0_1px_0_0_oklch(1_0_0/0.03)_inset] transition-all duration-500 ease-out will-change-transform hover:-translate-y-2 hover:border-[#3a1414] hover:shadow-[0_20px_60px_-20px_oklch(0.6_0.24_27/0.35)]"
+      className="group/card relative flex h-[220px] w-[380px] shrink-0 flex-col justify-between rounded-[22px] border border-white/[0.08] bg-[oklch(0.18_0.025_260)] p-7 shadow-[0_1px_0_0_oklch(1_0_0/0.04)_inset] transition-all duration-500 ease-out will-change-transform hover:-translate-y-2 hover:border-[oklch(0.65_0.19_255/0.45)] hover:shadow-[0_20px_60px_-20px_oklch(0.65_0.2_255/0.45)]"
     >
       <div
         className="pointer-events-none absolute inset-0 rounded-[22px] opacity-0 transition-opacity duration-500 group-hover/card:opacity-100"
-        style={{ background: "radial-gradient(120% 80% at 50% 0%, oklch(0.6 0.24 27 / 0.10), transparent 60%)" }}
+        style={{ background: "radial-gradient(120% 80% at 50% 0%, oklch(0.65 0.2 255 / 0.12), transparent 60%)" }}
       />
       <span className="absolute right-5 top-5 text-[11px] font-medium text-white/40">{r.date}</span>
 
       <div className="relative">
-        <div className="flex gap-0.5 text-[oklch(0.72_0.19_25)]">
+        <div className="flex gap-0.5 text-[oklch(0.78_0.16_235)]">
           {Array.from({ length: 5 }).map((_, i) => (
             <Star key={i} className="h-3.5 w-3.5 fill-current" />
           ))}
@@ -66,7 +66,7 @@ function ReviewCard({ r }: { r: Review }) {
         <div className="flex items-center gap-3">
           <div
             className="grid h-9 w-9 shrink-0 place-items-center rounded-full text-sm font-semibold text-white"
-            style={{ background: "linear-gradient(135deg, oklch(0.55 0.24 27), oklch(0.42 0.2 25))" }}
+            style={{ background: "linear-gradient(135deg, oklch(0.65 0.2 255), oklch(0.75 0.18 235))" }}
           >
             {r.name[0]}
           </div>
@@ -74,7 +74,7 @@ function ReviewCard({ r }: { r: Review }) {
             <div className="truncate text-[13px] font-semibold text-white">{r.name}</div>
             <div className="truncate text-[11.5px] text-white/50">{r.role} • {r.city}</div>
           </div>
-          <span className="inline-flex items-center gap-1 rounded-full border border-[#2a1414] bg-[oklch(0.3_0.12_25/0.25)] px-2 py-0.5 text-[10px] font-medium text-[oklch(0.78_0.15_25)]">
+          <span className="inline-flex items-center gap-1 rounded-full border border-[oklch(0.65_0.19_255/0.35)] bg-[oklch(0.4_0.15_255/0.15)] px-2 py-0.5 text-[10px] font-medium text-[oklch(0.82_0.14_235)]">
             <BadgeCheck className="h-3 w-3" />
             Verificada
           </span>
@@ -102,11 +102,11 @@ function MarqueeRow({ items, direction = "left", duration = 90 }: { items: Revie
 
 export function TestimonialsMarquee() {
   return (
-    <section id="depoimentos" className="relative overflow-hidden bg-[#050505] py-32">
-      {/* Ambient red glow */}
+    <section id="depoimentos" className="relative overflow-hidden bg-background py-32">
+      {/* Ambient brand glow */}
       <div
         className="pointer-events-none absolute left-1/2 top-32 -z-0 h-[520px] w-[900px] -translate-x-1/2 rounded-full blur-3xl"
-        style={{ background: "radial-gradient(50% 50% at 50% 50%, oklch(0.55 0.24 27 / 0.18), transparent 70%)" }}
+        style={{ background: "radial-gradient(50% 50% at 50% 50%, oklch(0.55 0.24 255 / 0.28), transparent 70%)" }}
       />
       <div
         className="pointer-events-none absolute inset-0 -z-0 opacity-[0.06]"
@@ -119,18 +119,13 @@ export function TestimonialsMarquee() {
       />
 
       <div className="relative mx-auto max-w-3xl px-6 text-center">
-        <div className="inline-flex items-center gap-2 rounded-full border border-[#232323] bg-[#0d0d0d] px-3.5 py-1.5 text-[11px] font-medium text-white/70">
-          <span className="text-[oklch(0.72_0.19_25)]">★★★★★</span>
+        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-1.5 text-[11px] font-medium text-white/70 backdrop-blur">
+          <span className="text-[oklch(0.78_0.16_235)]">★★★★★</span>
           <span>+12.000 Importadores</span>
         </div>
         <h2 className="mt-6 text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
           Quem começa a importar,{" "}
-          <span
-            className="bg-clip-text text-transparent"
-            style={{ backgroundImage: "linear-gradient(135deg, oklch(0.72 0.22 25), oklch(0.55 0.24 27))" }}
-          >
-            recomenda.
-          </span>
+          <span className="text-gradient">recomenda.</span>
         </h2>
         <p className="mx-auto mt-5 max-w-xl text-[15px] leading-relaxed text-white/55">
           Centenas de importadores utilizam diariamente nossas ferramentas para encontrar fornecedores confiáveis, calcular custos e importar com muito mais segurança.
