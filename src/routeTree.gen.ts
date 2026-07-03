@@ -14,10 +14,14 @@ import { Route as SuporteRouteImport } from './routes/suporte'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as ReembolsoRouteImport } from './routes/reembolso'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as BlogRouteImport } from './routes/blog'
+import { Route as AtivarRouteImport } from './routes/ativar'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as ApiPublicWebhooksCaktoRouteImport } from './routes/api/public/webhooks/cakto'
 
 const TermosRoute = TermosRouteImport.update({
@@ -45,6 +49,11 @@ const PrivacidadeRoute = PrivacidadeRouteImport.update({
   path: '/privacidade',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContatoRoute = ContatoRouteImport.update({
   id: '/contato',
   path: '/contato',
@@ -53,6 +62,15 @@ const ContatoRoute = ContatoRouteImport.update({
 const BlogRoute = BlogRouteImport.update({
   id: '/blog',
   path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AtivarRoute = AtivarRouteImport.update({
+  id: '/ativar',
+  path: '/ativar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -65,6 +83,11 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => BlogRoute,
 } as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const ApiPublicWebhooksCaktoRoute = ApiPublicWebhooksCaktoRouteImport.update({
   id: '/api/public/webhooks/cakto',
   path: '/api/public/webhooks/cakto',
@@ -73,38 +96,48 @@ const ApiPublicWebhooksCaktoRoute = ApiPublicWebhooksCaktoRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ativar': typeof AtivarRoute
   '/blog': typeof BlogRouteWithChildren
   '/contato': typeof ContatoRoute
+  '/login': typeof LoginRoute
   '/privacidade': typeof PrivacidadeRoute
   '/reembolso': typeof ReembolsoRoute
   '/sobre': typeof SobreRoute
   '/suporte': typeof SuporteRoute
   '/termos': typeof TermosRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/api/public/webhooks/cakto': typeof ApiPublicWebhooksCaktoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ativar': typeof AtivarRoute
   '/blog': typeof BlogRouteWithChildren
   '/contato': typeof ContatoRoute
+  '/login': typeof LoginRoute
   '/privacidade': typeof PrivacidadeRoute
   '/reembolso': typeof ReembolsoRoute
   '/sobre': typeof SobreRoute
   '/suporte': typeof SuporteRoute
   '/termos': typeof TermosRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/api/public/webhooks/cakto': typeof ApiPublicWebhooksCaktoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/ativar': typeof AtivarRoute
   '/blog': typeof BlogRouteWithChildren
   '/contato': typeof ContatoRoute
+  '/login': typeof LoginRoute
   '/privacidade': typeof PrivacidadeRoute
   '/reembolso': typeof ReembolsoRoute
   '/sobre': typeof SobreRoute
   '/suporte': typeof SuporteRoute
   '/termos': typeof TermosRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/api/public/webhooks/cakto': typeof ApiPublicWebhooksCaktoRoute
 }
@@ -112,45 +145,58 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/ativar'
     | '/blog'
     | '/contato'
+    | '/login'
     | '/privacidade'
     | '/reembolso'
     | '/sobre'
     | '/suporte'
     | '/termos'
+    | '/dashboard'
     | '/blog/$slug'
     | '/api/public/webhooks/cakto'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/ativar'
     | '/blog'
     | '/contato'
+    | '/login'
     | '/privacidade'
     | '/reembolso'
     | '/sobre'
     | '/suporte'
     | '/termos'
+    | '/dashboard'
     | '/blog/$slug'
     | '/api/public/webhooks/cakto'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
+    | '/ativar'
     | '/blog'
     | '/contato'
+    | '/login'
     | '/privacidade'
     | '/reembolso'
     | '/sobre'
     | '/suporte'
     | '/termos'
+    | '/_authenticated/dashboard'
     | '/blog/$slug'
     | '/api/public/webhooks/cakto'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AtivarRoute: typeof AtivarRoute
   BlogRoute: typeof BlogRouteWithChildren
   ContatoRoute: typeof ContatoRoute
+  LoginRoute: typeof LoginRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
   ReembolsoRoute: typeof ReembolsoRoute
   SobreRoute: typeof SobreRoute
@@ -196,6 +242,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacidadeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contato': {
       id: '/contato'
       path: '/contato'
@@ -208,6 +261,20 @@ declare module '@tanstack/react-router' {
       path: '/blog'
       fullPath: '/blog'
       preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ativar': {
+      id: '/ativar'
+      path: '/ativar'
+      fullPath: '/ativar'
+      preLoaderRoute: typeof AtivarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -224,6 +291,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof BlogRoute
     }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/api/public/webhooks/cakto': {
       id: '/api/public/webhooks/cakto'
       path: '/api/public/webhooks/cakto'
@@ -233,6 +307,17 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface BlogRouteChildren {
   BlogSlugRoute: typeof BlogSlugRoute
@@ -246,8 +331,11 @@ const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AtivarRoute: AtivarRoute,
   BlogRoute: BlogRouteWithChildren,
   ContatoRoute: ContatoRoute,
+  LoginRoute: LoginRoute,
   PrivacidadeRoute: PrivacidadeRoute,
   ReembolsoRoute: ReembolsoRoute,
   SobreRoute: SobreRoute,
