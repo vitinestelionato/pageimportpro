@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRight,
   Check,
@@ -1089,10 +1089,10 @@ function LandingPage() {
             <div>
               <div className="text-[11px] font-semibold uppercase tracking-[0.15em] text-muted-foreground/80">Empresa</div>
               <ul className="mt-4 space-y-2.5 text-sm">
-                <li><a href="#" className="text-muted-foreground transition-colors hover:text-foreground">Sobre</a></li>
-                <li><a href="#" className="text-muted-foreground transition-colors hover:text-foreground">Blog</a></li>
-                <li><a href="#" className="text-muted-foreground transition-colors hover:text-foreground">Contato</a></li>
-                <li><a href="#" className="text-muted-foreground transition-colors hover:text-foreground">Suporte</a></li>
+                <li><Link to="/sobre" className="text-muted-foreground transition-colors hover:text-foreground">Sobre</Link></li>
+                <li><Link to="/blog" className="text-muted-foreground transition-colors hover:text-foreground">Blog</Link></li>
+                <li><Link to="/contato" className="text-muted-foreground transition-colors hover:text-foreground">Contato</Link></li>
+                <li><Link to="/suporte" className="text-muted-foreground transition-colors hover:text-foreground">Suporte</Link></li>
               </ul>
             </div>
 
@@ -1100,9 +1100,9 @@ function LandingPage() {
             <div>
               <div className="text-[11px] font-semibold uppercase tracking-[0.15em] text-muted-foreground/80">Legal</div>
               <ul className="mt-4 space-y-2.5 text-sm">
-                <li><a href="#" className="text-muted-foreground transition-colors hover:text-foreground">Privacidade</a></li>
-                <li><a href="#" className="text-muted-foreground transition-colors hover:text-foreground">Termos de uso</a></li>
-                <li><a href="#" className="text-muted-foreground transition-colors hover:text-foreground">Reembolso</a></li>
+                <li><Link to="/privacidade" className="text-muted-foreground transition-colors hover:text-foreground">Privacidade</Link></li>
+                <li><Link to="/termos" className="text-muted-foreground transition-colors hover:text-foreground">Termos de uso</Link></li>
+                <li><Link to="/reembolso" className="text-muted-foreground transition-colors hover:text-foreground">Reembolso</Link></li>
               </ul>
             </div>
           </div>
