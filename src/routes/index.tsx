@@ -20,6 +20,50 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CommunityChat } from "@/components/CommunityChat";
+import { useMemo } from "react";
+
+function DashParticles({ count = 60 }: { count?: number }) {
+  const dashes = useMemo(
+    () =>
+      Array.from({ length: count }).map(() => ({
+        left: Math.random() * 100,
+        top: Math.random() * 100,
+        len: 6 + Math.random() * 14,
+        rot: -20 + Math.random() * 60,
+        dx: -60 + Math.random() * 120,
+        dy: -180 + Math.random() * 120,
+        dur: 5 + Math.random() * 6,
+        delay: -Math.random() * 8,
+        opacity: 0.35 + Math.random() * 0.55,
+        glow: Math.random() > 0.6,
+      })),
+    [count],
+  );
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {dashes.map((d, i) => (
+        <span
+          key={i}
+          className="absolute block animate-dash rounded-full"
+          style={{
+            left: `${d.left}%`,
+            top: `${d.top}%`,
+            width: `${d.len}px`,
+            height: "2px",
+            background: d.glow ? "oklch(0.78 0.18 235)" : "oklch(0.65 0.2 255)",
+            boxShadow: d.glow ? "0 0 12px oklch(0.75 0.2 235 / 0.9)" : "none",
+            opacity: d.opacity,
+            ["--r" as string]: `${d.rot}deg`,
+            ["--dx" as string]: `${d.dx}px`,
+            ["--dy" as string]: `${d.dy}px`,
+            animationDuration: `${d.dur}s`,
+            animationDelay: `${d.delay}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
 export const Route = createFileRoute("/")({
   component: LandingPage,
