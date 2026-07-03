@@ -61,8 +61,19 @@ export function CommunityChat() {
   useEffect(() => {
     const el = listRef.current;
     if (!el) return;
+    const contentOverflows = () => {
+      const style = getComputedStyle(el);
+      const padY = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+      const gap = parseFloat(style.rowGap) || 0;
+      const children = Array.from(el.children) as HTMLElement[];
+      const total =
+        children.reduce((sum, c) => sum + c.offsetHeight, 0) +
+        gap * Math.max(0, children.length - 1) +
+        padY;
+      return total > el.clientHeight + 2;
+    };
     const trim = () => {
-      if (el.scrollHeight > el.clientHeight + 2) {
+      if (contentOverflows()) {
         setMessages((prev) => (prev.length > 1 ? prev.slice(1) : prev));
       }
     };
