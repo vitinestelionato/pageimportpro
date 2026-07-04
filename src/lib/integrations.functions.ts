@@ -221,6 +221,7 @@ export const testConnection = createServerFn({ method: "POST" })
 
     if (!conn) throw new Error("Conexão não encontrada.");
 
+    await import("@/lib/connectors/registry");
     const { getConnector } = await import("@/lib/connectors/types");
     const { makeGenericAdapter } = await import("@/lib/connectors/generic-adapter");
 
