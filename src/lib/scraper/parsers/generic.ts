@@ -67,16 +67,19 @@ export function genericParse(page: ScrapedPage, platform: Platform, label: strin
     /<meta[^>]+name=["']description["'][^>]+content=["']([^"']+)["']/i,
   ]);
 
-  const images = extractImages(html, base);
+  const images = rankProductImages(extractImages(html, base));
   const videos = extractVideos(html, base);
   const price = priceFromJsonLd(product);
+
+  // og:image de marketplace chinês costuma ser o logo do site — descarta se casar.
+  const safeOgImage = ogImage && !OG_IMAGE_LOGO_RE.test(ogImage) ? ogImage : null;
 
   const productImage = product?.image;
   const productImageUrl =
     typeof productImage === "string" ? productImage :
     Array.isArray(productImage) && typeof productImage[0] === "string" ? productImage[0] : null;
 
-  const mainImage = absolutize(productImageUrl, base) || ogImage || images[0] || null;
+  const mainImage = absolutize(productImageUrl, base) || safeOgImage || images[0] || null;
 
   const brand = (() => {
     const b = product?.brand;
