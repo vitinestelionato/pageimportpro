@@ -24,6 +24,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
 import { Route as AuthenticatedDashboardTendenciasRouteImport } from './routes/_authenticated/dashboard/tendencias'
+import { Route as AuthenticatedDashboardSessoesRouteImport } from './routes/_authenticated/dashboard/sessoes'
 import { Route as AuthenticatedDashboardRastreioRouteImport } from './routes/_authenticated/dashboard/rastreio'
 import { Route as AuthenticatedDashboardProdutosRouteImport } from './routes/_authenticated/dashboard/produtos'
 import { Route as AuthenticatedDashboardPerfilRouteImport } from './routes/_authenticated/dashboard/perfil'
@@ -114,6 +115,12 @@ const AuthenticatedDashboardTendenciasRoute =
   AuthenticatedDashboardTendenciasRouteImport.update({
     id: '/dashboard/tendencias',
     path: '/dashboard/tendencias',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardSessoesRoute =
+  AuthenticatedDashboardSessoesRouteImport.update({
+    id: '/dashboard/sessoes',
+    path: '/dashboard/sessoes',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardRastreioRoute =
@@ -233,6 +240,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/perfil': typeof AuthenticatedDashboardPerfilRoute
   '/dashboard/produtos': typeof AuthenticatedDashboardProdutosRoute
   '/dashboard/rastreio': typeof AuthenticatedDashboardRastreioRoute
+  '/dashboard/sessoes': typeof AuthenticatedDashboardSessoesRoute
   '/dashboard/tendencias': typeof AuthenticatedDashboardTendenciasRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/api/public/webhooks/cakto': typeof ApiPublicWebhooksCaktoRoute
@@ -264,6 +272,7 @@ export interface FileRoutesByTo {
   '/dashboard/perfil': typeof AuthenticatedDashboardPerfilRoute
   '/dashboard/produtos': typeof AuthenticatedDashboardProdutosRoute
   '/dashboard/rastreio': typeof AuthenticatedDashboardRastreioRoute
+  '/dashboard/sessoes': typeof AuthenticatedDashboardSessoesRoute
   '/dashboard/tendencias': typeof AuthenticatedDashboardTendenciasRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/api/public/webhooks/cakto': typeof ApiPublicWebhooksCaktoRoute
@@ -297,6 +306,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/perfil': typeof AuthenticatedDashboardPerfilRoute
   '/_authenticated/dashboard/produtos': typeof AuthenticatedDashboardProdutosRoute
   '/_authenticated/dashboard/rastreio': typeof AuthenticatedDashboardRastreioRoute
+  '/_authenticated/dashboard/sessoes': typeof AuthenticatedDashboardSessoesRoute
   '/_authenticated/dashboard/tendencias': typeof AuthenticatedDashboardTendenciasRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/api/public/webhooks/cakto': typeof ApiPublicWebhooksCaktoRoute
@@ -330,6 +340,7 @@ export interface FileRouteTypes {
     | '/dashboard/perfil'
     | '/dashboard/produtos'
     | '/dashboard/rastreio'
+    | '/dashboard/sessoes'
     | '/dashboard/tendencias'
     | '/dashboard/'
     | '/api/public/webhooks/cakto'
@@ -361,6 +372,7 @@ export interface FileRouteTypes {
     | '/dashboard/perfil'
     | '/dashboard/produtos'
     | '/dashboard/rastreio'
+    | '/dashboard/sessoes'
     | '/dashboard/tendencias'
     | '/dashboard'
     | '/api/public/webhooks/cakto'
@@ -393,6 +405,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/perfil'
     | '/_authenticated/dashboard/produtos'
     | '/_authenticated/dashboard/rastreio'
+    | '/_authenticated/dashboard/sessoes'
     | '/_authenticated/dashboard/tendencias'
     | '/_authenticated/dashboard/'
     | '/api/public/webhooks/cakto'
@@ -521,6 +534,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardTendenciasRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dashboard/sessoes': {
+      id: '/_authenticated/dashboard/sessoes'
+      path: '/dashboard/sessoes'
+      fullPath: '/dashboard/sessoes'
+      preLoaderRoute: typeof AuthenticatedDashboardSessoesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard/rastreio': {
       id: '/_authenticated/dashboard/rastreio'
       path: '/dashboard/rastreio'
@@ -644,6 +664,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardPerfilRoute: typeof AuthenticatedDashboardPerfilRoute
   AuthenticatedDashboardProdutosRoute: typeof AuthenticatedDashboardProdutosRoute
   AuthenticatedDashboardRastreioRoute: typeof AuthenticatedDashboardRastreioRoute
+  AuthenticatedDashboardSessoesRoute: typeof AuthenticatedDashboardSessoesRoute
   AuthenticatedDashboardTendenciasRoute: typeof AuthenticatedDashboardTendenciasRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
 }
@@ -667,6 +688,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardPerfilRoute: AuthenticatedDashboardPerfilRoute,
   AuthenticatedDashboardProdutosRoute: AuthenticatedDashboardProdutosRoute,
   AuthenticatedDashboardRastreioRoute: AuthenticatedDashboardRastreioRoute,
+  AuthenticatedDashboardSessoesRoute: AuthenticatedDashboardSessoesRoute,
   AuthenticatedDashboardTendenciasRoute: AuthenticatedDashboardTendenciasRoute,
   AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
 }
