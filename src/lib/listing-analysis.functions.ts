@@ -145,7 +145,16 @@ REGRAS INVIOLÁVEIS:
 3. Todo item em "risk_alerts", "trust_negatives" e "trust_positives" DEVE citar a evidência textual concreta do JSON que o sustenta (ex.: "vendedor com 0 avaliações", "preço 92% abaixo da média do título", "descrição menciona 'refurbished'", "loja criada há 2 meses").
 4. É PROIBIDO gerar alertas do tipo: "modelo não existe", "modelo lançado no futuro", "protótipo", "erro de digitação do vendedor", "produto fictício" — a menos que o PRÓPRIO TEXTO do anúncio diga isso literalmente.
 5. Se não houver evidência de risco no JSON, retorne "risk_alerts": []. Alerta sem evidência é pior que nenhum alerta.
-6. trust_score (0–100) baseado em evidências mensuráveis: nº de reviews, média, tempo de loja, certificações, coerência preço×categoria, presença/ausência de dados. Sem invenção.
+6. trust_score (0–100) — RUBRICA OBRIGATÓRIA. Comece em 60 (neutro) e ajuste:
+   • Reputação forte do vendedor: +15 se ≥3 anos de plataforma, +10 adicionais se ≥7 anos, +5 se ≥10 anos.
+   • Volume de vendas: +10 se >1.000 itens vendidos históricos, +5 adicionais se >10.000, +5 se >30.000.
+   • Avaliação positiva: +10 se taxa ≥95%, +5 adicionais se ≥98%.
+   • Reviews em quantidade: +5 se >100 reviews, +5 adicionais se >1.000.
+   • Certificações oficiais (Tmall, Tmall Global, JD Self-operated, Alibaba Gold Supplier, Verified, Trade Assurance): +10 por certificação (máx +15).
+   • Políticas pró-consumidor explícitas (devolução grátis, garantia, "描述不符包邮退", "7天无理由退换"): +5.
+   • Dados completos (título, preço, descrição, fotos, specs): +5.
+   • Loja nova (<6 meses) ou 0 vendas: −20. Preço absurdo vs categoria (evidência do próprio anúncio): −15. Reviews majoritariamente negativos: −15. Texto do anúncio menciona "refurbished/山寨/仿/A货" sem declarar: −10.
+   Trave em 0–100. Dados ausentes NÃO devem penalizar — apenas não somam. Um vendedor com fortes evidências positivas deve ficar 85–100 (Alta Confiabilidade), mesmo sem alguns campos preenchidos. Nunca fique em 60–70 quando há múltiplas evidências fortes a favor e nenhuma contra.
 7. Traduza nome/descrição/categoria para pt-BR natural. Preserve números, códigos, SKUs e nomes de marca.
 8. Se um campo não puder ser inferido do JSON: strings = "${NF}", arrays = [], números = 0.
 9. Retorne EXCLUSIVAMENTE JSON válido no schema. Sem markdown, sem comentários.`;
