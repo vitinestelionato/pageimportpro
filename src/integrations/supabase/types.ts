@@ -214,6 +214,96 @@ export type Database = {
         }
         Relationships: []
       }
+      integration_events: {
+        Row: {
+          action: string
+          created_at: string
+          duration_ms: number | null
+          id: string
+          integration_slug: string
+          ip_address: string | null
+          message: string | null
+          metadata: Json
+          status: string
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          duration_ms?: number | null
+          id?: string
+          integration_slug: string
+          ip_address?: string | null
+          message?: string | null
+          metadata?: Json
+          status: string
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          duration_ms?: number | null
+          id?: string
+          integration_slug?: string
+          ip_address?: string | null
+          message?: string | null
+          metadata?: Json
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      integrations: {
+        Row: {
+          auth_type: string
+          category: string
+          config_schema: Json
+          created_at: string
+          description: string | null
+          docs_url: string | null
+          icon_url: string | null
+          id: string
+          is_active: boolean
+          is_coming_soon: boolean
+          name: string
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          auth_type: string
+          category: string
+          config_schema?: Json
+          created_at?: string
+          description?: string | null
+          docs_url?: string | null
+          icon_url?: string | null
+          id?: string
+          is_active?: boolean
+          is_coming_soon?: boolean
+          name: string
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          auth_type?: string
+          category?: string
+          config_schema?: Json
+          created_at?: string
+          description?: string | null
+          docs_url?: string | null
+          icon_url?: string | null
+          id?: string
+          is_active?: boolean
+          is_coming_soon?: boolean
+          name?: string
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       notes: {
         Row: {
           body: string
@@ -461,6 +551,59 @@ export type Database = {
           whatsapp?: string | null
         }
         Relationships: []
+      }
+      user_integrations: {
+        Row: {
+          account_label: string | null
+          config: Json
+          created_at: string
+          credentials: Json
+          expires_at: string | null
+          id: string
+          integration_slug: string
+          last_error: string | null
+          last_sync_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_label?: string | null
+          config?: Json
+          created_at?: string
+          credentials?: Json
+          expires_at?: string | null
+          id?: string
+          integration_slug: string
+          last_error?: string | null
+          last_sync_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_label?: string | null
+          config?: Json
+          created_at?: string
+          credentials?: Json
+          expires_at?: string | null
+          id?: string
+          integration_slug?: string
+          last_error?: string | null
+          last_sync_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_integrations_integration_slug_fkey"
+            columns: ["integration_slug"]
+            isOneToOne: false
+            referencedRelation: "integrations"
+            referencedColumns: ["slug"]
+          },
+        ]
       }
       user_roles: {
         Row: {
