@@ -521,16 +521,6 @@ function LandingPage() {
                   <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </a>
-              <a href="#recursos" className="block w-full sm:inline-block sm:w-auto">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="group h-12 w-full rounded-full border-border bg-transparent px-7 text-base font-medium hover:bg-accent sm:w-auto"
-                >
-                  Testar IA de importação
-                  <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Button>
-              </a>
             </div>
 
             <p
