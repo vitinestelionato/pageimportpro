@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermosRouteImport } from './routes/termos'
+import { Route as SuporteAcessoRouteImport } from './routes/suporte-acesso'
 import { Route as SuporteRouteImport } from './routes/suporte'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as ReembolsoRouteImport } from './routes/reembolso'
@@ -41,6 +42,11 @@ import { Route as ApiPublicWebhooksCaktoRouteImport } from './routes/api/public/
 const TermosRoute = TermosRouteImport.update({
   id: '/termos',
   path: '/termos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SuporteAcessoRoute = SuporteAcessoRouteImport.update({
+  id: '/suporte-acesso',
+  path: '/suporte-acesso',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SuporteRoute = SuporteRouteImport.update({
@@ -203,6 +209,7 @@ export interface FileRoutesByFullPath {
   '/reembolso': typeof ReembolsoRoute
   '/sobre': typeof SobreRoute
   '/suporte': typeof SuporteRoute
+  '/suporte-acesso': typeof SuporteAcessoRoute
   '/termos': typeof TermosRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/dashboard/alertas': typeof AuthenticatedDashboardAlertasRoute
@@ -232,6 +239,7 @@ export interface FileRoutesByTo {
   '/reembolso': typeof ReembolsoRoute
   '/sobre': typeof SobreRoute
   '/suporte': typeof SuporteRoute
+  '/suporte-acesso': typeof SuporteAcessoRoute
   '/termos': typeof TermosRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/dashboard/alertas': typeof AuthenticatedDashboardAlertasRoute
@@ -263,6 +271,7 @@ export interface FileRoutesById {
   '/reembolso': typeof ReembolsoRoute
   '/sobre': typeof SobreRoute
   '/suporte': typeof SuporteRoute
+  '/suporte-acesso': typeof SuporteAcessoRoute
   '/termos': typeof TermosRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/_authenticated/dashboard/alertas': typeof AuthenticatedDashboardAlertasRoute
@@ -294,6 +303,7 @@ export interface FileRouteTypes {
     | '/reembolso'
     | '/sobre'
     | '/suporte'
+    | '/suporte-acesso'
     | '/termos'
     | '/blog/$slug'
     | '/dashboard/alertas'
@@ -323,6 +333,7 @@ export interface FileRouteTypes {
     | '/reembolso'
     | '/sobre'
     | '/suporte'
+    | '/suporte-acesso'
     | '/termos'
     | '/blog/$slug'
     | '/dashboard/alertas'
@@ -353,6 +364,7 @@ export interface FileRouteTypes {
     | '/reembolso'
     | '/sobre'
     | '/suporte'
+    | '/suporte-acesso'
     | '/termos'
     | '/blog/$slug'
     | '/_authenticated/dashboard/alertas'
@@ -384,6 +396,7 @@ export interface RootRouteChildren {
   ReembolsoRoute: typeof ReembolsoRoute
   SobreRoute: typeof SobreRoute
   SuporteRoute: typeof SuporteRoute
+  SuporteAcessoRoute: typeof SuporteAcessoRoute
   TermosRoute: typeof TermosRoute
   ApiPublicWebhooksCaktoRoute: typeof ApiPublicWebhooksCaktoRoute
 }
@@ -395,6 +408,13 @@ declare module '@tanstack/react-router' {
       path: '/termos'
       fullPath: '/termos'
       preLoaderRoute: typeof TermosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/suporte-acesso': {
+      id: '/suporte-acesso'
+      path: '/suporte-acesso'
+      fullPath: '/suporte-acesso'
+      preLoaderRoute: typeof SuporteAcessoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/suporte': {
@@ -652,6 +672,7 @@ const rootRouteChildren: RootRouteChildren = {
   ReembolsoRoute: ReembolsoRoute,
   SobreRoute: SobreRoute,
   SuporteRoute: SuporteRoute,
+  SuporteAcessoRoute: SuporteAcessoRoute,
   TermosRoute: TermosRoute,
   ApiPublicWebhooksCaktoRoute: ApiPublicWebhooksCaktoRoute,
 }
