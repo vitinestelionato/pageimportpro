@@ -22,6 +22,12 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
+import { Route as AuthenticatedDashboardProdutosRouteImport } from './routes/_authenticated/dashboard/produtos'
+import { Route as AuthenticatedDashboardPerfilRouteImport } from './routes/_authenticated/dashboard/perfil'
+import { Route as AuthenticatedDashboardCambioRouteImport } from './routes/_authenticated/dashboard/cambio'
+import { Route as AuthenticatedDashboardCalculadoraRouteImport } from './routes/_authenticated/dashboard/calculadora'
+import { Route as AuthenticatedDashboardAnotacoesRouteImport } from './routes/_authenticated/dashboard/anotacoes'
 import { Route as ApiPublicWebhooksCaktoRouteImport } from './routes/api/public/webhooks/cakto'
 
 const TermosRoute = TermosRouteImport.update({
@@ -88,6 +94,42 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDashboardIndexRoute =
+  AuthenticatedDashboardIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardProdutosRoute =
+  AuthenticatedDashboardProdutosRouteImport.update({
+    id: '/produtos',
+    path: '/produtos',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardPerfilRoute =
+  AuthenticatedDashboardPerfilRouteImport.update({
+    id: '/perfil',
+    path: '/perfil',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardCambioRoute =
+  AuthenticatedDashboardCambioRouteImport.update({
+    id: '/cambio',
+    path: '/cambio',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardCalculadoraRoute =
+  AuthenticatedDashboardCalculadoraRouteImport.update({
+    id: '/calculadora',
+    path: '/calculadora',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardAnotacoesRoute =
+  AuthenticatedDashboardAnotacoesRouteImport.update({
+    id: '/anotacoes',
+    path: '/anotacoes',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const ApiPublicWebhooksCaktoRoute = ApiPublicWebhooksCaktoRouteImport.update({
   id: '/api/public/webhooks/cakto',
   path: '/api/public/webhooks/cakto',
@@ -105,8 +147,14 @@ export interface FileRoutesByFullPath {
   '/sobre': typeof SobreRoute
   '/suporte': typeof SuporteRoute
   '/termos': typeof TermosRoute
-  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
+  '/dashboard/anotacoes': typeof AuthenticatedDashboardAnotacoesRoute
+  '/dashboard/calculadora': typeof AuthenticatedDashboardCalculadoraRoute
+  '/dashboard/cambio': typeof AuthenticatedDashboardCambioRoute
+  '/dashboard/perfil': typeof AuthenticatedDashboardPerfilRoute
+  '/dashboard/produtos': typeof AuthenticatedDashboardProdutosRoute
+  '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/api/public/webhooks/cakto': typeof ApiPublicWebhooksCaktoRoute
 }
 export interface FileRoutesByTo {
@@ -120,8 +168,13 @@ export interface FileRoutesByTo {
   '/sobre': typeof SobreRoute
   '/suporte': typeof SuporteRoute
   '/termos': typeof TermosRoute
-  '/dashboard': typeof AuthenticatedDashboardRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/dashboard/anotacoes': typeof AuthenticatedDashboardAnotacoesRoute
+  '/dashboard/calculadora': typeof AuthenticatedDashboardCalculadoraRoute
+  '/dashboard/cambio': typeof AuthenticatedDashboardCambioRoute
+  '/dashboard/perfil': typeof AuthenticatedDashboardPerfilRoute
+  '/dashboard/produtos': typeof AuthenticatedDashboardProdutosRoute
+  '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/api/public/webhooks/cakto': typeof ApiPublicWebhooksCaktoRoute
 }
 export interface FileRoutesById {
@@ -137,8 +190,14 @@ export interface FileRoutesById {
   '/sobre': typeof SobreRoute
   '/suporte': typeof SuporteRoute
   '/termos': typeof TermosRoute
-  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
+  '/_authenticated/dashboard/anotacoes': typeof AuthenticatedDashboardAnotacoesRoute
+  '/_authenticated/dashboard/calculadora': typeof AuthenticatedDashboardCalculadoraRoute
+  '/_authenticated/dashboard/cambio': typeof AuthenticatedDashboardCambioRoute
+  '/_authenticated/dashboard/perfil': typeof AuthenticatedDashboardPerfilRoute
+  '/_authenticated/dashboard/produtos': typeof AuthenticatedDashboardProdutosRoute
+  '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/api/public/webhooks/cakto': typeof ApiPublicWebhooksCaktoRoute
 }
 export interface FileRouteTypes {
@@ -156,6 +215,12 @@ export interface FileRouteTypes {
     | '/termos'
     | '/dashboard'
     | '/blog/$slug'
+    | '/dashboard/anotacoes'
+    | '/dashboard/calculadora'
+    | '/dashboard/cambio'
+    | '/dashboard/perfil'
+    | '/dashboard/produtos'
+    | '/dashboard/'
     | '/api/public/webhooks/cakto'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -169,8 +234,13 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/suporte'
     | '/termos'
-    | '/dashboard'
     | '/blog/$slug'
+    | '/dashboard/anotacoes'
+    | '/dashboard/calculadora'
+    | '/dashboard/cambio'
+    | '/dashboard/perfil'
+    | '/dashboard/produtos'
+    | '/dashboard'
     | '/api/public/webhooks/cakto'
   id:
     | '__root__'
@@ -187,6 +257,12 @@ export interface FileRouteTypes {
     | '/termos'
     | '/_authenticated/dashboard'
     | '/blog/$slug'
+    | '/_authenticated/dashboard/anotacoes'
+    | '/_authenticated/dashboard/calculadora'
+    | '/_authenticated/dashboard/cambio'
+    | '/_authenticated/dashboard/perfil'
+    | '/_authenticated/dashboard/produtos'
+    | '/_authenticated/dashboard/'
     | '/api/public/webhooks/cakto'
   fileRoutesById: FileRoutesById
 }
@@ -298,6 +374,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dashboard/': {
+      id: '/_authenticated/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/produtos': {
+      id: '/_authenticated/dashboard/produtos'
+      path: '/produtos'
+      fullPath: '/dashboard/produtos'
+      preLoaderRoute: typeof AuthenticatedDashboardProdutosRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/perfil': {
+      id: '/_authenticated/dashboard/perfil'
+      path: '/perfil'
+      fullPath: '/dashboard/perfil'
+      preLoaderRoute: typeof AuthenticatedDashboardPerfilRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/cambio': {
+      id: '/_authenticated/dashboard/cambio'
+      path: '/cambio'
+      fullPath: '/dashboard/cambio'
+      preLoaderRoute: typeof AuthenticatedDashboardCambioRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/calculadora': {
+      id: '/_authenticated/dashboard/calculadora'
+      path: '/calculadora'
+      fullPath: '/dashboard/calculadora'
+      preLoaderRoute: typeof AuthenticatedDashboardCalculadoraRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/anotacoes': {
+      id: '/_authenticated/dashboard/anotacoes'
+      path: '/anotacoes'
+      fullPath: '/dashboard/anotacoes'
+      preLoaderRoute: typeof AuthenticatedDashboardAnotacoesRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/api/public/webhooks/cakto': {
       id: '/api/public/webhooks/cakto'
       path: '/api/public/webhooks/cakto'
@@ -308,12 +426,37 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedDashboardRouteChildren {
+  AuthenticatedDashboardAnotacoesRoute: typeof AuthenticatedDashboardAnotacoesRoute
+  AuthenticatedDashboardCalculadoraRoute: typeof AuthenticatedDashboardCalculadoraRoute
+  AuthenticatedDashboardCambioRoute: typeof AuthenticatedDashboardCambioRoute
+  AuthenticatedDashboardPerfilRoute: typeof AuthenticatedDashboardPerfilRoute
+  AuthenticatedDashboardProdutosRoute: typeof AuthenticatedDashboardProdutosRoute
+  AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
+}
+
+const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
+  {
+    AuthenticatedDashboardAnotacoesRoute: AuthenticatedDashboardAnotacoesRoute,
+    AuthenticatedDashboardCalculadoraRoute:
+      AuthenticatedDashboardCalculadoraRoute,
+    AuthenticatedDashboardCambioRoute: AuthenticatedDashboardCambioRoute,
+    AuthenticatedDashboardPerfilRoute: AuthenticatedDashboardPerfilRoute,
+    AuthenticatedDashboardProdutosRoute: AuthenticatedDashboardProdutosRoute,
+    AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
+  }
+
+const AuthenticatedDashboardRouteWithChildren =
+  AuthenticatedDashboardRoute._addFileChildren(
+    AuthenticatedDashboardRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
