@@ -29,6 +29,7 @@ import { Route as AuthenticatedDashboardProdutosRouteImport } from './routes/_au
 import { Route as AuthenticatedDashboardPerfilRouteImport } from './routes/_authenticated/dashboard/perfil'
 import { Route as AuthenticatedDashboardNichosRouteImport } from './routes/_authenticated/dashboard/nichos'
 import { Route as AuthenticatedDashboardFornecedoresRouteImport } from './routes/_authenticated/dashboard/fornecedores'
+import { Route as AuthenticatedDashboardFinanceiroRouteImport } from './routes/_authenticated/dashboard/financeiro'
 import { Route as AuthenticatedDashboardFavoritosRouteImport } from './routes/_authenticated/dashboard/favoritos'
 import { Route as AuthenticatedDashboardDocumentosRouteImport } from './routes/_authenticated/dashboard/documentos'
 import { Route as AuthenticatedDashboardConcorrentesRouteImport } from './routes/_authenticated/dashboard/concorrentes'
@@ -146,6 +147,12 @@ const AuthenticatedDashboardFornecedoresRoute =
     path: '/dashboard/fornecedores',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDashboardFinanceiroRoute =
+  AuthenticatedDashboardFinanceiroRouteImport.update({
+    id: '/dashboard/financeiro',
+    path: '/dashboard/financeiro',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardFavoritosRoute =
   AuthenticatedDashboardFavoritosRouteImport.update({
     id: '/dashboard/favoritos',
@@ -228,6 +235,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/concorrentes': typeof AuthenticatedDashboardConcorrentesRoute
   '/dashboard/documentos': typeof AuthenticatedDashboardDocumentosRoute
   '/dashboard/favoritos': typeof AuthenticatedDashboardFavoritosRoute
+  '/dashboard/financeiro': typeof AuthenticatedDashboardFinanceiroRoute
   '/dashboard/fornecedores': typeof AuthenticatedDashboardFornecedoresRoute
   '/dashboard/nichos': typeof AuthenticatedDashboardNichosRoute
   '/dashboard/perfil': typeof AuthenticatedDashboardPerfilRoute
@@ -259,6 +267,7 @@ export interface FileRoutesByTo {
   '/dashboard/concorrentes': typeof AuthenticatedDashboardConcorrentesRoute
   '/dashboard/documentos': typeof AuthenticatedDashboardDocumentosRoute
   '/dashboard/favoritos': typeof AuthenticatedDashboardFavoritosRoute
+  '/dashboard/financeiro': typeof AuthenticatedDashboardFinanceiroRoute
   '/dashboard/fornecedores': typeof AuthenticatedDashboardFornecedoresRoute
   '/dashboard/nichos': typeof AuthenticatedDashboardNichosRoute
   '/dashboard/perfil': typeof AuthenticatedDashboardPerfilRoute
@@ -292,6 +301,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/concorrentes': typeof AuthenticatedDashboardConcorrentesRoute
   '/_authenticated/dashboard/documentos': typeof AuthenticatedDashboardDocumentosRoute
   '/_authenticated/dashboard/favoritos': typeof AuthenticatedDashboardFavoritosRoute
+  '/_authenticated/dashboard/financeiro': typeof AuthenticatedDashboardFinanceiroRoute
   '/_authenticated/dashboard/fornecedores': typeof AuthenticatedDashboardFornecedoresRoute
   '/_authenticated/dashboard/nichos': typeof AuthenticatedDashboardNichosRoute
   '/_authenticated/dashboard/perfil': typeof AuthenticatedDashboardPerfilRoute
@@ -325,6 +335,7 @@ export interface FileRouteTypes {
     | '/dashboard/concorrentes'
     | '/dashboard/documentos'
     | '/dashboard/favoritos'
+    | '/dashboard/financeiro'
     | '/dashboard/fornecedores'
     | '/dashboard/nichos'
     | '/dashboard/perfil'
@@ -356,6 +367,7 @@ export interface FileRouteTypes {
     | '/dashboard/concorrentes'
     | '/dashboard/documentos'
     | '/dashboard/favoritos'
+    | '/dashboard/financeiro'
     | '/dashboard/fornecedores'
     | '/dashboard/nichos'
     | '/dashboard/perfil'
@@ -388,6 +400,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/concorrentes'
     | '/_authenticated/dashboard/documentos'
     | '/_authenticated/dashboard/favoritos'
+    | '/_authenticated/dashboard/financeiro'
     | '/_authenticated/dashboard/fornecedores'
     | '/_authenticated/dashboard/nichos'
     | '/_authenticated/dashboard/perfil'
@@ -556,6 +569,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardFornecedoresRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dashboard/financeiro': {
+      id: '/_authenticated/dashboard/financeiro'
+      path: '/dashboard/financeiro'
+      fullPath: '/dashboard/financeiro'
+      preLoaderRoute: typeof AuthenticatedDashboardFinanceiroRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard/favoritos': {
       id: '/_authenticated/dashboard/favoritos'
       path: '/dashboard/favoritos'
@@ -639,6 +659,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardConcorrentesRoute: typeof AuthenticatedDashboardConcorrentesRoute
   AuthenticatedDashboardDocumentosRoute: typeof AuthenticatedDashboardDocumentosRoute
   AuthenticatedDashboardFavoritosRoute: typeof AuthenticatedDashboardFavoritosRoute
+  AuthenticatedDashboardFinanceiroRoute: typeof AuthenticatedDashboardFinanceiroRoute
   AuthenticatedDashboardFornecedoresRoute: typeof AuthenticatedDashboardFornecedoresRoute
   AuthenticatedDashboardNichosRoute: typeof AuthenticatedDashboardNichosRoute
   AuthenticatedDashboardPerfilRoute: typeof AuthenticatedDashboardPerfilRoute
@@ -661,6 +682,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedDashboardConcorrentesRoute,
   AuthenticatedDashboardDocumentosRoute: AuthenticatedDashboardDocumentosRoute,
   AuthenticatedDashboardFavoritosRoute: AuthenticatedDashboardFavoritosRoute,
+  AuthenticatedDashboardFinanceiroRoute: AuthenticatedDashboardFinanceiroRoute,
   AuthenticatedDashboardFornecedoresRoute:
     AuthenticatedDashboardFornecedoresRoute,
   AuthenticatedDashboardNichosRoute: AuthenticatedDashboardNichosRoute,

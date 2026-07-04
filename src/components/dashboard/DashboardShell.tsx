@@ -8,6 +8,7 @@ import {
   Image as ImageIcon,
   Calculator,
   DollarSign,
+  Wallet,
   Truck,
   FileText,
   StickyNote,
@@ -65,6 +66,12 @@ const NAV: NavGroup[] = [
       { icon: <Truck className="h-4 w-4" />, label: "Rastreio de Encomenda", to: "/dashboard/rastreio", badge: "EM BREVE" },
       { icon: <FileText className="h-4 w-4" />, label: "Documentos", to: "/dashboard/documentos" },
       { icon: <StickyNote className="h-4 w-4" />, label: "Anotações", to: "/dashboard/anotacoes" },
+    ],
+  },
+  {
+    label: "Financeiro",
+    items: [
+      { icon: <Wallet className="h-4 w-4" />, label: "Financeiro & Precificação", to: "/dashboard/financeiro", badge: "NOVO" },
     ],
   },
   {
