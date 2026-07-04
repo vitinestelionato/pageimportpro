@@ -65,12 +65,10 @@ function Chip({ children, variant = "default" }: { children: React.ReactNode; va
 function ProdutosPage() {
   const fetchAnalysis = useServerFn(analyzeListing);
   const [url, setUrl] = useState("");
-  const [raw, setRaw] = useState("");
-  const [mode, setMode] = useState<"url" | "text">("url");
   const [result, setResult] = useState<ListingAnalysis | null>(null);
 
   const mut = useMutation({
-    mutationFn: (payload: { url: string | null; raw: string | null; refresh: boolean }) =>
+    mutationFn: (payload: { url: string; refresh: boolean }) =>
       fetchAnalysis({ data: payload }) as Promise<ListingAnalysis>,
     onSuccess: (data) => {
       setResult(data);
@@ -80,19 +78,11 @@ function ProdutosPage() {
   });
 
   const submit = (refresh = false) => {
-    if (mode === "url" && url.trim().length < 8) {
+    if (url.trim().length < 8) {
       toast.error("Cole a URL completa do anúncio");
       return;
     }
-    if (mode === "text" && raw.trim().length < 30) {
-      toast.error("Cole o texto ou HTML do anúncio");
-      return;
-    }
-    mut.mutate({
-      url: mode === "url" ? url.trim() : null,
-      raw: mode === "text" ? raw.trim() : null,
-      refresh,
-    });
+    mut.mutate({ url: url.trim(), refresh });
   };
 
   return (
@@ -105,74 +95,36 @@ function ProdutosPage() {
           </div>
           <p className="text-sm text-muted-foreground">
             Analise anúncios reais de Goofish, 1688, Taobao, Tmall, Alibaba, JD, Pinduoduo, AliExpress,
-            Weidian, DHGate, Made-in-China e Global Sources. O sistema extrai apenas dados verdadeiros do
-            anúncio — nunca inventa informação.
+            Weidian, DHGate, Made-in-China e Global Sources. O sistema abre a página em navegador
+            headless real (via ScraperService) e extrai apenas dados verdadeiros do anúncio.
           </p>
         </header>
 
         {/* Input */}
         <div className="rounded-xl border bg-card p-5 shadow-sm">
-          <div className="mb-4 flex gap-2">
+          <div className="mb-3 flex items-center gap-2 text-xs text-muted-foreground">
+            <LinkIcon className="h-3.5 w-3.5" />
+            URL do anúncio
+          </div>
+          <div className="flex gap-2">
+            <input
+              type="url"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && submit(false)}
+              placeholder="https://item.taobao.com/item.htm?id=..."
+              className="flex-1 rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+            />
             <button
               type="button"
-              onClick={() => setMode("url")}
-              className={`flex-1 rounded-lg border px-3 py-2 text-sm font-medium transition ${
-                mode === "url" ? "border-primary bg-primary/10 text-primary" : "border-border hover:bg-muted"
-              }`}
+              onClick={() => submit(false)}
+              disabled={mut.isPending}
+              className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
             >
-              <LinkIcon className="mr-1.5 inline h-4 w-4" /> URL do anúncio
-            </button>
-            <button
-              type="button"
-              onClick={() => setMode("text")}
-              className={`flex-1 rounded-lg border px-3 py-2 text-sm font-medium transition ${
-                mode === "text" ? "border-primary bg-primary/10 text-primary" : "border-border hover:bg-muted"
-              }`}
-            >
-              <FileText className="mr-1.5 inline h-4 w-4" /> Colar texto / HTML
+              {mut.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
+              Analisar
             </button>
           </div>
-
-          {mode === "url" ? (
-            <div className="flex gap-2">
-              <input
-                type="url"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && submit(false)}
-                placeholder="https://item.taobao.com/item.htm?id=..."
-                className="flex-1 rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none focus:border-primary"
-              />
-              <button
-                type="button"
-                onClick={() => submit(false)}
-                disabled={mut.isPending}
-                className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
-              >
-                {mut.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
-                Analisar
-              </button>
-            </div>
-          ) : (
-            <div className="space-y-2">
-              <textarea
-                value={raw}
-                onChange={(e) => setRaw(e.target.value)}
-                rows={8}
-                placeholder="Cole aqui o texto copiado do anúncio ou o HTML da página..."
-                className="w-full resize-none rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none focus:border-primary"
-              />
-              <button
-                type="button"
-                onClick={() => submit(false)}
-                disabled={mut.isPending}
-                className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
-              >
-                {mut.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
-                Analisar conteúdo
-              </button>
-            </div>
-          )}
 
           <div className="mt-3 flex flex-wrap gap-1.5">
             <span className="text-xs text-muted-foreground">Exemplos:</span>
