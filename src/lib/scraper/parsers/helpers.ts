@@ -32,7 +32,6 @@ export function absolutize(url: string | null, base: string): string | null {
   try { return new URL(url, base).toString(); } catch { return null; }
 }
 
-export function extractImages(html: string, base: string, limit = 40): string[] {
 /**
  * Padrões que indicam imagens NÃO-produto: logos do site, banners de UI,
  * avatares, ícones, sprites, spacers, badges, placeholders, propagandas.
