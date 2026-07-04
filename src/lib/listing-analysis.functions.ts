@@ -380,20 +380,50 @@ function mergeToAnalysis(args: {
         status_code: page?.statusCode ?? null,
       },
     },
-    product: {
-      name_original: orNF(parsed.title),
-      name_translated: enr ? enr.name_translated : NOT_FOUND,
-      category: enr?.category && enr.category !== NOT_FOUND ? enr.category : orNF(parsed.category),
-      brand: orNF(parsed.brand ?? inferBrand(`${parsed.title ?? ""} ${parsed.description ?? ""}`)),
-      model: orNF(parsed.model ?? inferModel(`${parsed.title ?? ""} ${parsed.description ?? ""}`)),
-      description,
+    product: (() => {
+      const finalSpecs = enr && enr.specs.length > 0 ? enr.specs : parsed.specs;
+      const specLookup = (patterns: RegExp[]): string | null => {
+        for (const s of finalSpecs) {
+          if (patterns.some((r) => r.test(s.key))) {
+            const v = String(s.value ?? "").trim();
+            if (v) return v;
+          }
+        }
+        return null;
+      };
+      const titleDesc = `${parsed.title ?? ""} ${parsed.description ?? ""}`;
+      const brand =
+        parsed.brand ||
+        specLookup([/marca/i, /brand/i, /品牌/]) ||
+        inferBrand(titleDesc);
+      const model =
+        parsed.model ||
+        specLookup([/modelo/i, /model/i, /型号/, /型號/, /reference/i, /ref\.?/i]) ||
+        inferModel(titleDesc);
+      const stock =
+        parsed.stock_status ||
+        specLookup([/estoque/i, /stock/i, /库存/, /inventory/i, /disponibilidade/i, /availability/i]);
+      const moq =
+        parsed.price.moq ||
+        specLookup([/moq/i, /pedido\s*m[ií]nimo/i, /minimum\s*order/i, /起订/, /最小起订/]);
+      const category =
+        (enr?.category && enr.category !== NOT_FOUND ? enr.category : parsed.category) ||
+        specLookup([/categoria/i, /category/i, /类目/, /类别/]);
 
-      specs: enr && enr.specs.length > 0 ? enr.specs : parsed.specs,
-      keywords: enr ? enr.keywords : [],
-      variations: parsed.variations,
-      stock_status: orNF(parsed.stock_status),
-      moq: orNF(parsed.price.moq),
-    },
+      return {
+        name_original: orNF(parsed.title),
+        name_translated: enr ? enr.name_translated : NOT_FOUND,
+        category: orNF(category),
+        brand: orNF(brand),
+        model: orNF(model),
+        description,
+        specs: finalSpecs,
+        keywords: enr ? enr.keywords : [],
+        variations: parsed.variations,
+        stock_status: orNF(stock),
+        moq: orNF(moq),
+      };
+    })(),
     images: {
       main: parsed.images.main,
       gallery: parsed.images.gallery,
