@@ -472,11 +472,12 @@ function LandingPage() {
             <a href="#depoimentos" className="transition-colors hover:text-foreground">Depoimentos</a>
             <a href="#precos" className="transition-colors hover:text-foreground">Planos</a>
           </nav>
-          <a href="#precos">
+          <Link to="/login">
             <Button size="sm" className="rounded-full bg-gradient-to-r from-brand to-brand-glow text-primary-foreground shadow-lg shadow-brand/30 hover:opacity-90">
-              Começar agora
+              Entrar
             </Button>
-          </a>
+          </Link>
+
         </div>
       </header>
 
