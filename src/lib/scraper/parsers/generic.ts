@@ -17,8 +17,12 @@ import {
   extractVideos,
   findProductJsonLd,
   pickMeta,
+  rankProductImages,
   stripTags,
 } from "./helpers";
+
+// Padrão para detectar og:image que é logo do site (não é foto do produto).
+const OG_IMAGE_LOGO_RE = /\b(logo|favicon|share|default|brand|site[-_]?logo|xianyu|goofish|1688|taobao|tmall)\b/i;
 
 function priceFromJsonLd(product: Record<string, unknown> | null): {
   value: number | null;
