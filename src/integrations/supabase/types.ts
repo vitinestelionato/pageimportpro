@@ -265,10 +265,14 @@ export type Database = {
           id: string
           is_active: boolean
           is_coming_soon: boolean
+          lifecycle_status: string
           name: string
+          provider: string | null
           slug: string
           sort_order: number
+          supported_events: string[]
           updated_at: string
+          version: string
         }
         Insert: {
           auth_type: string
@@ -281,10 +285,14 @@ export type Database = {
           id?: string
           is_active?: boolean
           is_coming_soon?: boolean
+          lifecycle_status?: string
           name: string
+          provider?: string | null
           slug: string
           sort_order?: number
+          supported_events?: string[]
           updated_at?: string
+          version?: string
         }
         Update: {
           auth_type?: string
@@ -297,10 +305,14 @@ export type Database = {
           id?: string
           is_active?: boolean
           is_coming_soon?: boolean
+          lifecycle_status?: string
           name?: string
+          provider?: string | null
           slug?: string
           sort_order?: number
+          supported_events?: string[]
           updated_at?: string
+          version?: string
         }
         Relationships: []
       }
@@ -596,46 +608,133 @@ export type Database = {
         }
         Relationships: []
       }
-      user_integrations: {
+      sync_jobs: {
         Row: {
-          account_label: string | null
-          config: Json
+          connection_id: string | null
           created_at: string
-          credentials: Json
-          expires_at: string | null
+          duration_ms: number | null
+          error_message: string | null
+          finished_at: string | null
           id: string
           integration_slug: string
-          last_error: string | null
-          last_sync_at: string | null
+          items_processed: number
+          job_type: string
+          metadata: Json
+          started_at: string | null
           status: string
           updated_at: string
           user_id: string
         }
         Insert: {
-          account_label?: string | null
-          config?: Json
+          connection_id?: string | null
           created_at?: string
-          credentials?: Json
-          expires_at?: string | null
+          duration_ms?: number | null
+          error_message?: string | null
+          finished_at?: string | null
           id?: string
           integration_slug: string
-          last_error?: string | null
-          last_sync_at?: string | null
+          items_processed?: number
+          job_type?: string
+          metadata?: Json
+          started_at?: string | null
           status?: string
           updated_at?: string
           user_id: string
         }
         Update: {
+          connection_id?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          error_message?: string | null
+          finished_at?: string | null
+          id?: string
+          integration_slug?: string
+          items_processed?: number
+          job_type?: string
+          metadata?: Json
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sync_jobs_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "user_integrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sync_jobs_integration_slug_fkey"
+            columns: ["integration_slug"]
+            isOneToOne: false
+            referencedRelation: "integrations"
+            referencedColumns: ["slug"]
+          },
+        ]
+      }
+      user_integrations: {
+        Row: {
+          account_label: string | null
+          avg_response_ms: number | null
+          config: Json
+          created_at: string
+          credentials: Json
+          error_count: number
+          expires_at: string | null
+          health_status: string
+          id: string
+          integration_slug: string
+          last_error: string | null
+          last_sync_at: string | null
+          last_test_at: string | null
+          last_test_result: Json
+          status: string
+          sync_interval_minutes: number | null
+          sync_mode: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
           account_label?: string | null
+          avg_response_ms?: number | null
           config?: Json
           created_at?: string
           credentials?: Json
+          error_count?: number
           expires_at?: string | null
+          health_status?: string
+          id?: string
+          integration_slug: string
+          last_error?: string | null
+          last_sync_at?: string | null
+          last_test_at?: string | null
+          last_test_result?: Json
+          status?: string
+          sync_interval_minutes?: number | null
+          sync_mode?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_label?: string | null
+          avg_response_ms?: number | null
+          config?: Json
+          created_at?: string
+          credentials?: Json
+          error_count?: number
+          expires_at?: string | null
+          health_status?: string
           id?: string
           integration_slug?: string
           last_error?: string | null
           last_sync_at?: string | null
+          last_test_at?: string | null
+          last_test_result?: Json
           status?: string
+          sync_interval_minutes?: number | null
+          sync_mode?: string
           updated_at?: string
           user_id?: string
         }

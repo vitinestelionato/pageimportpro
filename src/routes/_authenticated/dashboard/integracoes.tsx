@@ -37,24 +37,30 @@ import {
   connectIntegration,
   disconnectIntegration,
   syncIntegration,
+  testConnection,
+  triggerSync,
   listIntegrationEvents,
 } from "@/lib/integrations.functions";
 
 export const Route = createFileRoute("/_authenticated/dashboard/integracoes")({
   head: () => ({
     meta: [
-      { title: "Central de Conexões · ImportPro" },
+      { title: "Connector Manager · ImportPro" },
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
   component: IntegrationsPage,
 });
 
+type HealthStatus = "unknown" | "healthy" | "unhealthy";
+
 type Integration = {
   slug: string;
   name: string;
   description: string | null;
   category: string;
+  provider: string | null;
+  version: string | null;
   auth_type: "oauth2" | "api_key" | "bearer" | "webhook" | "custom" | "builtin";
   is_coming_soon: boolean;
   connection: {
@@ -63,6 +69,9 @@ type Integration = {
     last_sync_at: string | null;
     last_error: string | null;
     account_label: string | null;
+    health_status?: HealthStatus | null;
+    avg_response_ms?: number | null;
+    last_test_at?: string | null;
   } | null;
 };
 
@@ -81,6 +90,8 @@ function IntegrationsPage() {
   const doConnect = useServerFn(connectIntegration);
   const doDisconnect = useServerFn(disconnectIntegration);
   const doSync = useServerFn(syncIntegration);
+  const doTest = useServerFn(testConnection);
+  const doTriggerSync = useServerFn(triggerSync);
   const fetchLogs = useServerFn(listIntegrationEvents);
 
   const { data, isLoading } = useQuery({
@@ -95,6 +106,8 @@ function IntegrationsPage() {
 
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<string>("all");
+  const [authFilter, setAuthFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<"all" | "connected" | "disconnected" | "error">("all");
   const [dialogFor, setDialogFor] = useState<Integration | null>(null);
   const [apiKey, setApiKey] = useState("");
   const [label, setLabel] = useState("");
@@ -104,11 +117,26 @@ function IntegrationsPage() {
     () => ["all", ...Array.from(new Set(items.map((i) => i.category)))],
     [items],
   );
+  const authTypes = useMemo(
+    () => ["all", ...Array.from(new Set(items.map((i) => i.auth_type)))],
+    [items],
+  );
   const filtered = items.filter((i) => {
     const okCat = category === "all" || i.category === category;
+    const okAuth = authFilter === "all" || i.auth_type === authFilter;
+    const s = i.connection?.status ?? "disconnected";
+    const okStatus =
+      statusFilter === "all" ||
+      (statusFilter === "connected" && s === "connected") ||
+      (statusFilter === "disconnected" && (s === "disconnected" || s === "revoked" || s === "pending")) ||
+      (statusFilter === "error" && s === "error");
     const q = search.trim().toLowerCase();
-    const okSearch = !q || i.name.toLowerCase().includes(q) || i.category.toLowerCase().includes(q);
-    return okCat && okSearch;
+    const okSearch =
+      !q ||
+      i.name.toLowerCase().includes(q) ||
+      i.category.toLowerCase().includes(q) ||
+      (i.provider ?? "").toLowerCase().includes(q);
+    return okCat && okAuth && okStatus && okSearch;
   });
 
   const connectMut = useMutation({
@@ -136,14 +164,30 @@ function IntegrationsPage() {
   });
 
   const syncMut = useMutation({
-    mutationFn: (slug: string) => doSync({ data: { slug } }),
-    onSuccess: () => {
-      toast.success("Sincronização concluída.");
+    mutationFn: (slug: string) => doTriggerSync({ data: { slug, mode: "manual" as const } }),
+    onSuccess: (r) => {
+      if (r?.ok) toast.success(r.message || "Sincronização concluída.");
+      else toast.error(r?.message || "Falha ao sincronizar.");
       qc.invalidateQueries({ queryKey: ["integrations"] });
       qc.invalidateQueries({ queryKey: ["integration-events"] });
     },
     onError: (e: Error) => toast.error(e.message ?? "Falha ao sincronizar."),
   });
+
+  const testMut = useMutation({
+    mutationFn: (slug: string) => doTest({ data: { slug } }),
+    onSuccess: (r) => {
+      if (r?.ok) toast.success(`Conexão saudável (${r.latency_ms}ms).`);
+      else toast.error(r?.message || "Conexão com problemas.");
+      qc.invalidateQueries({ queryKey: ["integrations"] });
+      qc.invalidateQueries({ queryKey: ["integration-events"] });
+    },
+    onError: (e: Error) => toast.error(e.message ?? "Falha ao testar."),
+  });
+
+  // Silence lint for legacy syncIntegration reference retained for API surface
+  void doSync;
+
 
   function openConnect(item: Integration) {
     if (item.is_coming_soon) {
@@ -174,7 +218,7 @@ function IntegrationsPage() {
   }
 
   return (
-    <DashboardShell title="Central de Conexões" breadcrumb="Integrações">
+    <DashboardShell title="Connector Manager" breadcrumb="Sistema / Connector Manager">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-4 md:p-6">
         <header className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
@@ -182,52 +226,46 @@ function IntegrationsPage() {
               <Plug className="h-5 w-5" />
             </div>
             <div className="min-w-0">
-              <h1 className="truncate text-2xl font-bold tracking-tight">Central de Conexões</h1>
+              <h1 className="truncate text-2xl font-bold tracking-tight">Connector Manager</h1>
               <p className="text-sm text-muted-foreground">
-                Conecte, sincronize e monitore integrações externas em um só lugar.
+                Cadastre, monitore e sincronize todos os conectores do sistema em um só lugar.
               </p>
             </div>
           </div>
+          <SummaryStats items={items} />
         </header>
 
         <Tabs defaultValue="catalog" className="w-full">
           <TabsList>
-            <TabsTrigger value="catalog">Catálogo</TabsTrigger>
+            <TabsTrigger value="catalog">Conectores</TabsTrigger>
             <TabsTrigger value="logs">Histórico</TabsTrigger>
           </TabsList>
 
           <TabsContent value="catalog" className="mt-4 space-y-4">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <div className="relative flex-1">
+            <div className="flex flex-col gap-3">
+              <div className="relative">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Buscar integração…"
+                  placeholder="Buscar por nome, provedor ou categoria…"
                   className="pl-9"
                 />
               </div>
-              <div className="flex flex-wrap gap-1.5">
-                {categories.map((c) => (
-                  <button
-                    key={c}
-                    onClick={() => setCategory(c)}
-                    className={`rounded-full border px-3 py-1 text-xs transition-colors ${
-                      category === c
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border text-muted-foreground hover:border-ring/40 hover:text-foreground"
-                    }`}
-                  >
-                    {c === "all" ? "Todas" : c}
-                  </button>
-                ))}
+              <div className="flex flex-col gap-2">
+                <FilterRow label="Categoria" values={categories} active={category} onChange={setCategory} translate={(v) => (v === "all" ? "Todas" : v)} />
+                <FilterRow label="Autenticação" values={authTypes} active={authFilter} onChange={setAuthFilter}
+                  translate={(v) => (v === "all" ? "Todas" : AUTH_LABEL[v as Integration["auth_type"]] ?? v)} />
+                <FilterRow label="Status" values={["all", "connected", "disconnected", "error"]} active={statusFilter}
+                  onChange={(v) => setStatusFilter(v as typeof statusFilter)}
+                  translate={(v) => ({ all: "Todos", connected: "Conectados", disconnected: "Desconectados", error: "Com erro" }[v] ?? v)} />
               </div>
             </div>
 
             {isLoading ? (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {Array.from({ length: 6 }).map((_, i) => (
-                  <Skeleton key={i} className="h-44 rounded-xl" />
+                  <Skeleton key={i} className="h-52 rounded-xl" />
                 ))}
               </div>
             ) : filtered.length === 0 ? (
@@ -241,7 +279,9 @@ function IntegrationsPage() {
                     onConnect={() => openConnect(item)}
                     onDisconnect={() => disconnectMut.mutate(item.slug)}
                     onSync={() => syncMut.mutate(item.slug)}
+                    onTest={() => testMut.mutate(item.slug)}
                     syncing={syncMut.isPending && syncMut.variables === item.slug}
+                    testing={testMut.isPending && testMut.variables === item.slug}
                   />
                 ))}
               </div>
@@ -350,16 +390,22 @@ function IntegrationCard({
   onConnect,
   onDisconnect,
   onSync,
+  onTest,
   syncing,
+  testing,
 }: {
   item: Integration;
   onConnect: () => void;
   onDisconnect: () => void;
   onSync: () => void;
+  onTest: () => void;
   syncing: boolean;
+  testing: boolean;
 }) {
   const connected = item.connection?.status === "connected";
   const hasError = item.connection?.status === "error";
+  const health = item.connection?.health_status ?? "unknown";
+  const latency = item.connection?.avg_response_ms ?? null;
 
   return (
     <Card interactive className="flex h-full flex-col">
@@ -372,36 +418,27 @@ function IntegrationCard({
             <div className="min-w-0">
               <CardTitle className="truncate text-base">{item.name}</CardTitle>
               <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
-                <Badge variant="outline" className="text-[10px]">
-                  {item.category}
-                </Badge>
-                <Badge variant="secondary" className="text-[10px]">
-                  {AUTH_LABEL[item.auth_type]}
-                </Badge>
+                <Badge variant="outline" className="text-[10px]">{item.category}</Badge>
+                <Badge variant="secondary" className="text-[10px]">{AUTH_LABEL[item.auth_type]}</Badge>
+                {item.version && <Badge variant="outline" className="text-[10px]">v{item.version}</Badge>}
               </div>
             </div>
           </div>
           <StatusBadge
-            status={
-              item.is_coming_soon
-                ? "soon"
-                : hasError
-                  ? "error"
-                  : connected
-                    ? "connected"
-                    : "disconnected"
-            }
+            status={item.is_coming_soon ? "soon" : hasError ? "error" : connected ? "connected" : "disconnected"}
           />
         </div>
       </CardHeader>
       <CardContent className="flex flex-1 flex-col gap-3">
         <p className="line-clamp-2 text-sm text-muted-foreground">{item.description}</p>
-        {connected && item.connection?.last_sync_at ? (
-          <p className="text-xs text-muted-foreground">
-            Última sincronização:{" "}
-            {new Date(item.connection.last_sync_at).toLocaleString("pt-BR")}
-          </p>
-        ) : null}
+        {connected && (
+          <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+            <HealthPill status={health} latency={latency} />
+            {item.connection?.last_sync_at && (
+              <span>Sync: {new Date(item.connection.last_sync_at).toLocaleString("pt-BR")}</span>
+            )}
+          </div>
+        )}
         {hasError && item.connection?.last_error ? (
           <p className="line-clamp-2 rounded-md border border-destructive/30 bg-destructive/5 p-2 text-xs text-destructive">
             {item.connection.last_error}
@@ -418,14 +455,14 @@ function IntegrationCard({
                 <RefreshCw className={`h-3.5 w-3.5 ${syncing ? "animate-spin" : ""}`} />
                 Sincronizar
               </Button>
-              <Button size="sm" variant="ghost" onClick={onDisconnect}>
-                Desconectar
+              <Button size="sm" variant="outline" onClick={onTest} disabled={testing}>
+                <CheckCircle2 className={`h-3.5 w-3.5 ${testing ? "animate-pulse" : ""}`} />
+                Testar
               </Button>
+              <Button size="sm" variant="ghost" onClick={onDisconnect}>Desconectar</Button>
             </>
           ) : (
-            <Button size="sm" onClick={onConnect}>
-              Conectar
-            </Button>
+            <Button size="sm" onClick={onConnect}>Conectar</Button>
           )}
           <Button size="sm" variant="ghost" className="ml-auto" disabled>
             <Settings className="h-3.5 w-3.5" />
@@ -435,6 +472,74 @@ function IntegrationCard({
     </Card>
   );
 }
+
+function HealthPill({ status, latency }: { status: HealthStatus; latency: number | null }) {
+  const map: Record<HealthStatus, { cls: string; label: string }> = {
+    healthy: { cls: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20", label: "Saudável" },
+    unhealthy: { cls: "bg-destructive/10 text-destructive border-destructive/20", label: "Instável" },
+    unknown: { cls: "bg-muted text-muted-foreground border-border", label: "Sem teste" },
+  };
+  const m = map[status];
+  return (
+    <span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-medium ${m.cls}`}>
+      <span className="h-1.5 w-1.5 rounded-full bg-current" />
+      {m.label}
+      {latency != null && status !== "unknown" && <> · {latency}ms</>}
+    </span>
+  );
+}
+
+function FilterRow({
+  label, values, active, onChange, translate,
+}: {
+  label: string;
+  values: string[];
+  active: string;
+  onChange: (v: string) => void;
+  translate: (v: string) => string;
+}) {
+  return (
+    <div className="flex flex-wrap items-center gap-1.5">
+      <span className="mr-1 text-[11px] uppercase tracking-wide text-muted-foreground">{label}</span>
+      {values.map((v) => (
+        <button
+          key={v}
+          onClick={() => onChange(v)}
+          className={`rounded-full border px-3 py-1 text-xs transition-colors ${
+            active === v
+              ? "border-primary bg-primary/10 text-primary"
+              : "border-border text-muted-foreground hover:border-ring/40 hover:text-foreground"
+          }`}
+        >
+          {translate(v)}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function SummaryStats({ items }: { items: Integration[] }) {
+  const total = items.length;
+  const connected = items.filter((i) => i.connection?.status === "connected").length;
+  const healthy = items.filter((i) => i.connection?.health_status === "healthy").length;
+  const withErrors = items.filter((i) => i.connection?.status === "error").length;
+  return (
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+      {[
+        { label: "Conectores", value: total },
+        { label: "Conectados", value: connected },
+        { label: "Saudáveis", value: healthy },
+        { label: "Com erro", value: withErrors },
+      ].map((s) => (
+        <div key={s.label} className="rounded-lg border bg-card px-3 py-2">
+          <div className="text-[11px] text-muted-foreground">{s.label}</div>
+          <div className="text-lg font-semibold">{s.value}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 
 function StatusBadge({
   status,
