@@ -373,7 +373,7 @@ export const triggerSync = createServerFn({ method: "POST" })
       duration_ms: duration,
     });
 
-    return { ok: result.ok, job_id: job.id, ...result };
+    return { job_id: job.id, ok: result.ok, items_processed: result.items_processed, message: result.message };
   });
 
 // ---------------------------------------------------------------------------
