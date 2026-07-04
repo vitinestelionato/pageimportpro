@@ -390,16 +390,22 @@ function IntegrationCard({
   onConnect,
   onDisconnect,
   onSync,
+  onTest,
   syncing,
+  testing,
 }: {
   item: Integration;
   onConnect: () => void;
   onDisconnect: () => void;
   onSync: () => void;
+  onTest: () => void;
   syncing: boolean;
+  testing: boolean;
 }) {
   const connected = item.connection?.status === "connected";
   const hasError = item.connection?.status === "error";
+  const health = item.connection?.health_status ?? "unknown";
+  const latency = item.connection?.avg_response_ms ?? null;
 
   return (
     <Card interactive className="flex h-full flex-col">
@@ -412,36 +418,27 @@ function IntegrationCard({
             <div className="min-w-0">
               <CardTitle className="truncate text-base">{item.name}</CardTitle>
               <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
-                <Badge variant="outline" className="text-[10px]">
-                  {item.category}
-                </Badge>
-                <Badge variant="secondary" className="text-[10px]">
-                  {AUTH_LABEL[item.auth_type]}
-                </Badge>
+                <Badge variant="outline" className="text-[10px]">{item.category}</Badge>
+                <Badge variant="secondary" className="text-[10px]">{AUTH_LABEL[item.auth_type]}</Badge>
+                {item.version && <Badge variant="outline" className="text-[10px]">v{item.version}</Badge>}
               </div>
             </div>
           </div>
           <StatusBadge
-            status={
-              item.is_coming_soon
-                ? "soon"
-                : hasError
-                  ? "error"
-                  : connected
-                    ? "connected"
-                    : "disconnected"
-            }
+            status={item.is_coming_soon ? "soon" : hasError ? "error" : connected ? "connected" : "disconnected"}
           />
         </div>
       </CardHeader>
       <CardContent className="flex flex-1 flex-col gap-3">
         <p className="line-clamp-2 text-sm text-muted-foreground">{item.description}</p>
-        {connected && item.connection?.last_sync_at ? (
-          <p className="text-xs text-muted-foreground">
-            Última sincronização:{" "}
-            {new Date(item.connection.last_sync_at).toLocaleString("pt-BR")}
-          </p>
-        ) : null}
+        {connected && (
+          <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+            <HealthPill status={health} latency={latency} />
+            {item.connection?.last_sync_at && (
+              <span>Sync: {new Date(item.connection.last_sync_at).toLocaleString("pt-BR")}</span>
+            )}
+          </div>
+        )}
         {hasError && item.connection?.last_error ? (
           <p className="line-clamp-2 rounded-md border border-destructive/30 bg-destructive/5 p-2 text-xs text-destructive">
             {item.connection.last_error}
@@ -458,14 +455,14 @@ function IntegrationCard({
                 <RefreshCw className={`h-3.5 w-3.5 ${syncing ? "animate-spin" : ""}`} />
                 Sincronizar
               </Button>
-              <Button size="sm" variant="ghost" onClick={onDisconnect}>
-                Desconectar
+              <Button size="sm" variant="outline" onClick={onTest} disabled={testing}>
+                <CheckCircle2 className={`h-3.5 w-3.5 ${testing ? "animate-pulse" : ""}`} />
+                Testar
               </Button>
+              <Button size="sm" variant="ghost" onClick={onDisconnect}>Desconectar</Button>
             </>
           ) : (
-            <Button size="sm" onClick={onConnect}>
-              Conectar
-            </Button>
+            <Button size="sm" onClick={onConnect}>Conectar</Button>
           )}
           <Button size="sm" variant="ghost" className="ml-auto" disabled>
             <Settings className="h-3.5 w-3.5" />
@@ -475,6 +472,74 @@ function IntegrationCard({
     </Card>
   );
 }
+
+function HealthPill({ status, latency }: { status: HealthStatus; latency: number | null }) {
+  const map: Record<HealthStatus, { cls: string; label: string }> = {
+    healthy: { cls: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20", label: "Saudável" },
+    unhealthy: { cls: "bg-destructive/10 text-destructive border-destructive/20", label: "Instável" },
+    unknown: { cls: "bg-muted text-muted-foreground border-border", label: "Sem teste" },
+  };
+  const m = map[status];
+  return (
+    <span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-medium ${m.cls}`}>
+      <span className="h-1.5 w-1.5 rounded-full bg-current" />
+      {m.label}
+      {latency != null && status !== "unknown" && <> · {latency}ms</>}
+    </span>
+  );
+}
+
+function FilterRow({
+  label, values, active, onChange, translate,
+}: {
+  label: string;
+  values: string[];
+  active: string;
+  onChange: (v: string) => void;
+  translate: (v: string) => string;
+}) {
+  return (
+    <div className="flex flex-wrap items-center gap-1.5">
+      <span className="mr-1 text-[11px] uppercase tracking-wide text-muted-foreground">{label}</span>
+      {values.map((v) => (
+        <button
+          key={v}
+          onClick={() => onChange(v)}
+          className={`rounded-full border px-3 py-1 text-xs transition-colors ${
+            active === v
+              ? "border-primary bg-primary/10 text-primary"
+              : "border-border text-muted-foreground hover:border-ring/40 hover:text-foreground"
+          }`}
+        >
+          {translate(v)}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function SummaryStats({ items }: { items: Integration[] }) {
+  const total = items.length;
+  const connected = items.filter((i) => i.connection?.status === "connected").length;
+  const healthy = items.filter((i) => i.connection?.health_status === "healthy").length;
+  const withErrors = items.filter((i) => i.connection?.status === "error").length;
+  return (
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+      {[
+        { label: "Conectores", value: total },
+        { label: "Conectados", value: connected },
+        { label: "Saudáveis", value: healthy },
+        { label: "Com erro", value: withErrors },
+      ].map((s) => (
+        <div key={s.label} className="rounded-lg border bg-card px-3 py-2">
+          <div className="text-[11px] text-muted-foreground">{s.label}</div>
+          <div className="text-lg font-semibold">{s.value}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 
 function StatusBadge({
   status,
