@@ -37,24 +37,30 @@ import {
   connectIntegration,
   disconnectIntegration,
   syncIntegration,
+  testConnection,
+  triggerSync,
   listIntegrationEvents,
 } from "@/lib/integrations.functions";
 
 export const Route = createFileRoute("/_authenticated/dashboard/integracoes")({
   head: () => ({
     meta: [
-      { title: "Central de Conexões · ImportPro" },
+      { title: "Connector Manager · ImportPro" },
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
   component: IntegrationsPage,
 });
 
+type HealthStatus = "unknown" | "healthy" | "unhealthy";
+
 type Integration = {
   slug: string;
   name: string;
   description: string | null;
   category: string;
+  provider: string | null;
+  version: string | null;
   auth_type: "oauth2" | "api_key" | "bearer" | "webhook" | "custom" | "builtin";
   is_coming_soon: boolean;
   connection: {
@@ -63,6 +69,9 @@ type Integration = {
     last_sync_at: string | null;
     last_error: string | null;
     account_label: string | null;
+    health_status?: HealthStatus | null;
+    avg_response_ms?: number | null;
+    last_test_at?: string | null;
   } | null;
 };
 
