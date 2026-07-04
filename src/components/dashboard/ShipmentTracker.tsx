@@ -56,7 +56,7 @@ export function ShipmentTracker() {
 
   const { data: shipments = [], isLoading } = useQuery({
     queryKey: ["shipments", "list"],
-    queryFn: () => fetchList() as Promise<Shipment[]>,
+    queryFn: async () => (await fetchList()) as unknown as Shipment[],
     refetchInterval: REFRESH_INTERVAL_MS,
     refetchOnWindowFocus: true,
   });
