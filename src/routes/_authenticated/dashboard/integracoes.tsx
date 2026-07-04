@@ -218,7 +218,7 @@ function IntegrationsPage() {
   }
 
   return (
-    <DashboardShell title="Central de Conexões" breadcrumb="Integrações">
+    <DashboardShell title="Connector Manager" breadcrumb="Sistema / Connector Manager">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-4 md:p-6">
         <header className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
@@ -226,52 +226,46 @@ function IntegrationsPage() {
               <Plug className="h-5 w-5" />
             </div>
             <div className="min-w-0">
-              <h1 className="truncate text-2xl font-bold tracking-tight">Central de Conexões</h1>
+              <h1 className="truncate text-2xl font-bold tracking-tight">Connector Manager</h1>
               <p className="text-sm text-muted-foreground">
-                Conecte, sincronize e monitore integrações externas em um só lugar.
+                Cadastre, monitore e sincronize todos os conectores do sistema em um só lugar.
               </p>
             </div>
           </div>
+          <SummaryStats items={items} />
         </header>
 
         <Tabs defaultValue="catalog" className="w-full">
           <TabsList>
-            <TabsTrigger value="catalog">Catálogo</TabsTrigger>
+            <TabsTrigger value="catalog">Conectores</TabsTrigger>
             <TabsTrigger value="logs">Histórico</TabsTrigger>
           </TabsList>
 
           <TabsContent value="catalog" className="mt-4 space-y-4">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <div className="relative flex-1">
+            <div className="flex flex-col gap-3">
+              <div className="relative">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Buscar integração…"
+                  placeholder="Buscar por nome, provedor ou categoria…"
                   className="pl-9"
                 />
               </div>
-              <div className="flex flex-wrap gap-1.5">
-                {categories.map((c) => (
-                  <button
-                    key={c}
-                    onClick={() => setCategory(c)}
-                    className={`rounded-full border px-3 py-1 text-xs transition-colors ${
-                      category === c
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border text-muted-foreground hover:border-ring/40 hover:text-foreground"
-                    }`}
-                  >
-                    {c === "all" ? "Todas" : c}
-                  </button>
-                ))}
+              <div className="flex flex-col gap-2">
+                <FilterRow label="Categoria" values={categories} active={category} onChange={setCategory} translate={(v) => (v === "all" ? "Todas" : v)} />
+                <FilterRow label="Autenticação" values={authTypes} active={authFilter} onChange={setAuthFilter}
+                  translate={(v) => (v === "all" ? "Todas" : AUTH_LABEL[v as Integration["auth_type"]] ?? v)} />
+                <FilterRow label="Status" values={["all", "connected", "disconnected", "error"]} active={statusFilter}
+                  onChange={(v) => setStatusFilter(v as typeof statusFilter)}
+                  translate={(v) => ({ all: "Todos", connected: "Conectados", disconnected: "Desconectados", error: "Com erro" }[v] ?? v)} />
               </div>
             </div>
 
             {isLoading ? (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {Array.from({ length: 6 }).map((_, i) => (
-                  <Skeleton key={i} className="h-44 rounded-xl" />
+                  <Skeleton key={i} className="h-52 rounded-xl" />
                 ))}
               </div>
             ) : filtered.length === 0 ? (
@@ -285,7 +279,9 @@ function IntegrationsPage() {
                     onConnect={() => openConnect(item)}
                     onDisconnect={() => disconnectMut.mutate(item.slug)}
                     onSync={() => syncMut.mutate(item.slug)}
+                    onTest={() => testMut.mutate(item.slug)}
                     syncing={syncMut.isPending && syncMut.variables === item.slug}
+                    testing={testMut.isPending && testMut.variables === item.slug}
                   />
                 ))}
               </div>
