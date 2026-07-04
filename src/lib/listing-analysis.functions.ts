@@ -585,7 +585,17 @@ export const analyzeListing = createServerFn({ method: "POST" })
       warnings.push("Não foi possível ler o anúncio. Verifique o link ou tente novamente.");
     }
 
-    // 8) Montar resultado final
+    // 8) Validação real das imagens no servidor: baixa cada uma, descarta
+    //    quebradas, ícones e placeholders "图片加载失败" (conteúdo idêntico repetido)
+    const validated = await validateProductImages(
+      parsed.images.main,
+      parsed.images.gallery,
+      parsed.url || null,
+    );
+    parsed.images.main = validated.main;
+    parsed.images.gallery = validated.gallery;
+
+    // 9) Montar resultado final
     const result = mergeToAnalysis({ parsed, enrichment, page, fetchedOk, warnings, conversion });
 
     cache.set(key, { data: result, expiresAt: Date.now() + CACHE_TTL_MS });
