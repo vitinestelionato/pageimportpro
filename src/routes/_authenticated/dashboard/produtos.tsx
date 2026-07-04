@@ -212,6 +212,47 @@ function ProductsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={() => setModalOpen(false)}>
           <div onClick={(e) => e.stopPropagation()} className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-white/10 bg-card p-6">
             <h2 className="mb-4 font-display text-2xl font-bold">{form.id ? "Editar produto" : "Novo produto"}</h2>
+
+            {!form.id && (
+              <div className="mb-5 rounded-xl border border-primary/30 bg-primary/5 p-4">
+                <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-primary">
+                  <Sparkles className="h-4 w-4" /> Preenchimento automático
+                </div>
+                <p className="mb-3 text-xs text-muted-foreground">
+                  Cole o link do produto (AliExpress, Shopee, Mercado Livre, Amazon, etc.) e o sistema busca nome, imagem, preço e mais.
+                </p>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <div className="relative flex-1">
+                    <Link2 className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <input
+                      type="url"
+                      value={autoUrl}
+                      onChange={(e) => setAutoUrl(e.target.value)}
+                      onPaste={(e) => {
+                        const v = e.clipboardData.getData("text").trim();
+                        if (/^https?:\/\//i.test(v)) {
+                          setAutoUrl(v);
+                          setTimeout(() => enrichMut.mutate(v), 50);
+                          e.preventDefault();
+                        }
+                      }}
+                      placeholder="Cole aqui o link do produto..."
+                      className="input pl-9"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    disabled={enrichMut.isPending || !autoUrl.trim()}
+                    onClick={() => enrichMut.mutate(autoUrl.trim())}
+                    className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+                  >
+                    <Sparkles className="h-4 w-4" />
+                    {enrichMut.isPending ? "Buscando..." : "Buscar dados"}
+                  </button>
+                </div>
+              </div>
+            )}
+
             <form onSubmit={(e) => { e.preventDefault(); if (!form.name.trim()) { toast.error("Nome é obrigatório"); return; } saveMut.mutate(); }} className="space-y-4">
               <Field label="Nome *"><input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="input" /></Field>
               <div className="grid gap-3 md:grid-cols-2">
