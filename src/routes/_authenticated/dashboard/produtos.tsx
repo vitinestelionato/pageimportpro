@@ -8,6 +8,7 @@ import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { ShipmentTracker } from "@/components/dashboard/ShipmentTracker";
 import { listProducts, createProduct, updateProduct, deleteProduct } from "@/lib/products.functions";
 import { enrichProductFromUrl } from "@/lib/enrich-product.functions";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export const Route = createFileRoute("/_authenticated/dashboard/produtos")({
   head: () => ({ meta: [{ title: "Produtos · ImportPro" }, { name: "robots", content: "noindex,nofollow" }] }),
