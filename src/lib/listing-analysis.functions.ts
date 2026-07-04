@@ -214,7 +214,7 @@ Lembre-se: cada risk_alert precisa citar a evidência exata do JSON. Sem evidên
       method: "POST",
       headers: { "Lovable-API-Key": apiKey, "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "google/gemini-2.5-pro",
+        model: "google/gemini-3-flash-preview",
         messages: [
           { role: "system", content: system },
           { role: "user", content: user },
@@ -367,7 +367,7 @@ function inferModel(text: string): string | null {
 }
 
 
-const IMG_FETCH_TIMEOUT_MS = 6000;
+const IMG_FETCH_TIMEOUT_MS = 3000;
 // Placeholder branco/corrompido da CDN geralmente tem <1.5KB. Fotos reais
 // (mesmo miniaturas webp) costumam ficar acima de 2KB. Ser conservador para
 // não esconder fotos legítimas do produto.
@@ -376,7 +376,7 @@ const IMG_MIN_BYTES = 1_800;
 // entre as URLs candidatas. Isso evita rejeitar pares legítimos duplicados.
 const IMG_PLACEHOLDER_MIN_REPEATS = 3;
 const IMG_PLACEHOLDER_MAX_BYTES = 12_000;
-const IMG_MAX_CANDIDATES = 40;
+const IMG_MAX_CANDIDATES = 12;
 
 type ImgCheck = { url: string; size: number; hash: string };
 
@@ -665,8 +665,8 @@ export const analyzeListing = createServerFn({ method: "POST" })
       page = await scraper.scrape(normalizedUrl, {
         country: "CN",
         locale: "zh-CN",
-        waitForMs: 4000,
-        timeoutMs: 45000,
+        waitForMs: 1800,
+        timeoutMs: 30000,
       });
       fetchedOk = !!page.html && page.statusCode < 400;
     } catch (err) {
@@ -701,22 +701,18 @@ export const analyzeListing = createServerFn({ method: "POST" })
       conversion = await convert(parsed.price.value, parsed.price.currency);
     }
 
-    // 7) IA — recebe SOMENTE o JSON estruturado, nunca a URL
-    const enrichment = fetchedOk ? await aiDiagnose(parsed) : null;
+    // 7) IA + validação de imagens rodam em PARALELO — ambos dependem só do
+    //    ParsedListing, então não faz sentido serializar.
+    const [enrichment, validated] = await Promise.all([
+      fetchedOk ? aiDiagnose(parsed) : Promise.resolve(null),
+      validateProductImages(parsed.images.main, parsed.images.gallery, parsed.url || null),
+    ]);
     if (fetchedOk && !enrichment) {
       warnings.push("Diagnóstico por IA indisponível — dados estruturais preservados.");
     }
     if (!fetchedOk && !parsed.title) {
       warnings.push("Não foi possível ler o anúncio. Verifique o link ou tente novamente.");
     }
-
-    // 8) Validação real das imagens no servidor: baixa cada uma, descarta
-    //    quebradas, ícones e placeholders "图片加载失败" (conteúdo idêntico repetido)
-    const validated = await validateProductImages(
-      parsed.images.main,
-      parsed.images.gallery,
-      parsed.url || null,
-    );
     parsed.images.main = validated.main;
     parsed.images.gallery = validated.gallery;
 
