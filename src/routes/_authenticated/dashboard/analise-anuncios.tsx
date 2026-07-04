@@ -15,7 +15,7 @@ import { analyzeListing, NOT_FOUND, type ListingAnalysis } from "@/lib/listing-a
 export const Route = createFileRoute("/_authenticated/dashboard/analise-anuncios")({
   head: () => ({
     meta: [
-      { title: "Gestão de Produtos · ImportPro" },
+      { title: "Análise de Anúncios · ImportPro" },
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
