@@ -97,7 +97,7 @@ function SuppliersPage() {
   }, [suppliers]);
 
   const saveMut = useMutation({
-    mutationFn: (payload: Parameters<typeof save>[0]["data"]) => save({ data: payload }),
+    mutationFn: (payload: Parameters<typeof upsertSupplier>[0]["data"]) => save({ data: payload }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["suppliers"] });
       setModalOpen(false);
