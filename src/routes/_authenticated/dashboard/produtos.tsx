@@ -444,3 +444,278 @@ function AnalysisResult({ data, onRefresh }: { data: ListingAnalysis; onRefresh:
     </div>
   );
 }
+
+function ProductImages({ images }: { images: ListingAnalysis["images"] }) {
+  const [validMain, setValidMain] = useState<string | null>(images.main || null);
+  const [validGallery, setValidGallery] = useState<string[]>(images.gallery.slice(0, 12));
+  const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
+
+  useEffect(() => {
+    setValidMain(images.main || null);
+    setValidGallery(images.gallery.slice(0, 12));
+  }, [images]);
+
+  const all = [validMain, ...validGallery].filter((s): s is string => !!s);
+
+  const removeMain = () => setValidMain(null);
+  const removeGalleryAt = (i: number) =>
+    setValidGallery((g) => g.filter((_, idx) => idx !== i));
+
+  return (
+    <>
+      <div className="rounded-xl border bg-card p-5">
+        <div className="mb-3 flex items-center gap-2">
+          <ImageIcon className="h-4 w-4 text-primary" />
+          <h2 className="font-semibold">Imagens do produto</h2>
+        </div>
+        <div className="grid gap-4 md:grid-cols-[minmax(0,1fr),minmax(0,1fr)]">
+          <button
+            type="button"
+            onClick={() => validMain && setLightboxIdx(0)}
+            className="group relative mx-auto flex aspect-square w-full max-w-[520px] items-center justify-center overflow-hidden rounded-xl border bg-muted"
+          >
+            {validMain ? (
+              <img
+                src={validMain}
+                alt="Foto principal"
+                className="h-full w-full object-contain transition group-hover:scale-[1.02]"
+                loading="lazy"
+                onLoad={(e) => {
+                  const el = e.currentTarget;
+                  if (el.naturalWidth < 150 || el.naturalHeight < 150) removeMain();
+                }}
+                onError={removeMain}
+              />
+            ) : (
+              <ImageIcon className="h-10 w-10 text-muted-foreground" />
+            )}
+          </button>
+
+          {validGallery.length > 0 && (
+            <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+              {validGallery.map((src, i) => (
+                <button
+                  key={src + i}
+                  type="button"
+                  onClick={() => setLightboxIdx(validMain ? i + 1 : i)}
+                  className="aspect-square overflow-hidden rounded-lg border bg-muted transition hover:ring-2 hover:ring-primary"
+                >
+                  <img
+                    src={src}
+                    alt={`Foto ${i + 2}`}
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                    onLoad={(e) => {
+                      const el = e.currentTarget;
+                      if (el.naturalWidth < 150 || el.naturalHeight < 150) removeGalleryAt(i);
+                    }}
+                    onError={() => removeGalleryAt(i)}
+                  />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        {images.videos.length > 0 && (
+          <div className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Play className="h-3.5 w-3.5" />
+            {images.videos.length} vídeo(s) detectado(s)
+          </div>
+        )}
+      </div>
+
+      {lightboxIdx !== null && all.length > 0 && (
+        <Lightbox
+          images={all}
+          index={Math.min(lightboxIdx, all.length - 1)}
+          onClose={() => setLightboxIdx(null)}
+          onIndexChange={setLightboxIdx}
+        />
+      )}
+    </>
+  );
+}
+
+function Lightbox({
+  images,
+  index,
+  onClose,
+  onIndexChange,
+}: {
+  images: string[];
+  index: number;
+  onClose: () => void;
+  onIndexChange: (i: number) => void;
+}) {
+  const [zoom, setZoom] = useState(1);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const dragRef = useRef<{ x: number; y: number; ox: number; oy: number } | null>(null);
+  const pinchRef = useRef<{ dist: number; zoom: number } | null>(null);
+
+  const reset = useCallback(() => {
+    setZoom(1);
+    setOffset({ x: 0, y: 0 });
+  }, []);
+
+  const prev = useCallback(() => {
+    onIndexChange((index - 1 + images.length) % images.length);
+    reset();
+  }, [index, images.length, onIndexChange, reset]);
+
+  const next = useCallback(() => {
+    onIndexChange((index + 1) % images.length);
+    reset();
+  }, [index, images.length, onIndexChange, reset]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      else if (e.key === "ArrowLeft") prev();
+      else if (e.key === "ArrowRight") next();
+      else if (e.key === "+" || e.key === "=") setZoom((z) => Math.min(z + 0.25, 5));
+      else if (e.key === "-") setZoom((z) => Math.max(z - 0.25, 1));
+    };
+    window.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [onClose, prev, next]);
+
+  const onWheel = (e: React.WheelEvent) => {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? -0.2 : 0.2;
+    setZoom((z) => {
+      const nz = Math.min(Math.max(z + delta, 1), 6);
+      if (nz === 1) setOffset({ x: 0, y: 0 });
+      return nz;
+    });
+  };
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (zoom <= 1) return;
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    dragRef.current = { x: e.clientX, y: e.clientY, ox: offset.x, oy: offset.y };
+  };
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!dragRef.current) return;
+    setOffset({
+      x: dragRef.current.ox + (e.clientX - dragRef.current.x),
+      y: dragRef.current.oy + (e.clientY - dragRef.current.y),
+    });
+  };
+  const onPointerUp = () => {
+    dragRef.current = null;
+  };
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 2) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      pinchRef.current = { dist: Math.hypot(dx, dy), zoom };
+    }
+  };
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (e.touches.length === 2 && pinchRef.current) {
+      e.preventDefault();
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      const d = Math.hypot(dx, dy);
+      const nz = Math.min(Math.max(pinchRef.current.zoom * (d / pinchRef.current.dist), 1), 6);
+      setZoom(nz);
+      if (nz === 1) setOffset({ x: 0, y: 0 });
+    }
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (e.touches.length < 2) pinchRef.current = null;
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <button
+        type="button"
+        onClick={(e) => { e.stopPropagation(); onClose(); }}
+        className="absolute right-4 top-4 z-10 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
+        aria-label="Fechar"
+      >
+        <X className="h-5 w-5" />
+      </button>
+
+      {images.length > 1 && (
+        <>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); prev(); }}
+            className="absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white hover:bg-white/20"
+            aria-label="Anterior"
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </button>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); next(); }}
+            className="absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white hover:bg-white/20"
+            aria-label="Próxima"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
+        </>
+      )}
+
+      <div className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs text-white">
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); setZoom((z) => Math.max(z - 0.5, 1)); if (zoom - 0.5 <= 1) setOffset({ x: 0, y: 0 }); }}
+          className="rounded-full p-1 hover:bg-white/20"
+          aria-label="Diminuir zoom"
+        >
+          <ZoomOut className="h-4 w-4" />
+        </button>
+        <span className="min-w-[3ch] text-center">{Math.round(zoom * 100)}%</span>
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); setZoom((z) => Math.min(z + 0.5, 6)); }}
+          className="rounded-full p-1 hover:bg-white/20"
+          aria-label="Aumentar zoom"
+        >
+          <ZoomIn className="h-4 w-4" />
+        </button>
+        <span className="ml-2 opacity-70">{index + 1} / {images.length}</span>
+      </div>
+
+      <div
+        className="flex h-full w-full items-center justify-center overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+        onWheel={onWheel}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+        style={{ touchAction: zoom > 1 ? "none" : "pinch-zoom" }}
+      >
+        <img
+          src={images[index]}
+          alt={`Foto ${index + 1}`}
+          draggable={false}
+          className="max-h-[90vh] max-w-[92vw] select-none object-contain transition-transform"
+          style={{
+            transform: `translate(${offset.x}px, ${offset.y}px) scale(${zoom})`,
+            cursor: zoom > 1 ? "grab" : "zoom-in",
+          }}
+          onDoubleClick={() => {
+            if (zoom === 1) setZoom(2);
+            else { setZoom(1); setOffset({ x: 0, y: 0 }); }
+          }}
+        />
+      </div>
+    </div>
+  );
+}
