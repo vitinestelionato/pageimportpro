@@ -41,6 +41,78 @@ export type Database = {
         }
         Relationships: []
       }
+      alerts: {
+        Row: {
+          comparison: string | null
+          created_at: string
+          current_value: number | null
+          description: string | null
+          due_at: string | null
+          id: string
+          last_checked_at: string | null
+          last_triggered_at: string | null
+          metadata: Json
+          notify_email: boolean
+          notify_in_app: boolean
+          priority: string
+          reference_label: string | null
+          reference_url: string | null
+          status: string
+          target_value: number | null
+          title: string
+          trigger_count: number
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          comparison?: string | null
+          created_at?: string
+          current_value?: number | null
+          description?: string | null
+          due_at?: string | null
+          id?: string
+          last_checked_at?: string | null
+          last_triggered_at?: string | null
+          metadata?: Json
+          notify_email?: boolean
+          notify_in_app?: boolean
+          priority?: string
+          reference_label?: string | null
+          reference_url?: string | null
+          status?: string
+          target_value?: number | null
+          title: string
+          trigger_count?: number
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          comparison?: string | null
+          created_at?: string
+          current_value?: number | null
+          description?: string | null
+          due_at?: string | null
+          id?: string
+          last_checked_at?: string | null
+          last_triggered_at?: string | null
+          metadata?: Json
+          notify_email?: boolean
+          notify_in_app?: boolean
+          priority?: string
+          reference_label?: string | null
+          reference_url?: string | null
+          status?: string
+          target_value?: number | null
+          title?: string
+          trigger_count?: number
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       catalog_favorites: {
         Row: {
           created_at: string
