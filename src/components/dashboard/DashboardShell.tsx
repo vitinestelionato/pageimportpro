@@ -69,6 +69,12 @@ const NAV: NavGroup[] = [
     ],
   },
   {
+    label: "Financeiro",
+    items: [
+      { icon: <Wallet className="h-4 w-4" />, label: "Financeiro & Precificação", to: "/dashboard/financeiro", badge: "NOVO" },
+    ],
+  },
+  {
     label: "Tendências",
     items: [
       { icon: <Flame className="h-4 w-4" />, label: "Produtos em Alta", to: "/dashboard/tendencias" },
