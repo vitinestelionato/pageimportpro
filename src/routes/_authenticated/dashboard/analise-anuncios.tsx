@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { analyzeListing, NOT_FOUND, type ListingAnalysis } from "@/lib/listing-analysis.functions";
+import { BuyOnAgentButton } from "@/components/BuyOnAgentButton";
+import { BuyingAgentSelector } from "@/components/BuyingAgentSelector";
 
 export const Route = createFileRoute("/_authenticated/dashboard/analise-anuncios")({
   head: () => ({
