@@ -1,10 +1,8 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
-  validateSearch: z.object({}).passthrough(),
   beforeLoad: async () => {
     // 1) Must have a valid Supabase session.
     const { data, error } = await supabase.auth.getUser();
