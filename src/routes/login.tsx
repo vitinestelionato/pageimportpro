@@ -106,7 +106,19 @@ function LoginPage() {
               <p className="mt-1 text-sm text-muted-foreground">Bem-vindo de volta.</p>
             </div>
 
-            <div className="mt-8">
+            <div className="mt-6 rounded-xl border border-primary/30 bg-primary/10 p-4 text-xs leading-relaxed">
+              <div className="flex items-start gap-3">
+                <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                <p className="text-foreground/90">
+                  <span className="font-semibold text-primary">Acesso exclusivo para compradores.</span>{" "}
+                  O login só funciona se você já comprou a ImportPro e sua conta foi criada
+                  automaticamente pela <span className="font-semibold">Cakto</span> após a
+                  confirmação do pagamento. Use o mesmo e-mail utilizado na compra.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6">
               {blocked && (
                 <div className="mb-5 rounded-xl border border-amber-500/40 bg-amber-500/10 p-4 text-sm">
                   <div className="flex items-start gap-3">
