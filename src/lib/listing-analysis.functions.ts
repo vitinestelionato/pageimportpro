@@ -289,6 +289,69 @@ function orNF(v: string | null | undefined): string {
   return v && v.trim() ? v.trim() : NOT_FOUND;
 }
 
+// Marcas conhecidas + regex de modelo. Ordem importa: nomes compostos primeiro.
+const KNOWN_BRANDS: { brand: string; patterns: RegExp[] }[] = [
+  { brand: "Apple", patterns: [/\bapple\b/i, /\biphone\b/i, /\bipad\b/i, /\bmacbook\b/i, /\bairpods\b/i, /\bapple\s*watch\b/i] },
+  { brand: "Samsung", patterns: [/\bsamsung\b/i, /\bgalaxy\b/i] },
+  { brand: "Xiaomi", patterns: [/\bxiaomi\b/i, /\bredmi\b/i, /\bpoco\b/i, /\bmi\s?\d/i] },
+  { brand: "Huawei", patterns: [/\bhuawei\b/i, /\bmate\s?\d/i, /\bp\d{2}\s?pro\b/i] },
+  { brand: "Honor", patterns: [/\bhonor\b/i] },
+  { brand: "Oppo", patterns: [/\boppo\b/i] },
+  { brand: "Vivo", patterns: [/\bvivo\b/i] },
+  { brand: "OnePlus", patterns: [/\boneplus\b/i] },
+  { brand: "Realme", patterns: [/\brealme\b/i] },
+  { brand: "Motorola", patterns: [/\bmotorola\b/i, /\bmoto\s?[gez]\b/i] },
+  { brand: "Google", patterns: [/\bgoogle\s?pixel\b/i, /\bpixel\s?\d/i] },
+  { brand: "Sony", patterns: [/\bsony\b/i, /\bxperia\b/i, /\bplaystation\b/i, /\bps[45]\b/i] },
+  { brand: "LG", patterns: [/\blg\b/i] },
+  { brand: "Nintendo", patterns: [/\bnintendo\b/i, /\bswitch\b/i] },
+  { brand: "Microsoft", patterns: [/\bmicrosoft\b/i, /\bxbox\b/i, /\bsurface\b/i] },
+  { brand: "Dell", patterns: [/\bdell\b/i] },
+  { brand: "HP", patterns: [/\bhp\b/i, /\bhewlett\b/i] },
+  { brand: "Lenovo", patterns: [/\blenovo\b/i, /\bthinkpad\b/i] },
+  { brand: "Asus", patterns: [/\basus\b/i, /\brog\b/i, /\bzenbook\b/i] },
+  { brand: "Acer", patterns: [/\bacer\b/i] },
+  { brand: "JBL", patterns: [/\bjbl\b/i] },
+  { brand: "Bose", patterns: [/\bbose\b/i] },
+  { brand: "DJI", patterns: [/\bdji\b/i, /\bmavic\b/i, /\bosmo\b/i] },
+  { brand: "GoPro", patterns: [/\bgopro\b/i, /\bhero\s?\d/i] },
+  { brand: "Nike", patterns: [/\bnike\b/i, /\bair\s?jordan\b/i] },
+  { brand: "Adidas", patterns: [/\badidas\b/i, /\byeezy\b/i] },
+];
+
+const MODEL_PATTERNS: RegExp[] = [
+  /\biphone\s?\d{1,2}\s?(?:pro\s?max|pro|plus|mini|air|se)?\b/i,
+  /\bipad\s?(?:pro|air|mini)?\s?\d*\b/i,
+  /\bmacbook\s?(?:pro|air)?\s?\d*\b/i,
+  /\bapple\s?watch\s?(?:series\s?\d+|ultra\s?\d*|se)?\b/i,
+  /\bgalaxy\s?[a-z]?\d{1,3}\s?(?:ultra|pro|plus|fe|note)?\b/i,
+  /\bredmi\s?(?:note\s?)?\d{1,2}[a-z]?\s?(?:pro|plus|max)?\b/i,
+  /\bpoco\s?[a-z]?\d{1,2}\s?(?:pro|plus)?\b/i,
+  /\bpixel\s?\d\s?(?:pro|xl|a)?\b/i,
+  /\bmate\s?\d{1,2}\s?(?:pro|plus)?\b/i,
+  /\bxperia\s?[a-z]?\d[a-z]*\b/i,
+  /\bps[45]\s?(?:pro|slim)?\b/i,
+  /\bxbox\s?(?:series\s?[xs]|one)?\b/i,
+  /\bswitch\s?(?:oled|lite)?\b/i,
+];
+
+function inferBrand(text: string): string | null {
+  for (const b of KNOWN_BRANDS) {
+    if (b.patterns.some((r) => r.test(text))) return b.brand;
+  }
+  return null;
+}
+
+function inferModel(text: string): string | null {
+  for (const r of MODEL_PATTERNS) {
+    const m = text.match(r);
+    if (m) return m[0].replace(/\s+/g, " ").trim().replace(/\b\w/g, (c) => c.toUpperCase());
+  }
+  return null;
+}
+
+
+
 function mergeToAnalysis(args: {
   parsed: ParsedListing;
   enrichment: AiEnrichment | null;
@@ -321,9 +384,10 @@ function mergeToAnalysis(args: {
       name_original: orNF(parsed.title),
       name_translated: enr ? enr.name_translated : NOT_FOUND,
       category: enr?.category && enr.category !== NOT_FOUND ? enr.category : orNF(parsed.category),
-      brand: orNF(parsed.brand),
-      model: orNF(parsed.model),
+      brand: orNF(parsed.brand ?? inferBrand(`${parsed.title ?? ""} ${parsed.description ?? ""}`)),
+      model: orNF(parsed.model ?? inferModel(`${parsed.title ?? ""} ${parsed.description ?? ""}`)),
       description,
+
       specs: enr && enr.specs.length > 0 ? enr.specs : parsed.specs,
       keywords: enr ? enr.keywords : [],
       variations: parsed.variations,
