@@ -192,6 +192,9 @@ function AnalysisResult({ data, onRefresh }: { data: ListingAnalysis; onRefresh:
             <RefreshCw className="h-3.5 w-3.5" /> Reanalisar
           </button>
         </div>
+      </div>
+
+
 
       {data.meta.warnings.length > 0 && (
         <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-3 text-xs text-amber-600">
