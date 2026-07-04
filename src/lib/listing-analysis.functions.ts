@@ -453,9 +453,7 @@ export const analyzeListing = createServerFn({ method: "POST" })
     } catch (err) {
       const e = err as { code?: string; message?: string };
       console.error("[listing-analysis] scrape falhou:", e);
-      warnings.push(
-        `Não foi possível carregar a página (${e.code ?? "erro"}): ${e.message ?? "desconhecido"}`,
-      );
+      warnings.push(e.message ?? "Não foi possível abrir o anúncio.");
     }
 
     // 5) Parser específico da plataforma → JSON estruturado
