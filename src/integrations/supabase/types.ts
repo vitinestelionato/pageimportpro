@@ -161,6 +161,65 @@ export type Database = {
         }
         Relationships: []
       }
+      shipments: {
+        Row: {
+          carrier: string
+          created_at: string
+          events: Json
+          id: string
+          last_event_at: string | null
+          last_event_description: string | null
+          last_synced_at: string | null
+          product_id: string | null
+          product_name: string
+          status: string
+          sync_error: string | null
+          tracking_code: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          carrier?: string
+          created_at?: string
+          events?: Json
+          id?: string
+          last_event_at?: string | null
+          last_event_description?: string | null
+          last_synced_at?: string | null
+          product_id?: string | null
+          product_name: string
+          status?: string
+          sync_error?: string | null
+          tracking_code: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          carrier?: string
+          created_at?: string
+          events?: Json
+          id?: string
+          last_event_at?: string | null
+          last_event_description?: string | null
+          last_synced_at?: string | null
+          product_id?: string | null
+          product_name?: string
+          status?: string
+          sync_error?: string | null
+          tracking_code?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shipments_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
