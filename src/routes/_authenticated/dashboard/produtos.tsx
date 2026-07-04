@@ -8,6 +8,7 @@ import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { ShipmentTracker } from "@/components/dashboard/ShipmentTracker";
 import { listProducts, createProduct, updateProduct, deleteProduct } from "@/lib/products.functions";
 import { enrichProductFromUrl } from "@/lib/enrich-product.functions";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export const Route = createFileRoute("/_authenticated/dashboard/produtos")({
   head: () => ({ meta: [{ title: "Produtos · ImportPro" }, { name: "robots", content: "noindex,nofollow" }] }),
@@ -262,18 +263,33 @@ function ProductsPage() {
               <div className="grid gap-3 md:grid-cols-3">
                 <Field label="Preço origem"><input type="number" step="0.01" min="0" value={form.origin_price} onChange={(e) => setForm({ ...form, origin_price: e.target.value })} className="input" /></Field>
                 <Field label="Moeda">
-                  <select value={form.origin_currency} onChange={(e) => setForm({ ...form, origin_currency: e.target.value as FormState["origin_currency"] })} className="input">
-                    <option value="USD">USD</option><option value="EUR">EUR</option><option value="CNY">CNY</option><option value="BRL">BRL</option>
-                  </select>
+                  <Select value={form.origin_currency} onValueChange={(v) => setForm({ ...form, origin_currency: v as FormState["origin_currency"] })}>
+                    <SelectTrigger className="h-10 w-full rounded-lg border-white/10 bg-black/20 text-sm">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="USD">USD · Dólar</SelectItem>
+                      <SelectItem value="EUR">EUR · Euro</SelectItem>
+                      <SelectItem value="CNY">CNY · Yuan</SelectItem>
+                      <SelectItem value="BRL">BRL · Real</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </Field>
                 <Field label="Peso (kg)"><input type="number" step="0.001" min="0" value={form.weight_kg} onChange={(e) => setForm({ ...form, weight_kg: e.target.value })} className="input" /></Field>
               </div>
               <div className="grid gap-3 md:grid-cols-2">
                 <Field label="Categoria"><input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="input" /></Field>
                 <Field label="Status">
-                  <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as FormState["status"] })} className="input">
-                    <option value="analise">Em análise</option><option value="importado">Importado</option><option value="arquivado">Arquivado</option>
-                  </select>
+                  <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v as FormState["status"] })}>
+                    <SelectTrigger className="h-10 w-full rounded-lg border-white/10 bg-black/20 text-sm">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="analise">Em análise</SelectItem>
+                      <SelectItem value="importado">Importado</SelectItem>
+                      <SelectItem value="arquivado">Arquivado</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </Field>
               </div>
               <Field label="Observações"><textarea rows={3} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} className="input" /></Field>
