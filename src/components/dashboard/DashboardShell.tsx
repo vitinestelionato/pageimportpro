@@ -197,6 +197,9 @@ export function DashboardShell({
           </div>
 
           <div className="flex items-center gap-2">
+            <div className="hidden md:block">
+              <BuyingAgentSelector compact />
+            </div>
             <IconBtn><Eye className="h-4 w-4" /></IconBtn>
             <IconBtn>🇧🇷</IconBtn>
             <IconBtn><Bell className="h-4 w-4" /></IconBtn>
