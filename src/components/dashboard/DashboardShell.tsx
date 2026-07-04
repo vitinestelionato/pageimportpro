@@ -73,13 +73,6 @@ const NAV: NavGroup[] = [
       { icon: <AlertTriangle className="h-4 w-4" />, label: "Alertas", to: "/dashboard/alertas" },
     ],
   },
-  {
-    label: "Sistema",
-    items: [
-      { icon: <Plug className="h-4 w-4" />, label: "Connector Manager", to: "/dashboard/integracoes" },
-      { icon: <ShieldCheck className="h-4 w-4" />, label: "Gerenciador de Sessões", to: "/dashboard/sessoes" },
-    ],
-  },
 ];
 
 export function DashboardShell({
