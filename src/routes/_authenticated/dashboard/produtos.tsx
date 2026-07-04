@@ -3,10 +3,11 @@ import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Package, Plus, Pencil, Trash2, ExternalLink, Search } from "lucide-react";
+import { Package, Plus, Pencil, Trash2, ExternalLink, Search, Sparkles, Link2 } from "lucide-react";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { ShipmentTracker } from "@/components/dashboard/ShipmentTracker";
 import { listProducts, createProduct, updateProduct, deleteProduct } from "@/lib/products.functions";
+import { enrichProductFromUrl } from "@/lib/enrich-product.functions";
 
 export const Route = createFileRoute("/_authenticated/dashboard/produtos")({
   head: () => ({ meta: [{ title: "Produtos · ImportPro" }, { name: "robots", content: "noindex,nofollow" }] }),
