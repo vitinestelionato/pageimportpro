@@ -321,6 +321,75 @@ export type Database = {
           },
         ]
       }
+      suppliers: {
+        Row: {
+          category: string | null
+          contact_name: string | null
+          country: string | null
+          created_at: string
+          email: string | null
+          favorite: boolean
+          id: string
+          lead_time_days: number | null
+          min_order: number | null
+          name: string
+          notes: string | null
+          platform: string | null
+          rating: number
+          status: string
+          tags: string[]
+          updated_at: string
+          url: string | null
+          user_id: string
+          wechat: string | null
+          whatsapp: string | null
+        }
+        Insert: {
+          category?: string | null
+          contact_name?: string | null
+          country?: string | null
+          created_at?: string
+          email?: string | null
+          favorite?: boolean
+          id?: string
+          lead_time_days?: number | null
+          min_order?: number | null
+          name: string
+          notes?: string | null
+          platform?: string | null
+          rating?: number
+          status?: string
+          tags?: string[]
+          updated_at?: string
+          url?: string | null
+          user_id: string
+          wechat?: string | null
+          whatsapp?: string | null
+        }
+        Update: {
+          category?: string | null
+          contact_name?: string | null
+          country?: string | null
+          created_at?: string
+          email?: string | null
+          favorite?: boolean
+          id?: string
+          lead_time_days?: number | null
+          min_order?: number | null
+          name?: string
+          notes?: string | null
+          platform?: string | null
+          rating?: number
+          status?: string
+          tags?: string[]
+          updated_at?: string
+          url?: string | null
+          user_id?: string
+          wechat?: string | null
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
