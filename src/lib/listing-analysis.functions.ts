@@ -351,6 +351,83 @@ function inferModel(text: string): string | null {
 }
 
 
+const IMG_FETCH_TIMEOUT_MS = 6000;
+const IMG_MIN_BYTES = 5_000; // menor que isso = ícone/placeholder
+const IMG_MAX_CANDIDATES = 14;
+
+type ImgCheck = { url: string; size: number; hash: string };
+
+async function checkImage(url: string, referer: string | null): Promise<ImgCheck | null> {
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), IMG_FETCH_TIMEOUT_MS);
+    const res = await fetch(url, {
+      signal: ctrl.signal,
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36",
+        Accept: "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
+        ...(referer ? { Referer: referer } : {}),
+      },
+    });
+    clearTimeout(timer);
+    if (!res.ok) return null;
+    const ct = (res.headers.get("content-type") || "").toLowerCase();
+    if (ct && !ct.startsWith("image/")) return null;
+    const buf = await res.arrayBuffer();
+    if (buf.byteLength < IMG_MIN_BYTES) return null;
+    const digest = await crypto.subtle.digest("SHA-1", buf);
+    const hash = Array.from(new Uint8Array(digest))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+    return { url, size: buf.byteLength, hash };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Baixa cada imagem candidata no servidor e mantém apenas as válidas:
+ * - HTTP ok + content-type de imagem
+ * - tamanho mínimo (descarta ícones/spacers)
+ * - remove placeholders de CDN ("图片加载失败"): mesmo conteúdo binário
+ *   repetido em várias URLs
+ * - remove duplicatas exatas
+ */
+async function validateProductImages(
+  main: string | null,
+  gallery: string[],
+  referer: string | null,
+): Promise<{ main: string | null; gallery: string[] }> {
+  const candidates = Array.from(new Set([main, ...gallery].filter((u): u is string => !!u))).slice(
+    0,
+    IMG_MAX_CANDIDATES,
+  );
+  if (candidates.length === 0) return { main: null, gallery: [] };
+
+  const checks = await Promise.all(candidates.map((u) => checkImage(u, referer)));
+  const ok = checks.filter((c): c is ImgCheck => c !== null);
+
+  // Conta repetições de conteúdo idêntico
+  const hashCount = new Map<string, number>();
+  for (const c of ok) hashCount.set(c.hash, (hashCount.get(c.hash) ?? 0) + 1);
+
+  const seen = new Set<string>();
+  const valid: string[] = [];
+  for (const c of ok) {
+    // Placeholder de CDN: conteúdo idêntico repetido e relativamente pequeno
+    if ((hashCount.get(c.hash) ?? 0) >= 2 && c.size < 80_000) continue;
+    // Duplicata exata da mesma foto
+    if (seen.has(c.hash)) continue;
+    seen.add(c.hash);
+    valid.push(c.url);
+  }
+
+  const newMain = main && valid.includes(main) ? main : valid[0] ?? null;
+  const newGallery = valid.filter((u) => u !== newMain);
+  return { main: newMain, gallery: newGallery };
+}
+
 
 function mergeToAnalysis(args: {
   parsed: ParsedListing;
