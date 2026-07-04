@@ -44,15 +44,16 @@ export const upsertSupplier = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => upsertSchema.parse(data))
   .handler(async ({ data, context }) => {
-    const payload = { ...clean(data), user_id: context.userId };
-    if (data.id) {
+    const { id, ...rest } = data;
+    const payload = { ...clean(rest), name: data.name, user_id: context.userId } as never;
+    if (id) {
       const { error } = await context.supabase
         .from("suppliers")
         .update(payload)
-        .eq("id", data.id)
+        .eq("id", id)
         .eq("user_id", context.userId);
       if (error) throw new Error(error.message);
-      return { id: data.id };
+      return { id };
     }
     const { data: row, error } = await context.supabase
       .from("suppliers")
