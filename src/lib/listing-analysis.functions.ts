@@ -701,22 +701,18 @@ export const analyzeListing = createServerFn({ method: "POST" })
       conversion = await convert(parsed.price.value, parsed.price.currency);
     }
 
-    // 7) IA — recebe SOMENTE o JSON estruturado, nunca a URL
-    const enrichment = fetchedOk ? await aiDiagnose(parsed) : null;
+    // 7) IA + validação de imagens rodam em PARALELO — ambos dependem só do
+    //    ParsedListing, então não faz sentido serializar.
+    const [enrichment, validated] = await Promise.all([
+      fetchedOk ? aiDiagnose(parsed) : Promise.resolve(null),
+      validateProductImages(parsed.images.main, parsed.images.gallery, parsed.url || null),
+    ]);
     if (fetchedOk && !enrichment) {
       warnings.push("Diagnóstico por IA indisponível — dados estruturais preservados.");
     }
     if (!fetchedOk && !parsed.title) {
       warnings.push("Não foi possível ler o anúncio. Verifique o link ou tente novamente.");
     }
-
-    // 8) Validação real das imagens no servidor: baixa cada uma, descarta
-    //    quebradas, ícones e placeholders "图片加载失败" (conteúdo idêntico repetido)
-    const validated = await validateProductImages(
-      parsed.images.main,
-      parsed.images.gallery,
-      parsed.url || null,
-    );
     parsed.images.main = validated.main;
     parsed.images.gallery = validated.gallery;
 
