@@ -365,60 +365,8 @@ function AnalysisResult({ data, onRefresh }: { data: ListingAnalysis; onRefresh:
         </div>
       </div>
 
-      {/* Score de confiabilidade */}
-      <div className="rounded-xl border bg-card p-5">
-        <div className="mb-4 flex items-center gap-2">
-          <Shield className="h-4 w-4 text-primary" />
-          <h2 className="font-semibold">Score de Confiabilidade</h2>
-        </div>
-        <div className="flex flex-wrap items-center gap-6">
-          <div className="text-center">
-            <div className={`text-5xl font-bold ${scoreColor}`}>{data.trust.score}<span className="text-xl">/100</span></div>
-            <p className={`mt-1 text-sm font-medium ${scoreColor}`}>{scoreLabel}</p>
-            {!isMissing(data.trust.label) && <p className="mt-0.5 text-xs text-muted-foreground">{data.trust.label}</p>}
-          </div>
-          <div className="grid flex-1 gap-4 sm:grid-cols-2">
-            <div>
-              <span className="text-xs font-medium text-emerald-600">A favor</span>
-              {data.trust.positives.length === 0 ? (
-                <p className="mt-1 text-xs italic text-muted-foreground">Sem evidências positivas identificadas.</p>
-              ) : (
-                <ul className="mt-1 space-y-0.5 text-sm">
-                  {data.trust.positives.map((p, i) => (
-                    <li key={i} className="flex items-start gap-1.5">
-                      <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-emerald-500" /> {p}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-            <div>
-              <span className="text-xs font-medium text-red-600">Contra</span>
-              {data.trust.negatives.length === 0 ? (
-                <p className="mt-1 text-xs italic text-muted-foreground">Sem evidências negativas identificadas.</p>
-              ) : (
-                <ul className="mt-1 space-y-0.5 text-sm">
-                  {data.trust.negatives.map((p, i) => (
-                    <li key={i} className="flex items-start gap-1.5">
-                      <XCircle className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-red-500" /> {p}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
-        </div>
-        {data.trust.risk_alerts.length > 0 && (
-          <div className="mt-4 rounded-lg border border-red-500/30 bg-red-500/5 p-3">
-            <div className="mb-1.5 flex items-center gap-1.5 text-sm font-semibold text-red-600">
-              <ShieldAlert className="h-4 w-4" /> Alertas de risco / possíveis golpes
-            </div>
-            <ul className="space-y-0.5 text-sm text-red-700 dark:text-red-400">
-              {data.trust.risk_alerts.map((r, i) => <li key={i}>• {r}</li>)}
-            </ul>
-          </div>
-        )}
-      </div>
+
+
 
       {/* Importação */}
       <div className="rounded-xl border bg-card p-5">
