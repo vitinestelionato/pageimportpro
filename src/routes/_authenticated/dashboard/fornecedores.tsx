@@ -43,6 +43,14 @@ type Supplier = {
   updated_at: string;
 };
 
+type SupplierInput = {
+  id?: string; name: string; platform?: string | null; country?: string | null; url?: string | null;
+  contact_name?: string | null; whatsapp?: string | null; email?: string | null; wechat?: string | null;
+  category?: string | null; min_order?: number | null; lead_time_days?: number | null;
+  rating: number; favorite: boolean; status: "ativo" | "avaliando" | "pausado";
+  tags: string[]; notes?: string | null;
+};
+
 const STATUS_META: Record<string, { label: string; cls: string }> = {
   ativo: { label: "Ativo", cls: "border-emerald-500/40 bg-emerald-500/15 text-emerald-300" },
   avaliando: { label: "Avaliando", cls: "border-amber-500/40 bg-amber-500/15 text-amber-300" },
