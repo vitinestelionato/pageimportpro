@@ -384,9 +384,10 @@ function mergeToAnalysis(args: {
       name_original: orNF(parsed.title),
       name_translated: enr ? enr.name_translated : NOT_FOUND,
       category: enr?.category && enr.category !== NOT_FOUND ? enr.category : orNF(parsed.category),
-      brand: orNF(parsed.brand),
-      model: orNF(parsed.model),
+      brand: orNF(parsed.brand ?? inferBrand(`${parsed.title ?? ""} ${parsed.description ?? ""}`)),
+      model: orNF(parsed.model ?? inferModel(`${parsed.title ?? ""} ${parsed.description ?? ""}`)),
       description,
+
       specs: enr && enr.specs.length > 0 ? enr.specs : parsed.specs,
       keywords: enr ? enr.keywords : [],
       variations: parsed.variations,
