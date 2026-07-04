@@ -21,7 +21,6 @@ import { Route as AtivarRouteImport } from './routes/ativar'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
-import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
 import { Route as AuthenticatedDashboardTendenciasRouteImport } from './routes/_authenticated/dashboard/tendencias'
 import { Route as AuthenticatedDashboardRastreioRouteImport } from './routes/_authenticated/dashboard/rastreio'
@@ -98,100 +97,95 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => BlogRoute,
 } as any)
-const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedDashboardIndexRoute =
   AuthenticatedDashboardIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedDashboardRoute,
+    id: '/dashboard/',
+    path: '/dashboard/',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardTendenciasRoute =
   AuthenticatedDashboardTendenciasRouteImport.update({
-    id: '/tendencias',
-    path: '/tendencias',
-    getParentRoute: () => AuthenticatedDashboardRoute,
+    id: '/dashboard/tendencias',
+    path: '/dashboard/tendencias',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardRastreioRoute =
   AuthenticatedDashboardRastreioRouteImport.update({
-    id: '/rastreio',
-    path: '/rastreio',
-    getParentRoute: () => AuthenticatedDashboardRoute,
+    id: '/dashboard/rastreio',
+    path: '/dashboard/rastreio',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardProdutosRoute =
   AuthenticatedDashboardProdutosRouteImport.update({
-    id: '/produtos',
-    path: '/produtos',
-    getParentRoute: () => AuthenticatedDashboardRoute,
+    id: '/dashboard/produtos',
+    path: '/dashboard/produtos',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardPerfilRoute =
   AuthenticatedDashboardPerfilRouteImport.update({
-    id: '/perfil',
-    path: '/perfil',
-    getParentRoute: () => AuthenticatedDashboardRoute,
+    id: '/dashboard/perfil',
+    path: '/dashboard/perfil',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardNichosRoute =
   AuthenticatedDashboardNichosRouteImport.update({
-    id: '/nichos',
-    path: '/nichos',
-    getParentRoute: () => AuthenticatedDashboardRoute,
+    id: '/dashboard/nichos',
+    path: '/dashboard/nichos',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardFornecedoresRoute =
   AuthenticatedDashboardFornecedoresRouteImport.update({
-    id: '/fornecedores',
-    path: '/fornecedores',
-    getParentRoute: () => AuthenticatedDashboardRoute,
+    id: '/dashboard/fornecedores',
+    path: '/dashboard/fornecedores',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardFavoritosRoute =
   AuthenticatedDashboardFavoritosRouteImport.update({
-    id: '/favoritos',
-    path: '/favoritos',
-    getParentRoute: () => AuthenticatedDashboardRoute,
+    id: '/dashboard/favoritos',
+    path: '/dashboard/favoritos',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardDocumentosRoute =
   AuthenticatedDashboardDocumentosRouteImport.update({
-    id: '/documentos',
-    path: '/documentos',
-    getParentRoute: () => AuthenticatedDashboardRoute,
+    id: '/dashboard/documentos',
+    path: '/dashboard/documentos',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardConcorrentesRoute =
   AuthenticatedDashboardConcorrentesRouteImport.update({
-    id: '/concorrentes',
-    path: '/concorrentes',
-    getParentRoute: () => AuthenticatedDashboardRoute,
+    id: '/dashboard/concorrentes',
+    path: '/dashboard/concorrentes',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardCatalogoRoute =
   AuthenticatedDashboardCatalogoRouteImport.update({
-    id: '/catalogo',
-    path: '/catalogo',
-    getParentRoute: () => AuthenticatedDashboardRoute,
+    id: '/dashboard/catalogo',
+    path: '/dashboard/catalogo',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardCambioRoute =
   AuthenticatedDashboardCambioRouteImport.update({
-    id: '/cambio',
-    path: '/cambio',
-    getParentRoute: () => AuthenticatedDashboardRoute,
+    id: '/dashboard/cambio',
+    path: '/dashboard/cambio',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardCalculadoraRoute =
   AuthenticatedDashboardCalculadoraRouteImport.update({
-    id: '/calculadora',
-    path: '/calculadora',
-    getParentRoute: () => AuthenticatedDashboardRoute,
+    id: '/dashboard/calculadora',
+    path: '/dashboard/calculadora',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardAnotacoesRoute =
   AuthenticatedDashboardAnotacoesRouteImport.update({
-    id: '/anotacoes',
-    path: '/anotacoes',
-    getParentRoute: () => AuthenticatedDashboardRoute,
+    id: '/dashboard/anotacoes',
+    path: '/dashboard/anotacoes',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardAlertasRoute =
   AuthenticatedDashboardAlertasRouteImport.update({
-    id: '/alertas',
-    path: '/alertas',
-    getParentRoute: () => AuthenticatedDashboardRoute,
+    id: '/dashboard/alertas',
+    path: '/dashboard/alertas',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const ApiPublicWebhooksCaktoRoute = ApiPublicWebhooksCaktoRouteImport.update({
   id: '/api/public/webhooks/cakto',
@@ -210,7 +204,6 @@ export interface FileRoutesByFullPath {
   '/sobre': typeof SobreRoute
   '/suporte': typeof SuporteRoute
   '/termos': typeof TermosRoute
-  '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/dashboard/alertas': typeof AuthenticatedDashboardAlertasRoute
   '/dashboard/anotacoes': typeof AuthenticatedDashboardAnotacoesRoute
@@ -271,7 +264,6 @@ export interface FileRoutesById {
   '/sobre': typeof SobreRoute
   '/suporte': typeof SuporteRoute
   '/termos': typeof TermosRoute
-  '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/_authenticated/dashboard/alertas': typeof AuthenticatedDashboardAlertasRoute
   '/_authenticated/dashboard/anotacoes': typeof AuthenticatedDashboardAnotacoesRoute
@@ -303,7 +295,6 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/suporte'
     | '/termos'
-    | '/dashboard'
     | '/blog/$slug'
     | '/dashboard/alertas'
     | '/dashboard/anotacoes'
@@ -363,7 +354,6 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/suporte'
     | '/termos'
-    | '/_authenticated/dashboard'
     | '/blog/$slug'
     | '/_authenticated/dashboard/alertas'
     | '/_authenticated/dashboard/anotacoes'
@@ -484,117 +474,110 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof BlogRoute
     }
-    '/_authenticated/dashboard': {
-      id: '/_authenticated/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/dashboard/': {
       id: '/_authenticated/dashboard/'
-      path: '/'
+      path: '/dashboard'
       fullPath: '/dashboard/'
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/tendencias': {
       id: '/_authenticated/dashboard/tendencias'
-      path: '/tendencias'
+      path: '/dashboard/tendencias'
       fullPath: '/dashboard/tendencias'
       preLoaderRoute: typeof AuthenticatedDashboardTendenciasRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/rastreio': {
       id: '/_authenticated/dashboard/rastreio'
-      path: '/rastreio'
+      path: '/dashboard/rastreio'
       fullPath: '/dashboard/rastreio'
       preLoaderRoute: typeof AuthenticatedDashboardRastreioRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/produtos': {
       id: '/_authenticated/dashboard/produtos'
-      path: '/produtos'
+      path: '/dashboard/produtos'
       fullPath: '/dashboard/produtos'
       preLoaderRoute: typeof AuthenticatedDashboardProdutosRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/perfil': {
       id: '/_authenticated/dashboard/perfil'
-      path: '/perfil'
+      path: '/dashboard/perfil'
       fullPath: '/dashboard/perfil'
       preLoaderRoute: typeof AuthenticatedDashboardPerfilRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/nichos': {
       id: '/_authenticated/dashboard/nichos'
-      path: '/nichos'
+      path: '/dashboard/nichos'
       fullPath: '/dashboard/nichos'
       preLoaderRoute: typeof AuthenticatedDashboardNichosRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/fornecedores': {
       id: '/_authenticated/dashboard/fornecedores'
-      path: '/fornecedores'
+      path: '/dashboard/fornecedores'
       fullPath: '/dashboard/fornecedores'
       preLoaderRoute: typeof AuthenticatedDashboardFornecedoresRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/favoritos': {
       id: '/_authenticated/dashboard/favoritos'
-      path: '/favoritos'
+      path: '/dashboard/favoritos'
       fullPath: '/dashboard/favoritos'
       preLoaderRoute: typeof AuthenticatedDashboardFavoritosRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/documentos': {
       id: '/_authenticated/dashboard/documentos'
-      path: '/documentos'
+      path: '/dashboard/documentos'
       fullPath: '/dashboard/documentos'
       preLoaderRoute: typeof AuthenticatedDashboardDocumentosRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/concorrentes': {
       id: '/_authenticated/dashboard/concorrentes'
-      path: '/concorrentes'
+      path: '/dashboard/concorrentes'
       fullPath: '/dashboard/concorrentes'
       preLoaderRoute: typeof AuthenticatedDashboardConcorrentesRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/catalogo': {
       id: '/_authenticated/dashboard/catalogo'
-      path: '/catalogo'
+      path: '/dashboard/catalogo'
       fullPath: '/dashboard/catalogo'
       preLoaderRoute: typeof AuthenticatedDashboardCatalogoRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/cambio': {
       id: '/_authenticated/dashboard/cambio'
-      path: '/cambio'
+      path: '/dashboard/cambio'
       fullPath: '/dashboard/cambio'
       preLoaderRoute: typeof AuthenticatedDashboardCambioRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/calculadora': {
       id: '/_authenticated/dashboard/calculadora'
-      path: '/calculadora'
+      path: '/dashboard/calculadora'
       fullPath: '/dashboard/calculadora'
       preLoaderRoute: typeof AuthenticatedDashboardCalculadoraRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/anotacoes': {
       id: '/_authenticated/dashboard/anotacoes'
-      path: '/anotacoes'
+      path: '/dashboard/anotacoes'
       fullPath: '/dashboard/anotacoes'
       preLoaderRoute: typeof AuthenticatedDashboardAnotacoesRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/alertas': {
       id: '/_authenticated/dashboard/alertas'
-      path: '/alertas'
+      path: '/dashboard/alertas'
       fullPath: '/dashboard/alertas'
       preLoaderRoute: typeof AuthenticatedDashboardAlertasRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/api/public/webhooks/cakto': {
       id: '/api/public/webhooks/cakto'
@@ -606,7 +589,7 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AuthenticatedDashboardRouteChildren {
+interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardAlertasRoute: typeof AuthenticatedDashboardAlertasRoute
   AuthenticatedDashboardAnotacoesRoute: typeof AuthenticatedDashboardAnotacoesRoute
   AuthenticatedDashboardCalculadoraRoute: typeof AuthenticatedDashboardCalculadoraRoute
@@ -624,41 +607,25 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
 }
 
-const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
-  {
-    AuthenticatedDashboardAlertasRoute: AuthenticatedDashboardAlertasRoute,
-    AuthenticatedDashboardAnotacoesRoute: AuthenticatedDashboardAnotacoesRoute,
-    AuthenticatedDashboardCalculadoraRoute:
-      AuthenticatedDashboardCalculadoraRoute,
-    AuthenticatedDashboardCambioRoute: AuthenticatedDashboardCambioRoute,
-    AuthenticatedDashboardCatalogoRoute: AuthenticatedDashboardCatalogoRoute,
-    AuthenticatedDashboardConcorrentesRoute:
-      AuthenticatedDashboardConcorrentesRoute,
-    AuthenticatedDashboardDocumentosRoute:
-      AuthenticatedDashboardDocumentosRoute,
-    AuthenticatedDashboardFavoritosRoute: AuthenticatedDashboardFavoritosRoute,
-    AuthenticatedDashboardFornecedoresRoute:
-      AuthenticatedDashboardFornecedoresRoute,
-    AuthenticatedDashboardNichosRoute: AuthenticatedDashboardNichosRoute,
-    AuthenticatedDashboardPerfilRoute: AuthenticatedDashboardPerfilRoute,
-    AuthenticatedDashboardProdutosRoute: AuthenticatedDashboardProdutosRoute,
-    AuthenticatedDashboardRastreioRoute: AuthenticatedDashboardRastreioRoute,
-    AuthenticatedDashboardTendenciasRoute:
-      AuthenticatedDashboardTendenciasRoute,
-    AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
-  }
-
-const AuthenticatedDashboardRouteWithChildren =
-  AuthenticatedDashboardRoute._addFileChildren(
-    AuthenticatedDashboardRouteChildren,
-  )
-
-interface AuthenticatedRouteRouteChildren {
-  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRouteWithChildren
-}
-
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedDashboardRoute: AuthenticatedDashboardRouteWithChildren,
+  AuthenticatedDashboardAlertasRoute: AuthenticatedDashboardAlertasRoute,
+  AuthenticatedDashboardAnotacoesRoute: AuthenticatedDashboardAnotacoesRoute,
+  AuthenticatedDashboardCalculadoraRoute:
+    AuthenticatedDashboardCalculadoraRoute,
+  AuthenticatedDashboardCambioRoute: AuthenticatedDashboardCambioRoute,
+  AuthenticatedDashboardCatalogoRoute: AuthenticatedDashboardCatalogoRoute,
+  AuthenticatedDashboardConcorrentesRoute:
+    AuthenticatedDashboardConcorrentesRoute,
+  AuthenticatedDashboardDocumentosRoute: AuthenticatedDashboardDocumentosRoute,
+  AuthenticatedDashboardFavoritosRoute: AuthenticatedDashboardFavoritosRoute,
+  AuthenticatedDashboardFornecedoresRoute:
+    AuthenticatedDashboardFornecedoresRoute,
+  AuthenticatedDashboardNichosRoute: AuthenticatedDashboardNichosRoute,
+  AuthenticatedDashboardPerfilRoute: AuthenticatedDashboardPerfilRoute,
+  AuthenticatedDashboardProdutosRoute: AuthenticatedDashboardProdutosRoute,
+  AuthenticatedDashboardRastreioRoute: AuthenticatedDashboardRastreioRoute,
+  AuthenticatedDashboardTendenciasRoute: AuthenticatedDashboardTendenciasRoute,
+  AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
