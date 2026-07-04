@@ -61,9 +61,15 @@ function CambioPage() {
             <span className="ml-3 font-display text-2xl font-bold text-primary">{fmt(converted)}</span>
           </div>
         </div>
-        {data?.stale && (
-          <p className="mt-3 text-xs text-amber-400">Fonte de câmbio indisponível — usando última cotação em cache.</p>
-        )}
+        <div className="mt-3 flex items-center justify-between gap-3 text-xs">
+          <span className="text-muted-foreground">
+            Fonte:{" "}
+            <span className={data?.source === "google_finance" ? "font-semibold text-emerald-400" : "font-semibold text-amber-400"}>
+              {data?.source === "google_finance" ? "Google Finance (tempo real)" : data?.source === "awesomeapi" ? "AwesomeAPI (fallback)" : "cache local"}
+            </span>
+          </span>
+          {data?.stale && <span className="text-amber-400">Cotação em cache — provedores indisponíveis.</span>}
+        </div>
       </section>
     </DashboardShell>
   );
