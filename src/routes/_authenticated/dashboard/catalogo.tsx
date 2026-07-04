@@ -10,6 +10,7 @@ import {
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { listCatalog, toggleCatalogFavorite, importCatalogItem } from "@/lib/catalog.functions";
+import { BuyOnAgentButton } from "@/components/BuyOnAgentButton";
 
 export const Route = createFileRoute("/_authenticated/dashboard/catalogo")({
   head: () => ({ meta: [{ title: "Catálogo · ImportPro" }, { name: "robots", content: "noindex,nofollow" }] }),
