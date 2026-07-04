@@ -10,6 +10,7 @@ import {
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { listTrendingProducts, type TrendingProduct } from "@/lib/trends.functions";
+import { BuyOnAgentButton } from "@/components/BuyOnAgentButton";
 
 export const Route = createFileRoute("/_authenticated/dashboard/tendencias")({
   head: () => ({ meta: [{ title: "Produtos em Alta · ImportPro" }, { name: "robots", content: "noindex,nofollow" }] }),
