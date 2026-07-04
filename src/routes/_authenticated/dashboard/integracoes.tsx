@@ -164,14 +164,30 @@ function IntegrationsPage() {
   });
 
   const syncMut = useMutation({
-    mutationFn: (slug: string) => doSync({ data: { slug } }),
-    onSuccess: () => {
-      toast.success("Sincronização concluída.");
+    mutationFn: (slug: string) => doTriggerSync({ data: { slug, mode: "manual" as const } }),
+    onSuccess: (r) => {
+      if (r?.ok) toast.success(r.message || "Sincronização concluída.");
+      else toast.error(r?.message || "Falha ao sincronizar.");
       qc.invalidateQueries({ queryKey: ["integrations"] });
       qc.invalidateQueries({ queryKey: ["integration-events"] });
     },
     onError: (e: Error) => toast.error(e.message ?? "Falha ao sincronizar."),
   });
+
+  const testMut = useMutation({
+    mutationFn: (slug: string) => doTest({ data: { slug } }),
+    onSuccess: (r) => {
+      if (r?.ok) toast.success(`Conexão saudável (${r.latency_ms}ms).`);
+      else toast.error(r?.message || "Conexão com problemas.");
+      qc.invalidateQueries({ queryKey: ["integrations"] });
+      qc.invalidateQueries({ queryKey: ["integration-events"] });
+    },
+    onError: (e: Error) => toast.error(e.message ?? "Falha ao testar."),
+  });
+
+  // Silence lint for legacy syncIntegration reference retained for API surface
+  void doSync;
+
 
   function openConnect(item: Integration) {
     if (item.is_coming_soon) {
