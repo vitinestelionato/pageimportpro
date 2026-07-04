@@ -472,11 +472,12 @@ function LandingPage() {
             <a href="#depoimentos" className="transition-colors hover:text-foreground">Depoimentos</a>
             <a href="#precos" className="transition-colors hover:text-foreground">Planos</a>
           </nav>
-          <a href="#precos">
+          <Link to="/login">
             <Button size="sm" className="rounded-full bg-gradient-to-r from-brand to-brand-glow text-primary-foreground shadow-lg shadow-brand/30 hover:opacity-90">
-              Começar agora
+              Entrar
             </Button>
-          </a>
+          </Link>
+
         </div>
       </header>
 
@@ -517,16 +518,6 @@ function LandingPage() {
                   className="group h-12 w-full rounded-full bg-gradient-to-r from-brand to-brand-glow px-7 text-base font-semibold text-primary-foreground shadow-xl shadow-brand/40 transition-all hover:-translate-y-0.5 hover:shadow-brand/60 sm:w-auto"
                 >
                   Ativar ImportPro
-                  <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Button>
-              </a>
-              <a href="#recursos" className="block w-full sm:inline-block sm:w-auto">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="group h-12 w-full rounded-full border-border bg-transparent px-7 text-base font-medium hover:bg-accent sm:w-auto"
-                >
-                  Testar IA de importação
                   <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </a>
