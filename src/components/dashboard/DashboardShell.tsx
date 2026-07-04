@@ -113,10 +113,6 @@ export function DashboardShell({
   const planLabel = (profile?.plan ?? "FREE").toUpperCase();
 
   const handleLogout = async () => {
-    try {
-      const m = await import("@/lib/session-tracker");
-      await m.endCurrentSession();
-    } catch {}
     await supabase.auth.signOut();
     toast.success("Sessão encerrada");
     navigate({ to: "/login" });
