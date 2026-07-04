@@ -123,8 +123,9 @@ export function DashboardShell({
       <aside
         className={`${
           sidebarOpen ? "w-64" : "w-0 -translate-x-full"
-        } fixed inset-y-0 left-0 z-40 flex flex-col border-r border-white/5 bg-card/60 backdrop-blur-xl transition-all lg:relative lg:translate-x-0`}
+        } fixed inset-y-0 left-0 z-40 flex h-screen flex-col border-r border-white/5 bg-card/60 backdrop-blur-xl transition-all lg:sticky lg:top-0 lg:translate-x-0`}
       >
+
         <div className="flex h-16 shrink-0 items-center justify-between border-b border-white/5 px-5">
           <Link to="/dashboard"><ImportProWordmark /></Link>
         </div>
