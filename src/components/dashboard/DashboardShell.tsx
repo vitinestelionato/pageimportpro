@@ -43,7 +43,7 @@ const NAV: NavGroup[] = [
   {
     label: "Meus Produtos",
     items: [
-      { icon: <Package className="h-4 w-4" />, label: "Gestão de Produtos", to: "/dashboard/produtos" },
+      { icon: <Package className="h-4 w-4" />, label: "Gestão de Produtos", to: "/dashboard/produtos", badge: "EM BREVE" },
     ],
   },
   {
@@ -57,6 +57,7 @@ const NAV: NavGroup[] = [
   {
     label: "Ferramentas",
     items: [
+      { icon: <Sparkles className="h-4 w-4" />, label: "Análise de Anúncios", to: "/dashboard/analise-anuncios" },
       { icon: <Calculator className="h-4 w-4" />, label: "Calculadora de Impostos", to: "/dashboard/calculadora" },
       { icon: <DollarSign className="h-4 w-4" />, label: "Câmbio ao vivo", to: "/dashboard/cambio" },
       { icon: <Truck className="h-4 w-4" />, label: "Rastreio de Encomenda", to: "/dashboard/rastreio", badge: "EM BREVE" },
