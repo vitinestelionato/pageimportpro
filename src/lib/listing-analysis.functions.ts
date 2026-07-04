@@ -367,7 +367,7 @@ function inferModel(text: string): string | null {
 }
 
 
-const IMG_FETCH_TIMEOUT_MS = 6000;
+const IMG_FETCH_TIMEOUT_MS = 3000;
 // Placeholder branco/corrompido da CDN geralmente tem <1.5KB. Fotos reais
 // (mesmo miniaturas webp) costumam ficar acima de 2KB. Ser conservador para
 // não esconder fotos legítimas do produto.
@@ -376,7 +376,7 @@ const IMG_MIN_BYTES = 1_800;
 // entre as URLs candidatas. Isso evita rejeitar pares legítimos duplicados.
 const IMG_PLACEHOLDER_MIN_REPEATS = 3;
 const IMG_PLACEHOLDER_MAX_BYTES = 12_000;
-const IMG_MAX_CANDIDATES = 40;
+const IMG_MAX_CANDIDATES = 12;
 
 type ImgCheck = { url: string; size: number; hash: string };
 
