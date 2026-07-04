@@ -32,6 +32,7 @@ import {
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { ImportProWordmark } from "@/components/ImportProLogo";
+import { BuyingAgentSelector } from "@/components/BuyingAgentSelector";
 
 type NavItem = { icon: ReactNode; label: string; to: string; badge?: string };
 type NavGroup = { label: string; items: NavItem[] };
