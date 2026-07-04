@@ -218,9 +218,12 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
           expires_at: tokenExpires,
         });
 
+        // Prioriza URL pública fixa (secret PUBLIC_APP_URL); só usa host da request como fallback
+        const hostHeader = request.headers.get("host") ?? "";
+        const isLocalHost = /^(localhost|127\.0\.0\.1)/i.test(hostHeader);
         const origin =
-          request.headers.get("origin") ??
-          `https://${request.headers.get("host") ?? "importpro.com.br"}`;
+          process.env.PUBLIC_APP_URL?.replace(/\/$/, "") ??
+          (!isLocalHost && hostHeader ? `https://${hostHeader}` : "https://importpro.com.br");
         activationUrl = `${origin}/ativar?token=${rawToken}`;
 
         // Send activation email via Brevo
