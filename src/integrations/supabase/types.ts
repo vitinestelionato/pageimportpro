@@ -41,6 +41,107 @@ export type Database = {
         }
         Relationships: []
       }
+      catalog_favorites: {
+        Row: {
+          created_at: string
+          id: string
+          item_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "catalog_favorites_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "catalog_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      catalog_items: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          difficulty: string
+          featured: boolean
+          id: string
+          image_url: string | null
+          margin_pct: number
+          monthly_searches: number
+          name: string
+          niche: string | null
+          origin_country: string
+          origin_currency: string
+          origin_price: number
+          rating: number
+          suggested_price_brl: number
+          supplier_platform: string | null
+          supplier_url: string | null
+          tags: string[]
+          trend: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string | null
+          difficulty?: string
+          featured?: boolean
+          id?: string
+          image_url?: string | null
+          margin_pct?: number
+          monthly_searches?: number
+          name: string
+          niche?: string | null
+          origin_country?: string
+          origin_currency?: string
+          origin_price?: number
+          rating?: number
+          suggested_price_brl?: number
+          supplier_platform?: string | null
+          supplier_url?: string | null
+          tags?: string[]
+          trend?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          difficulty?: string
+          featured?: boolean
+          id?: string
+          image_url?: string | null
+          margin_pct?: number
+          monthly_searches?: number
+          name?: string
+          niche?: string | null
+          origin_country?: string
+          origin_currency?: string
+          origin_price?: number
+          rating?: number
+          suggested_price_brl?: number
+          supplier_platform?: string | null
+          supplier_url?: string | null
+          tags?: string[]
+          trend?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       notes: {
         Row: {
           body: string
