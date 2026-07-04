@@ -199,68 +199,67 @@ function AnalysisResult({ data, onRefresh }: { data: ListingAnalysis; onRefresh:
         </div>
       )}
 
-      {/* Produto + Imagens */}
+      {/* Imagens */}
       <ProductImages images={data.images} />
 
-
-
-        <div className="space-y-4">
-          <div className="rounded-xl border bg-card p-5">
-            <div className="mb-3 flex items-center gap-2">
-              <Package className="h-4 w-4 text-primary" />
-              <h2 className="font-semibold">Produto</h2>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <Field label="Nome original" value={data.product.name_original} />
-              <Field label="Nome traduzido (PT-BR)" value={data.product.name_translated} />
-              <Field label="Categoria" value={data.product.category} icon={<Tag className="h-3 w-3" />} />
-              <Field label="Marca" value={data.product.brand} />
-              <Field label="Modelo" value={data.product.model} />
-              <Field label="Estoque" value={data.product.stock_status} />
-              <Field label="Pedido mínimo (MOQ)" value={data.product.moq} />
-            </div>
-            {!isMissing(data.product.description) && (
-              <div className="mt-4 border-t pt-3">
-                <span className="text-xs font-medium text-muted-foreground">Descrição</span>
-                <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed">{data.product.description}</p>
-              </div>
-            )}
-            {data.product.variations.length > 0 && (
-              <div className="mt-4 border-t pt-3">
-                <span className="text-xs font-medium text-muted-foreground">Variações</span>
-                <div className="mt-1.5 flex flex-wrap gap-1.5">
-                  {data.product.variations.map((v, i) => <Chip key={i}>{v}</Chip>)}
-                </div>
-              </div>
-            )}
-            {data.product.keywords.length > 0 && (
-              <div className="mt-4 border-t pt-3">
-                <span className="text-xs font-medium text-muted-foreground">Palavras-chave / SKU / EAN</span>
-                <div className="mt-1.5 flex flex-wrap gap-1.5">
-                  {data.product.keywords.map((k, i) => <Chip key={i}>{k}</Chip>)}
-                </div>
-              </div>
-            )}
+      {/* Produto */}
+      <div className="space-y-4">
+        <div className="rounded-xl border bg-card p-5">
+          <div className="mb-3 flex items-center gap-2">
+            <Package className="h-4 w-4 text-primary" />
+            <h2 className="font-semibold">Produto</h2>
           </div>
-
-          {data.product.specs.length > 0 && (
-            <div className="rounded-xl border bg-card p-5">
-              <div className="mb-3 flex items-center gap-2">
-                <Boxes className="h-4 w-4 text-primary" />
-                <h2 className="font-semibold">Especificações técnicas</h2>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Field label="Nome original" value={data.product.name_original} />
+            <Field label="Nome traduzido (PT-BR)" value={data.product.name_translated} />
+            <Field label="Categoria" value={data.product.category} icon={<Tag className="h-3 w-3" />} />
+            <Field label="Marca" value={data.product.brand} />
+            <Field label="Modelo" value={data.product.model} />
+            <Field label="Estoque" value={data.product.stock_status} />
+            <Field label="Pedido mínimo (MOQ)" value={data.product.moq} />
+          </div>
+          {!isMissing(data.product.description) && (
+            <div className="mt-4 border-t pt-3">
+              <span className="text-xs font-medium text-muted-foreground">Descrição</span>
+              <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed">{data.product.description}</p>
+            </div>
+          )}
+          {data.product.variations.length > 0 && (
+            <div className="mt-4 border-t pt-3">
+              <span className="text-xs font-medium text-muted-foreground">Variações</span>
+              <div className="mt-1.5 flex flex-wrap gap-1.5">
+                {data.product.variations.map((v, i) => <Chip key={i}>{v}</Chip>)}
               </div>
-              <div className="grid gap-2 sm:grid-cols-2">
-                {data.product.specs.map((s, i) => (
-                  <div key={i} className="flex justify-between gap-4 rounded-md border bg-muted/30 px-3 py-2 text-sm">
-                    <span className="text-muted-foreground">{s.key}</span>
-                    <span className="font-medium">{s.value}</span>
-                  </div>
-                ))}
+            </div>
+          )}
+          {data.product.keywords.length > 0 && (
+            <div className="mt-4 border-t pt-3">
+              <span className="text-xs font-medium text-muted-foreground">Palavras-chave / SKU / EAN</span>
+              <div className="mt-1.5 flex flex-wrap gap-1.5">
+                {data.product.keywords.map((k, i) => <Chip key={i}>{k}</Chip>)}
               </div>
             </div>
           )}
         </div>
+
+        {data.product.specs.length > 0 && (
+          <div className="rounded-xl border bg-card p-5">
+            <div className="mb-3 flex items-center gap-2">
+              <Boxes className="h-4 w-4 text-primary" />
+              <h2 className="font-semibold">Especificações técnicas</h2>
+            </div>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {data.product.specs.map((s, i) => (
+                <div key={i} className="flex justify-between gap-4 rounded-md border bg-muted/30 px-3 py-2 text-sm">
+                  <span className="text-muted-foreground">{s.key}</span>
+                  <span className="font-medium">{s.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
+
 
       {/* Preço */}
       <div className="rounded-xl border bg-card p-5">
