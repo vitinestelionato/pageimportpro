@@ -28,6 +28,7 @@ import { Route as AuthenticatedDashboardRastreioRouteImport } from './routes/_au
 import { Route as AuthenticatedDashboardProdutosRouteImport } from './routes/_authenticated/dashboard/produtos'
 import { Route as AuthenticatedDashboardPerfilRouteImport } from './routes/_authenticated/dashboard/perfil'
 import { Route as AuthenticatedDashboardNichosRouteImport } from './routes/_authenticated/dashboard/nichos'
+import { Route as AuthenticatedDashboardIntegracoesRouteImport } from './routes/_authenticated/dashboard/integracoes'
 import { Route as AuthenticatedDashboardFornecedoresRouteImport } from './routes/_authenticated/dashboard/fornecedores'
 import { Route as AuthenticatedDashboardFavoritosRouteImport } from './routes/_authenticated/dashboard/favoritos'
 import { Route as AuthenticatedDashboardDocumentosRouteImport } from './routes/_authenticated/dashboard/documentos'
@@ -139,6 +140,12 @@ const AuthenticatedDashboardNichosRoute =
     path: '/dashboard/nichos',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDashboardIntegracoesRoute =
+  AuthenticatedDashboardIntegracoesRouteImport.update({
+    id: '/dashboard/integracoes',
+    path: '/dashboard/integracoes',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardFornecedoresRoute =
   AuthenticatedDashboardFornecedoresRouteImport.update({
     id: '/dashboard/fornecedores',
@@ -221,6 +228,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/documentos': typeof AuthenticatedDashboardDocumentosRoute
   '/dashboard/favoritos': typeof AuthenticatedDashboardFavoritosRoute
   '/dashboard/fornecedores': typeof AuthenticatedDashboardFornecedoresRoute
+  '/dashboard/integracoes': typeof AuthenticatedDashboardIntegracoesRoute
   '/dashboard/nichos': typeof AuthenticatedDashboardNichosRoute
   '/dashboard/perfil': typeof AuthenticatedDashboardPerfilRoute
   '/dashboard/produtos': typeof AuthenticatedDashboardProdutosRoute
@@ -251,6 +259,7 @@ export interface FileRoutesByTo {
   '/dashboard/documentos': typeof AuthenticatedDashboardDocumentosRoute
   '/dashboard/favoritos': typeof AuthenticatedDashboardFavoritosRoute
   '/dashboard/fornecedores': typeof AuthenticatedDashboardFornecedoresRoute
+  '/dashboard/integracoes': typeof AuthenticatedDashboardIntegracoesRoute
   '/dashboard/nichos': typeof AuthenticatedDashboardNichosRoute
   '/dashboard/perfil': typeof AuthenticatedDashboardPerfilRoute
   '/dashboard/produtos': typeof AuthenticatedDashboardProdutosRoute
@@ -283,6 +292,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/documentos': typeof AuthenticatedDashboardDocumentosRoute
   '/_authenticated/dashboard/favoritos': typeof AuthenticatedDashboardFavoritosRoute
   '/_authenticated/dashboard/fornecedores': typeof AuthenticatedDashboardFornecedoresRoute
+  '/_authenticated/dashboard/integracoes': typeof AuthenticatedDashboardIntegracoesRoute
   '/_authenticated/dashboard/nichos': typeof AuthenticatedDashboardNichosRoute
   '/_authenticated/dashboard/perfil': typeof AuthenticatedDashboardPerfilRoute
   '/_authenticated/dashboard/produtos': typeof AuthenticatedDashboardProdutosRoute
@@ -315,6 +325,7 @@ export interface FileRouteTypes {
     | '/dashboard/documentos'
     | '/dashboard/favoritos'
     | '/dashboard/fornecedores'
+    | '/dashboard/integracoes'
     | '/dashboard/nichos'
     | '/dashboard/perfil'
     | '/dashboard/produtos'
@@ -345,6 +356,7 @@ export interface FileRouteTypes {
     | '/dashboard/documentos'
     | '/dashboard/favoritos'
     | '/dashboard/fornecedores'
+    | '/dashboard/integracoes'
     | '/dashboard/nichos'
     | '/dashboard/perfil'
     | '/dashboard/produtos'
@@ -376,6 +388,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/documentos'
     | '/_authenticated/dashboard/favoritos'
     | '/_authenticated/dashboard/fornecedores'
+    | '/_authenticated/dashboard/integracoes'
     | '/_authenticated/dashboard/nichos'
     | '/_authenticated/dashboard/perfil'
     | '/_authenticated/dashboard/produtos'
@@ -536,6 +549,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardNichosRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dashboard/integracoes': {
+      id: '/_authenticated/dashboard/integracoes'
+      path: '/dashboard/integracoes'
+      fullPath: '/dashboard/integracoes'
+      preLoaderRoute: typeof AuthenticatedDashboardIntegracoesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard/fornecedores': {
       id: '/_authenticated/dashboard/fornecedores'
       path: '/dashboard/fornecedores'
@@ -619,6 +639,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardDocumentosRoute: typeof AuthenticatedDashboardDocumentosRoute
   AuthenticatedDashboardFavoritosRoute: typeof AuthenticatedDashboardFavoritosRoute
   AuthenticatedDashboardFornecedoresRoute: typeof AuthenticatedDashboardFornecedoresRoute
+  AuthenticatedDashboardIntegracoesRoute: typeof AuthenticatedDashboardIntegracoesRoute
   AuthenticatedDashboardNichosRoute: typeof AuthenticatedDashboardNichosRoute
   AuthenticatedDashboardPerfilRoute: typeof AuthenticatedDashboardPerfilRoute
   AuthenticatedDashboardProdutosRoute: typeof AuthenticatedDashboardProdutosRoute
@@ -640,6 +661,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardFavoritosRoute: AuthenticatedDashboardFavoritosRoute,
   AuthenticatedDashboardFornecedoresRoute:
     AuthenticatedDashboardFornecedoresRoute,
+  AuthenticatedDashboardIntegracoesRoute:
+    AuthenticatedDashboardIntegracoesRoute,
   AuthenticatedDashboardNichosRoute: AuthenticatedDashboardNichosRoute,
   AuthenticatedDashboardPerfilRoute: AuthenticatedDashboardPerfilRoute,
   AuthenticatedDashboardProdutosRoute: AuthenticatedDashboardProdutosRoute,

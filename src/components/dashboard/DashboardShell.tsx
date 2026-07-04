@@ -15,6 +15,7 @@ import {
   Layers,
   BarChart3,
   AlertTriangle,
+  Plug,
   Bell,
   Eye,
   Moon,
@@ -71,6 +72,12 @@ const NAV: NavGroup[] = [
       { icon: <Layers className="h-4 w-4" />, label: "Nichos Quentes", to: "/dashboard/nichos" },
       { icon: <BarChart3 className="h-4 w-4" />, label: "Concorrentes", to: "/dashboard/concorrentes" },
       { icon: <AlertTriangle className="h-4 w-4" />, label: "Alertas", to: "/dashboard/alertas" },
+    ],
+  },
+  {
+    label: "Sistema",
+    items: [
+      { icon: <Plug className="h-4 w-4" />, label: "Central de Conexões", to: "/dashboard/integracoes" },
     ],
   },
 ];
