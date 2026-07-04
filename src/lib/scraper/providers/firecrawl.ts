@@ -144,46 +144,4 @@ export class FirecrawlProvider implements ScraperProvider {
     };
   }
 }
-        providerName: this.name,
-      };
-    }
 
-    const json = (await res.json()) as {
-      success?: boolean;
-      data?: {
-        html?: string;
-        markdown?: string;
-        screenshot?: string;
-        metadata?: {
-          statusCode?: number;
-          sourceURL?: string;
-          url?: string;
-          title?: string;
-          description?: string;
-          [k: string]: unknown;
-        };
-      };
-      error?: string;
-    };
-
-    if (!json.success || !json.data) {
-      throw {
-        code: "provider_error",
-        message: json.error || "Firecrawl retornou payload vazio.",
-        providerName: this.name,
-      };
-    }
-
-    const meta = json.data.metadata ?? {};
-    return {
-      finalUrl: (meta.url as string) || (meta.sourceURL as string) || url,
-      statusCode: (meta.statusCode as number) || 200,
-      html: json.data.html ?? "",
-      markdown: json.data.markdown ?? "",
-      screenshot: json.data.screenshot ?? null,
-      meta,
-      providerName: this.name,
-      elapsedMs,
-    };
-  }
-}
