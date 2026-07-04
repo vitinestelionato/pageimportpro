@@ -1,10 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { Eye, EyeOff, Loader2, Lock, Mail, TrendingUp, ArrowRight, Globe } from "lucide-react";
+import { Eye, EyeOff, Loader2, Lock, Mail, TrendingUp, ArrowRight, Globe, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { ImportProLogo, ImportProWordmark } from "@/components/ImportProLogo";
 import { Button } from "@/components/ui/button";
+import { checkLoginEligibility } from "@/lib/login-eligibility.functions";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -17,6 +18,8 @@ export const Route = createFileRoute("/login")({
   component: LoginPage,
 });
 
+type BlockReason = "not_purchased" | "inactive" | "unknown";
+
 function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -24,12 +27,22 @@ function LoginPage() {
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
   const [remember, setRemember] = useState(true);
+  const [blocked, setBlocked] = useState<BlockReason | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setBlocked(null);
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password: pw });
+      // 1) Pre-check: block anyone without a Cakto-created profile.
+      const check = await checkLoginEligibility({ data: { email: email.trim() } });
+      if (!check.eligible) {
+        setBlocked(check.reason ?? "unknown");
+        return;
+      }
+
+      // 2) Regular sign in.
+      const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password: pw });
       if (error) throw error;
       toast.success("Bem-vindo de volta!");
       navigate({ to: "/dashboard", replace: true });
@@ -94,9 +107,38 @@ function LoginPage() {
             </div>
 
             <div className="mt-8">
-
+              {blocked && (
+                <div className="mb-5 rounded-xl border border-amber-500/40 bg-amber-500/10 p-4 text-sm">
+                  <div className="flex items-start gap-3">
+                    <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-amber-400" />
+                    <div className="space-y-2">
+                      <p className="font-semibold text-amber-200">
+                        {blocked === "not_purchased" && "Não encontramos uma conta com esse e-mail."}
+                        {blocked === "inactive" && "Sua conta está inativa."}
+                        {blocked === "unknown" && "Não foi possível validar seu acesso agora."}
+                      </p>
+                      <p className="text-xs text-amber-100/80">
+                        {blocked === "not_purchased" && (
+                          <>
+                            O acesso à ImportPro é liberado automaticamente após a compra na Cakto.
+                            Verifique se você usou o mesmo e-mail da compra ou{" "}
+                            <Link to="/" className="underline">garanta seu acesso</Link>.
+                          </>
+                        )}
+                        {blocked === "inactive" && (
+                          <>Fale com o suporte para reativar sua assinatura.</>
+                        )}
+                        {blocked === "unknown" && (
+                          <>Tente novamente em instantes. Se persistir, contate o suporte.</>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <form onSubmit={handleSubmit} className="space-y-4">
+
                 <div>
                   <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                     E-mail
