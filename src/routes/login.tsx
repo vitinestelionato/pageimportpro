@@ -1,10 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { Eye, EyeOff, Loader2, Lock, Mail, TrendingUp, ArrowRight, Globe } from "lucide-react";
+import { Eye, EyeOff, Loader2, Lock, Mail, TrendingUp, ArrowRight, Globe, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { ImportProLogo, ImportProWordmark } from "@/components/ImportProLogo";
 import { Button } from "@/components/ui/button";
+import { checkLoginEligibility } from "@/lib/login-eligibility.functions";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -17,6 +18,8 @@ export const Route = createFileRoute("/login")({
   component: LoginPage,
 });
 
+type BlockReason = "not_purchased" | "inactive" | "unknown";
+
 function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -24,12 +27,22 @@ function LoginPage() {
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
   const [remember, setRemember] = useState(true);
+  const [blocked, setBlocked] = useState<BlockReason | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setBlocked(null);
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password: pw });
+      // 1) Pre-check: block anyone without a Cakto-created profile.
+      const check = await checkLoginEligibility({ data: { email: email.trim() } });
+      if (!check.eligible) {
+        setBlocked(check.reason ?? "unknown");
+        return;
+      }
+
+      // 2) Regular sign in.
+      const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password: pw });
       if (error) throw error;
       toast.success("Bem-vindo de volta!");
       navigate({ to: "/dashboard", replace: true });
