@@ -134,15 +134,21 @@ async function aiDiagnose(structured: ParsedListing): Promise<AiEnrichment | nul
   if (!apiKey) return null;
 
   const NF = NOT_FOUND;
-  const system = `Você é um analista sênior de sourcing internacional especializado em marketplaces chineses e globais.
+  const today = new Date().toISOString().slice(0, 10);
+  const system = `Você é um analista sênior de sourcing internacional e compliance de importação, especialista em marketplaces chineses e globais (Taobao, 1688, Tmall, Alibaba, JD, Pinduoduo, Goofish, AliExpress, Weidian, DHGate, Made-in-China, Global Sources).
+
+DATA DE REFERÊNCIA: ${today}. Trate qualquer produto lançado até hoje como existente. NUNCA afirme que um modelo "não existe", "é falso" ou "é protótipo" com base apenas no seu conhecimento — seu conhecimento pode estar desatualizado. Julgue apenas pelos DADOS do JSON.
 
 REGRAS INVIOLÁVEIS:
-1. Você receberá um JSON JÁ EXTRAÍDO do anúncio (produto, preço, vendedor, avaliações). NÃO invente informações fora dele.
-2. NÃO acesse URLs. NÃO use conhecimento externo sobre marcas ou lojas para preencher lacunas.
-3. Seu trabalho é: traduzir para pt-BR, categorizar, resumir specs, extrair sinais de confiança e sugerir viabilidade de importação.
-4. Se um campo não puder ser inferido do JSON, use EXATAMENTE "${NF}" (strings), [] (arrays) ou 0 (números).
-5. trust_score de 0 a 100 baseado APENAS em evidências no JSON (reviews, certifications, anos de loja, presença de dados).
-6. Retorne EXCLUSIVAMENTE JSON válido com o schema pedido, sem markdown.`;
+1. Você recebe um JSON já extraído do anúncio. Analise APENAS o que está nele.
+2. NÃO invente fatos externos. NÃO use conhecimento sobre datas de lançamento, existência de modelos, ou histórico de marcas para gerar alertas.
+3. Todo item em "risk_alerts", "trust_negatives" e "trust_positives" DEVE citar a evidência textual concreta do JSON que o sustenta (ex.: "vendedor com 0 avaliações", "preço 92% abaixo da média do título", "descrição menciona 'refurbished'", "loja criada há 2 meses").
+4. É PROIBIDO gerar alertas do tipo: "modelo não existe", "modelo lançado no futuro", "protótipo", "erro de digitação do vendedor", "produto fictício" — a menos que o PRÓPRIO TEXTO do anúncio diga isso literalmente.
+5. Se não houver evidência de risco no JSON, retorne "risk_alerts": []. Alerta sem evidência é pior que nenhum alerta.
+6. trust_score (0–100) baseado em evidências mensuráveis: nº de reviews, média, tempo de loja, certificações, coerência preço×categoria, presença/ausência de dados. Sem invenção.
+7. Traduza nome/descrição/categoria para pt-BR natural. Preserve números, códigos, SKUs e nomes de marca.
+8. Se um campo não puder ser inferido do JSON: strings = "${NF}", arrays = [], números = 0.
+9. Retorne EXCLUSIVAMENTE JSON válido no schema. Sem markdown, sem comentários.`;
 
   const schema = `{
   "name_translated": string,
@@ -192,19 +198,20 @@ ${JSON.stringify(
 Retorne SOMENTE o JSON no schema:
 ${schema}
 
-Regras: campos sem base no JSON acima → "${NF}", [], ou 0.`;
+Lembre-se: cada risk_alert precisa citar a evidência exata do JSON. Sem evidência = não emita o alerta.`;
 
   try {
     const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
-      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      headers: { "Lovable-API-Key": apiKey, "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "google/gemini-2.5-pro",
         messages: [
           { role: "system", content: system },
           { role: "user", content: user },
         ],
         response_format: { type: "json_object" },
+        temperature: 0.2,
       }),
     });
     if (!res.ok) {
