@@ -24,12 +24,10 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
 import { Route as AuthenticatedDashboardTendenciasRouteImport } from './routes/_authenticated/dashboard/tendencias'
-import { Route as AuthenticatedDashboardSessoesRouteImport } from './routes/_authenticated/dashboard/sessoes'
 import { Route as AuthenticatedDashboardRastreioRouteImport } from './routes/_authenticated/dashboard/rastreio'
 import { Route as AuthenticatedDashboardProdutosRouteImport } from './routes/_authenticated/dashboard/produtos'
 import { Route as AuthenticatedDashboardPerfilRouteImport } from './routes/_authenticated/dashboard/perfil'
 import { Route as AuthenticatedDashboardNichosRouteImport } from './routes/_authenticated/dashboard/nichos'
-import { Route as AuthenticatedDashboardIntegracoesRouteImport } from './routes/_authenticated/dashboard/integracoes'
 import { Route as AuthenticatedDashboardFornecedoresRouteImport } from './routes/_authenticated/dashboard/fornecedores'
 import { Route as AuthenticatedDashboardFavoritosRouteImport } from './routes/_authenticated/dashboard/favoritos'
 import { Route as AuthenticatedDashboardDocumentosRouteImport } from './routes/_authenticated/dashboard/documentos'
@@ -117,12 +115,6 @@ const AuthenticatedDashboardTendenciasRoute =
     path: '/dashboard/tendencias',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedDashboardSessoesRoute =
-  AuthenticatedDashboardSessoesRouteImport.update({
-    id: '/dashboard/sessoes',
-    path: '/dashboard/sessoes',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
 const AuthenticatedDashboardRastreioRoute =
   AuthenticatedDashboardRastreioRouteImport.update({
     id: '/dashboard/rastreio',
@@ -145,12 +137,6 @@ const AuthenticatedDashboardNichosRoute =
   AuthenticatedDashboardNichosRouteImport.update({
     id: '/dashboard/nichos',
     path: '/dashboard/nichos',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedDashboardIntegracoesRoute =
-  AuthenticatedDashboardIntegracoesRouteImport.update({
-    id: '/dashboard/integracoes',
-    path: '/dashboard/integracoes',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardFornecedoresRoute =
@@ -235,12 +221,10 @@ export interface FileRoutesByFullPath {
   '/dashboard/documentos': typeof AuthenticatedDashboardDocumentosRoute
   '/dashboard/favoritos': typeof AuthenticatedDashboardFavoritosRoute
   '/dashboard/fornecedores': typeof AuthenticatedDashboardFornecedoresRoute
-  '/dashboard/integracoes': typeof AuthenticatedDashboardIntegracoesRoute
   '/dashboard/nichos': typeof AuthenticatedDashboardNichosRoute
   '/dashboard/perfil': typeof AuthenticatedDashboardPerfilRoute
   '/dashboard/produtos': typeof AuthenticatedDashboardProdutosRoute
   '/dashboard/rastreio': typeof AuthenticatedDashboardRastreioRoute
-  '/dashboard/sessoes': typeof AuthenticatedDashboardSessoesRoute
   '/dashboard/tendencias': typeof AuthenticatedDashboardTendenciasRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/api/public/webhooks/cakto': typeof ApiPublicWebhooksCaktoRoute
@@ -267,12 +251,10 @@ export interface FileRoutesByTo {
   '/dashboard/documentos': typeof AuthenticatedDashboardDocumentosRoute
   '/dashboard/favoritos': typeof AuthenticatedDashboardFavoritosRoute
   '/dashboard/fornecedores': typeof AuthenticatedDashboardFornecedoresRoute
-  '/dashboard/integracoes': typeof AuthenticatedDashboardIntegracoesRoute
   '/dashboard/nichos': typeof AuthenticatedDashboardNichosRoute
   '/dashboard/perfil': typeof AuthenticatedDashboardPerfilRoute
   '/dashboard/produtos': typeof AuthenticatedDashboardProdutosRoute
   '/dashboard/rastreio': typeof AuthenticatedDashboardRastreioRoute
-  '/dashboard/sessoes': typeof AuthenticatedDashboardSessoesRoute
   '/dashboard/tendencias': typeof AuthenticatedDashboardTendenciasRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/api/public/webhooks/cakto': typeof ApiPublicWebhooksCaktoRoute
@@ -301,12 +283,10 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/documentos': typeof AuthenticatedDashboardDocumentosRoute
   '/_authenticated/dashboard/favoritos': typeof AuthenticatedDashboardFavoritosRoute
   '/_authenticated/dashboard/fornecedores': typeof AuthenticatedDashboardFornecedoresRoute
-  '/_authenticated/dashboard/integracoes': typeof AuthenticatedDashboardIntegracoesRoute
   '/_authenticated/dashboard/nichos': typeof AuthenticatedDashboardNichosRoute
   '/_authenticated/dashboard/perfil': typeof AuthenticatedDashboardPerfilRoute
   '/_authenticated/dashboard/produtos': typeof AuthenticatedDashboardProdutosRoute
   '/_authenticated/dashboard/rastreio': typeof AuthenticatedDashboardRastreioRoute
-  '/_authenticated/dashboard/sessoes': typeof AuthenticatedDashboardSessoesRoute
   '/_authenticated/dashboard/tendencias': typeof AuthenticatedDashboardTendenciasRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/api/public/webhooks/cakto': typeof ApiPublicWebhooksCaktoRoute
@@ -335,12 +315,10 @@ export interface FileRouteTypes {
     | '/dashboard/documentos'
     | '/dashboard/favoritos'
     | '/dashboard/fornecedores'
-    | '/dashboard/integracoes'
     | '/dashboard/nichos'
     | '/dashboard/perfil'
     | '/dashboard/produtos'
     | '/dashboard/rastreio'
-    | '/dashboard/sessoes'
     | '/dashboard/tendencias'
     | '/dashboard/'
     | '/api/public/webhooks/cakto'
@@ -367,12 +345,10 @@ export interface FileRouteTypes {
     | '/dashboard/documentos'
     | '/dashboard/favoritos'
     | '/dashboard/fornecedores'
-    | '/dashboard/integracoes'
     | '/dashboard/nichos'
     | '/dashboard/perfil'
     | '/dashboard/produtos'
     | '/dashboard/rastreio'
-    | '/dashboard/sessoes'
     | '/dashboard/tendencias'
     | '/dashboard'
     | '/api/public/webhooks/cakto'
@@ -400,12 +376,10 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/documentos'
     | '/_authenticated/dashboard/favoritos'
     | '/_authenticated/dashboard/fornecedores'
-    | '/_authenticated/dashboard/integracoes'
     | '/_authenticated/dashboard/nichos'
     | '/_authenticated/dashboard/perfil'
     | '/_authenticated/dashboard/produtos'
     | '/_authenticated/dashboard/rastreio'
-    | '/_authenticated/dashboard/sessoes'
     | '/_authenticated/dashboard/tendencias'
     | '/_authenticated/dashboard/'
     | '/api/public/webhooks/cakto'
@@ -534,13 +508,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardTendenciasRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/dashboard/sessoes': {
-      id: '/_authenticated/dashboard/sessoes'
-      path: '/dashboard/sessoes'
-      fullPath: '/dashboard/sessoes'
-      preLoaderRoute: typeof AuthenticatedDashboardSessoesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/dashboard/rastreio': {
       id: '/_authenticated/dashboard/rastreio'
       path: '/dashboard/rastreio'
@@ -567,13 +534,6 @@ declare module '@tanstack/react-router' {
       path: '/dashboard/nichos'
       fullPath: '/dashboard/nichos'
       preLoaderRoute: typeof AuthenticatedDashboardNichosRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/dashboard/integracoes': {
-      id: '/_authenticated/dashboard/integracoes'
-      path: '/dashboard/integracoes'
-      fullPath: '/dashboard/integracoes'
-      preLoaderRoute: typeof AuthenticatedDashboardIntegracoesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/fornecedores': {
@@ -659,12 +619,10 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardDocumentosRoute: typeof AuthenticatedDashboardDocumentosRoute
   AuthenticatedDashboardFavoritosRoute: typeof AuthenticatedDashboardFavoritosRoute
   AuthenticatedDashboardFornecedoresRoute: typeof AuthenticatedDashboardFornecedoresRoute
-  AuthenticatedDashboardIntegracoesRoute: typeof AuthenticatedDashboardIntegracoesRoute
   AuthenticatedDashboardNichosRoute: typeof AuthenticatedDashboardNichosRoute
   AuthenticatedDashboardPerfilRoute: typeof AuthenticatedDashboardPerfilRoute
   AuthenticatedDashboardProdutosRoute: typeof AuthenticatedDashboardProdutosRoute
   AuthenticatedDashboardRastreioRoute: typeof AuthenticatedDashboardRastreioRoute
-  AuthenticatedDashboardSessoesRoute: typeof AuthenticatedDashboardSessoesRoute
   AuthenticatedDashboardTendenciasRoute: typeof AuthenticatedDashboardTendenciasRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
 }
@@ -682,13 +640,10 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardFavoritosRoute: AuthenticatedDashboardFavoritosRoute,
   AuthenticatedDashboardFornecedoresRoute:
     AuthenticatedDashboardFornecedoresRoute,
-  AuthenticatedDashboardIntegracoesRoute:
-    AuthenticatedDashboardIntegracoesRoute,
   AuthenticatedDashboardNichosRoute: AuthenticatedDashboardNichosRoute,
   AuthenticatedDashboardPerfilRoute: AuthenticatedDashboardPerfilRoute,
   AuthenticatedDashboardProdutosRoute: AuthenticatedDashboardProdutosRoute,
   AuthenticatedDashboardRastreioRoute: AuthenticatedDashboardRastreioRoute,
-  AuthenticatedDashboardSessoesRoute: AuthenticatedDashboardSessoesRoute,
   AuthenticatedDashboardTendenciasRoute: AuthenticatedDashboardTendenciasRoute,
   AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
 }
@@ -724,13 +679,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
