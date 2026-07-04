@@ -41,7 +41,6 @@ export type ConnectorTestReport = {
   scopes?: string[];
   rate_limit_remaining?: number | null;
   message: string;
-  details?: Record<string, unknown>;
 };
 
 export type ConnectorSyncResult = {
