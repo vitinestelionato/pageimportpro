@@ -52,6 +52,27 @@ function ProductsPage() {
   const create = useServerFn(createProduct);
   const update = useServerFn(updateProduct);
   const remove = useServerFn(deleteProduct);
+  const enrich = useServerFn(enrichProductFromUrl);
+  const [autoUrl, setAutoUrl] = useState("");
+
+  const enrichMut = useMutation({
+    mutationFn: (url: string) => enrich({ data: { url } }),
+    onSuccess: (r) => {
+      setForm((f) => ({
+        ...f,
+        name: r.name ?? f.name,
+        supplier_url: r.supplier_url || f.supplier_url,
+        image_url: r.image_url ?? f.image_url,
+        origin_price: r.origin_price != null ? String(r.origin_price) : f.origin_price,
+        origin_currency: (r.origin_currency ?? f.origin_currency) as FormState["origin_currency"],
+        weight_kg: r.weight_kg != null ? String(r.weight_kg) : f.weight_kg,
+        category: r.category ?? f.category,
+        notes: r.notes ?? f.notes,
+      }));
+      toast.success("Dados preenchidos automaticamente. Revise e salve.");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["products", "list"],
