@@ -1,0 +1,19 @@
+# ImportPro
+
+> Plataforma brasileira para importadores: análise de anúncios chineses (Taobao, 1688, Tmall, Weidian, Xianyu), catálogo de produtos, cálculo de custos e precificação, rastreio de encomendas, câmbio, fornecedores e integração com agentes de compra (CSSBUY, ACBUY, Ootdbuy, Hoobuy, Superbuy e outros).
+
+ImportPro ajuda vendedores a importar produtos da China com segurança, calcular todos os custos (frete internacional, impostos, taxas de marketplace) e precificar com margem alvo, além de acompanhar toda a jornada da mercadoria até a entrega.
+
+## Pages
+
+- [Home](/): Visão geral da plataforma e principais recursos para importadores.
+- [Sobre](/sobre): Quem somos e a missão do ImportPro.
+- [Blog](/blog): Artigos sobre importação da China, precificação e vendas online.
+- [Contato](/contato): Fale com o time do ImportPro.
+- [Suporte](/suporte): Central de ajuda e atendimento.
+
+## Optional
+
+- [Política de Privacidade](/privacidade): Como tratamos dados pessoais.
+- [Termos de Uso](/termos): Termos e condições da plataforma.
+- [Política de Reembolso](/reembolso): Regras de reembolso e cancelamento.
