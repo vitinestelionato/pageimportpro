@@ -80,7 +80,7 @@ export const connectIntegration = createServerFn({ method: "POST" })
           integration_slug: data.slug,
           account_label: data.account_label ?? null,
           credentials: data.credentials,
-          config: data.config,
+          config: data.config as Record<string, never>,
           status: "connected",
           last_error: null,
         },
