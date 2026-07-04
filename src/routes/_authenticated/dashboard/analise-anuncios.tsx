@@ -181,14 +181,17 @@ function AnalysisResult({ data, onRefresh }: { data: ListingAnalysis; onRefresh:
             </a>
           )}
         </div>
-        <button
-          type="button"
-          onClick={onRefresh}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted"
-        >
-          <RefreshCw className="h-3.5 w-3.5" /> Reanalisar
-        </button>
-      </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <BuyOnAgentButton sourceUrl={data.source.url ?? url} size="sm" />
+          <BuyingAgentSelector compact />
+          <button
+            type="button"
+            onClick={onRefresh}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted"
+          >
+            <RefreshCw className="h-3.5 w-3.5" /> Reanalisar
+          </button>
+        </div>
 
       {data.meta.warnings.length > 0 && (
         <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-3 text-xs text-amber-600">
