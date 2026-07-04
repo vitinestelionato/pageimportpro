@@ -10,6 +10,7 @@ import {
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { listTrendingProducts, type TrendingProduct } from "@/lib/trends.functions";
+import { BuyOnAgentButton } from "@/components/BuyOnAgentButton";
 
 export const Route = createFileRoute("/_authenticated/dashboard/tendencias")({
   head: () => ({ meta: [{ title: "Produtos em Alta · ImportPro" }, { name: "robots", content: "noindex,nofollow" }] }),
@@ -286,12 +287,15 @@ function TrendCard({ product, rank }: { product: TrendingProduct; rank: number }
         </div>
       )}
 
-      <button
-        onClick={() => setOpen((v) => !v)}
-        className="mt-3 inline-flex h-8 w-full items-center justify-center gap-1 rounded-lg border border-white/10 bg-black/20 text-xs font-semibold text-muted-foreground hover:text-foreground"
-      >
-        {open ? <>Recolher <ChevronUp className="h-3 w-3" /></> : <>Ver detalhes <ChevronDown className="h-3 w-3" /></>}
-      </button>
+      <div className="mt-3 flex items-center gap-2">
+        <BuyOnAgentButton keyword={p.name} size="sm" className="flex-1" />
+        <button
+          onClick={() => setOpen((v) => !v)}
+          className="inline-flex h-8 items-center justify-center gap-1 rounded-lg border border-white/10 bg-black/20 px-3 text-xs font-semibold text-muted-foreground hover:text-foreground"
+        >
+          {open ? <>Recolher <ChevronUp className="h-3 w-3" /></> : <>Ver detalhes <ChevronDown className="h-3 w-3" /></>}
+        </button>
+      </div>
     </article>
   );
 }

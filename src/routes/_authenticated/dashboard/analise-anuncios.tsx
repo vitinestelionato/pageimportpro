@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { analyzeListing, NOT_FOUND, type ListingAnalysis } from "@/lib/listing-analysis.functions";
+import { BuyOnAgentButton } from "@/components/BuyOnAgentButton";
+import { BuyingAgentSelector } from "@/components/BuyingAgentSelector";
 
 export const Route = createFileRoute("/_authenticated/dashboard/analise-anuncios")({
   head: () => ({
@@ -179,14 +181,20 @@ function AnalysisResult({ data, onRefresh }: { data: ListingAnalysis; onRefresh:
             </a>
           )}
         </div>
-        <button
-          type="button"
-          onClick={onRefresh}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted"
-        >
-          <RefreshCw className="h-3.5 w-3.5" /> Reanalisar
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <BuyOnAgentButton sourceUrl={data.source.url} keyword={data.product?.name_translated || data.product?.name_original} size="sm" />
+          <BuyingAgentSelector compact />
+          <button
+            type="button"
+            onClick={onRefresh}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted"
+          >
+            <RefreshCw className="h-3.5 w-3.5" /> Reanalisar
+          </button>
+        </div>
       </div>
+
+
 
       {data.meta.warnings.length > 0 && (
         <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-3 text-xs text-amber-600">

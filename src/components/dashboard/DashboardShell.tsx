@@ -32,6 +32,7 @@ import {
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { ImportProWordmark } from "@/components/ImportProLogo";
+import { BuyingAgentSelector } from "@/components/BuyingAgentSelector";
 
 type NavItem = { icon: ReactNode; label: string; to: string; badge?: string };
 type NavGroup = { label: string; items: NavItem[] };
@@ -196,6 +197,9 @@ export function DashboardShell({
           </div>
 
           <div className="flex items-center gap-2">
+            <div className="hidden md:block">
+              <BuyingAgentSelector compact />
+            </div>
             <IconBtn><Eye className="h-4 w-4" /></IconBtn>
             <IconBtn>🇧🇷</IconBtn>
             <IconBtn><Bell className="h-4 w-4" /></IconBtn>

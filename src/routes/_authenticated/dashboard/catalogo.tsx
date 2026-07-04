@@ -10,6 +10,7 @@ import {
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { listCatalog, toggleCatalogFavorite, importCatalogItem } from "@/lib/catalog.functions";
+import { BuyOnAgentButton } from "@/components/BuyOnAgentButton";
 
 export const Route = createFileRoute("/_authenticated/dashboard/catalogo")({
   head: () => ({ meta: [{ title: "Catálogo · ImportPro" }, { name: "robots", content: "noindex,nofollow" }] }),
@@ -260,6 +261,10 @@ function ProductCard({ item, onFav, onImport, importing }: { item: CatalogItem; 
           </div>
         </div>
 
+        <div className="pt-1">
+          <BuyOnAgentButton sourceUrl={item.supplier_url} keyword={item.name} size="md" className="w-full" />
+        </div>
+
         <div className="flex items-center gap-2 pt-1">
           {item.supplier_url && (
             <a
@@ -275,7 +280,7 @@ function ProductCard({ item, onFav, onImport, importing }: { item: CatalogItem; 
           <button
             onClick={onImport}
             disabled={importing}
-            className="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary px-3 text-xs font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+            className="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary/80 px-3 text-xs font-semibold text-primary-foreground hover:bg-primary disabled:opacity-50"
           >
             <ArrowDownToLine className="h-3.5 w-3.5" />
             {importing ? "Importando..." : "Importar"}
