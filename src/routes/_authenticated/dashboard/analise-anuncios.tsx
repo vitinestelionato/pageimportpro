@@ -182,7 +182,7 @@ function AnalysisResult({ data, onRefresh }: { data: ListingAnalysis; onRefresh:
           )}
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <BuyOnAgentButton sourceUrl={data.source.url} keyword={data.product?.name} size="sm" />
+          <BuyOnAgentButton sourceUrl={data.source.url} keyword={data.product?.name_translated || data.product?.name_original} size="sm" />
           <BuyingAgentSelector compact />
           <button
             type="button"
