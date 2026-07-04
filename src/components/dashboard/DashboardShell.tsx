@@ -15,8 +15,6 @@ import {
   Layers,
   BarChart3,
   AlertTriangle,
-  Plug,
-  ShieldCheck,
   Bell,
   Eye,
   Moon,
@@ -75,13 +73,6 @@ const NAV: NavGroup[] = [
       { icon: <AlertTriangle className="h-4 w-4" />, label: "Alertas", to: "/dashboard/alertas" },
     ],
   },
-  {
-    label: "Sistema",
-    items: [
-      { icon: <Plug className="h-4 w-4" />, label: "Connector Manager", to: "/dashboard/integracoes" },
-      { icon: <ShieldCheck className="h-4 w-4" />, label: "Gerenciador de Sessões", to: "/dashboard/sessoes" },
-    ],
-  },
 ];
 
 export function DashboardShell({
@@ -110,8 +101,6 @@ export function DashboardShell({
         .maybeSingle();
       setProfile(data);
     })();
-    // Registra/atualiza a sessão no gerenciador (RLS por usuário)
-    import("@/lib/session-tracker").then((m) => m.trackSession());
   }, []);
 
   const firstName = (profile?.full_name?.split(" ")[0] ?? profile?.email?.split("@")[0] ?? "importador").trim();
@@ -124,10 +113,6 @@ export function DashboardShell({
   const planLabel = (profile?.plan ?? "FREE").toUpperCase();
 
   const handleLogout = async () => {
-    try {
-      const m = await import("@/lib/session-tracker");
-      await m.endCurrentSession();
-    } catch {}
     await supabase.auth.signOut();
     toast.success("Sessão encerrada");
     navigate({ to: "/login" });
