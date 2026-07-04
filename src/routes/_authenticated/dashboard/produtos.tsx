@@ -1,12 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { toast } from "sonner";
 import {
   Search, Loader2, RefreshCw, Link as LinkIcon, Package, Tag, Building2,
   Star, Shield, ShieldAlert, AlertTriangle, DollarSign, ImageIcon, Play, Info,
   CheckCircle2, XCircle, Boxes, Truck, Sparkles, Globe, User, MapPin, Award,
+  X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut,
 } from "lucide-react";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { analyzeListing, NOT_FOUND, type ListingAnalysis } from "@/lib/listing-analysis.functions";
