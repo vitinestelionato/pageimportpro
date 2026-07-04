@@ -12,7 +12,7 @@ import {
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { analyzeListing, NOT_FOUND, type ListingAnalysis } from "@/lib/listing-analysis.functions";
 
-export const Route = createFileRoute("/_authenticated/dashboard/produtos")({
+export const Route = createFileRoute("/_authenticated/dashboard/analise-anuncios")({
   head: () => ({
     meta: [
       { title: "Gestão de Produtos · ImportPro" },

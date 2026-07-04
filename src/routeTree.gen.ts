@@ -36,6 +36,7 @@ import { Route as AuthenticatedDashboardCatalogoRouteImport } from './routes/_au
 import { Route as AuthenticatedDashboardCambioRouteImport } from './routes/_authenticated/dashboard/cambio'
 import { Route as AuthenticatedDashboardCalculadoraRouteImport } from './routes/_authenticated/dashboard/calculadora'
 import { Route as AuthenticatedDashboardAnotacoesRouteImport } from './routes/_authenticated/dashboard/anotacoes'
+import { Route as AuthenticatedDashboardAnaliseAnunciosRouteImport } from './routes/_authenticated/dashboard/analise-anuncios'
 import { Route as AuthenticatedDashboardAlertasRouteImport } from './routes/_authenticated/dashboard/alertas'
 import { Route as ApiPublicWebhooksCaktoRouteImport } from './routes/api/public/webhooks/cakto'
 
@@ -187,6 +188,12 @@ const AuthenticatedDashboardAnotacoesRoute =
     path: '/dashboard/anotacoes',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDashboardAnaliseAnunciosRoute =
+  AuthenticatedDashboardAnaliseAnunciosRouteImport.update({
+    id: '/dashboard/analise-anuncios',
+    path: '/dashboard/analise-anuncios',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardAlertasRoute =
   AuthenticatedDashboardAlertasRouteImport.update({
     id: '/dashboard/alertas',
@@ -213,6 +220,7 @@ export interface FileRoutesByFullPath {
   '/termos': typeof TermosRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/dashboard/alertas': typeof AuthenticatedDashboardAlertasRoute
+  '/dashboard/analise-anuncios': typeof AuthenticatedDashboardAnaliseAnunciosRoute
   '/dashboard/anotacoes': typeof AuthenticatedDashboardAnotacoesRoute
   '/dashboard/calculadora': typeof AuthenticatedDashboardCalculadoraRoute
   '/dashboard/cambio': typeof AuthenticatedDashboardCambioRoute
@@ -243,6 +251,7 @@ export interface FileRoutesByTo {
   '/termos': typeof TermosRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/dashboard/alertas': typeof AuthenticatedDashboardAlertasRoute
+  '/dashboard/analise-anuncios': typeof AuthenticatedDashboardAnaliseAnunciosRoute
   '/dashboard/anotacoes': typeof AuthenticatedDashboardAnotacoesRoute
   '/dashboard/calculadora': typeof AuthenticatedDashboardCalculadoraRoute
   '/dashboard/cambio': typeof AuthenticatedDashboardCambioRoute
@@ -275,6 +284,7 @@ export interface FileRoutesById {
   '/termos': typeof TermosRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/_authenticated/dashboard/alertas': typeof AuthenticatedDashboardAlertasRoute
+  '/_authenticated/dashboard/analise-anuncios': typeof AuthenticatedDashboardAnaliseAnunciosRoute
   '/_authenticated/dashboard/anotacoes': typeof AuthenticatedDashboardAnotacoesRoute
   '/_authenticated/dashboard/calculadora': typeof AuthenticatedDashboardCalculadoraRoute
   '/_authenticated/dashboard/cambio': typeof AuthenticatedDashboardCambioRoute
@@ -307,6 +317,7 @@ export interface FileRouteTypes {
     | '/termos'
     | '/blog/$slug'
     | '/dashboard/alertas'
+    | '/dashboard/analise-anuncios'
     | '/dashboard/anotacoes'
     | '/dashboard/calculadora'
     | '/dashboard/cambio'
@@ -337,6 +348,7 @@ export interface FileRouteTypes {
     | '/termos'
     | '/blog/$slug'
     | '/dashboard/alertas'
+    | '/dashboard/analise-anuncios'
     | '/dashboard/anotacoes'
     | '/dashboard/calculadora'
     | '/dashboard/cambio'
@@ -368,6 +380,7 @@ export interface FileRouteTypes {
     | '/termos'
     | '/blog/$slug'
     | '/_authenticated/dashboard/alertas'
+    | '/_authenticated/dashboard/analise-anuncios'
     | '/_authenticated/dashboard/anotacoes'
     | '/_authenticated/dashboard/calculadora'
     | '/_authenticated/dashboard/cambio'
@@ -592,6 +605,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardAnotacoesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dashboard/analise-anuncios': {
+      id: '/_authenticated/dashboard/analise-anuncios'
+      path: '/dashboard/analise-anuncios'
+      fullPath: '/dashboard/analise-anuncios'
+      preLoaderRoute: typeof AuthenticatedDashboardAnaliseAnunciosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard/alertas': {
       id: '/_authenticated/dashboard/alertas'
       path: '/dashboard/alertas'
@@ -611,6 +631,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardAlertasRoute: typeof AuthenticatedDashboardAlertasRoute
+  AuthenticatedDashboardAnaliseAnunciosRoute: typeof AuthenticatedDashboardAnaliseAnunciosRoute
   AuthenticatedDashboardAnotacoesRoute: typeof AuthenticatedDashboardAnotacoesRoute
   AuthenticatedDashboardCalculadoraRoute: typeof AuthenticatedDashboardCalculadoraRoute
   AuthenticatedDashboardCambioRoute: typeof AuthenticatedDashboardCambioRoute
@@ -629,6 +650,8 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardAlertasRoute: AuthenticatedDashboardAlertasRoute,
+  AuthenticatedDashboardAnaliseAnunciosRoute:
+    AuthenticatedDashboardAnaliseAnunciosRoute,
   AuthenticatedDashboardAnotacoesRoute: AuthenticatedDashboardAnotacoesRoute,
   AuthenticatedDashboardCalculadoraRoute:
     AuthenticatedDashboardCalculadoraRoute,
