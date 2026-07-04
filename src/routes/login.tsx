@@ -164,35 +164,8 @@ function LoginPage() {
             </div>
 
             <div className="mt-6">
-              {blocked && (
-                <div className="mb-5 rounded-xl border border-amber-500/40 bg-amber-500/10 p-4 text-sm">
-                  <div className="flex items-start gap-3">
-                    <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-amber-400" />
-                    <div className="space-y-2">
-                      <p className="font-semibold text-amber-200">
-                        {blocked === "not_purchased" && "Não encontramos uma conta com esse e-mail."}
-                        {blocked === "inactive" && "Sua conta está inativa."}
-                        {blocked === "unknown" && "Não foi possível validar seu acesso agora."}
-                      </p>
-                      <p className="text-xs text-amber-100/80">
-                        {blocked === "not_purchased" && (
-                          <>
-                            O acesso à ImportPro é liberado automaticamente após a compra na Cakto.
-                            Verifique se você usou o mesmo e-mail da compra ou{" "}
-                            <Link to="/" className="underline">garanta seu acesso</Link>.
-                          </>
-                        )}
-                        {blocked === "inactive" && (
-                          <>Fale com o suporte para reativar sua assinatura.</>
-                        )}
-                        {blocked === "unknown" && (
-                          <>Tente novamente em instantes. Se persistir, contate o suporte.</>
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
+              {blocked && <BlockedBanner reason={blocked} />}
+
 
               <form onSubmit={handleSubmit} className="space-y-4">
 
