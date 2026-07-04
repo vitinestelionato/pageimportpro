@@ -352,10 +352,36 @@ function inferModel(text: string): string | null {
 
 
 const IMG_FETCH_TIMEOUT_MS = 6000;
-const IMG_MIN_BYTES = 5_000; // menor que isso = ícone/placeholder
-const IMG_MAX_CANDIDATES = 14;
+// Placeholder branco/corrompido da CDN geralmente tem <1.5KB. Fotos reais
+// (mesmo miniaturas webp) costumam ficar acima de 2KB. Ser conservador para
+// não esconder fotos legítimas do produto.
+const IMG_MIN_BYTES = 1_800;
+// Só marca como "placeholder" quando o mesmo binário se repete várias vezes
+// entre as URLs candidatas. Isso evita rejeitar pares legítimos duplicados.
+const IMG_PLACEHOLDER_MIN_REPEATS = 3;
+const IMG_PLACEHOLDER_MAX_BYTES = 12_000;
+const IMG_MAX_CANDIDATES = 40;
 
 type ImgCheck = { url: string; size: number; hash: string };
+
+/** Confere assinatura binária de formatos de imagem comuns. */
+function hasImageMagicBytes(buf: ArrayBuffer): boolean {
+  const b = new Uint8Array(buf.slice(0, 16));
+  if (b.length < 4) return false;
+  // JPEG
+  if (b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff) return true;
+  // PNG
+  if (b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4e && b[3] === 0x47) return true;
+  // GIF
+  if (b[0] === 0x47 && b[1] === 0x49 && b[2] === 0x46) return true;
+  // WEBP / RIFF
+  if (b[0] === 0x52 && b[1] === 0x49 && b[2] === 0x46 && b[3] === 0x46) return true;
+  // BMP
+  if (b[0] === 0x42 && b[1] === 0x4d) return true;
+  // AVIF / HEIC (ftyp box)
+  if (b[4] === 0x66 && b[5] === 0x74 && b[6] === 0x79 && b[7] === 0x70) return true;
+  return false;
+}
 
 async function checkImage(url: string, referer: string | null): Promise<ImgCheck | null> {
   try {
@@ -372,10 +398,11 @@ async function checkImage(url: string, referer: string | null): Promise<ImgCheck
     });
     clearTimeout(timer);
     if (!res.ok) return null;
-    const ct = (res.headers.get("content-type") || "").toLowerCase();
-    if (ct && !ct.startsWith("image/")) return null;
     const buf = await res.arrayBuffer();
     if (buf.byteLength < IMG_MIN_BYTES) return null;
+    // Não confia só no content-type (CDNs às vezes mandam octet-stream);
+    // exige magic bytes de imagem real para descartar HTML de erro.
+    if (!hasImageMagicBytes(buf)) return null;
     const digest = await crypto.subtle.digest("SHA-1", buf);
     const hash = Array.from(new Uint8Array(digest))
       .map((b) => b.toString(16).padStart(2, "0"))
@@ -387,12 +414,10 @@ async function checkImage(url: string, referer: string | null): Promise<ImgCheck
 }
 
 /**
- * Baixa cada imagem candidata no servidor e mantém apenas as válidas:
- * - HTTP ok + content-type de imagem
- * - tamanho mínimo (descarta ícones/spacers)
- * - remove placeholders de CDN ("图片加载失败"): mesmo conteúdo binário
- *   repetido em várias URLs
- * - remove duplicatas exatas
+ * Baixa cada imagem candidata no servidor e mantém apenas as válidas.
+ * Estratégia conservadora: só descarta quando há forte evidência de que
+ * é lixo (fetch falhou, formato inválido, tamanho ínfimo, ou o mesmo
+ * binário se repete várias vezes indicando placeholder da CDN).
  */
 async function validateProductImages(
   main: string | null,
@@ -408,16 +433,21 @@ async function validateProductImages(
   const checks = await Promise.all(candidates.map((u) => checkImage(u, referer)));
   const ok = checks.filter((c): c is ImgCheck => c !== null);
 
-  // Conta repetições de conteúdo idêntico
+  // Conta repetições de conteúdo idêntico para detectar placeholder de CDN.
   const hashCount = new Map<string, number>();
   for (const c of ok) hashCount.set(c.hash, (hashCount.get(c.hash) ?? 0) + 1);
 
   const seen = new Set<string>();
   const valid: string[] = [];
   for (const c of ok) {
-    // Placeholder de CDN: conteúdo idêntico repetido e relativamente pequeno
-    if ((hashCount.get(c.hash) ?? 0) >= 2 && c.size < 80_000) continue;
-    // Duplicata exata da mesma foto
+    // Placeholder de CDN: mesmo binário repetido em várias URLs E pequeno.
+    if (
+      (hashCount.get(c.hash) ?? 0) >= IMG_PLACEHOLDER_MIN_REPEATS &&
+      c.size < IMG_PLACEHOLDER_MAX_BYTES
+    ) {
+      continue;
+    }
+    // Duplicata exata da mesma foto (mantém apenas a primeira ocorrência).
     if (seen.has(c.hash)) continue;
     seen.add(c.hash);
     valid.push(c.url);
@@ -427,6 +457,8 @@ async function validateProductImages(
   const newGallery = valid.filter((u) => u !== newMain);
   return { main: newMain, gallery: newGallery };
 }
+
+
 
 
 function mergeToAnalysis(args: {
