@@ -51,6 +51,75 @@ function inferMOQ(text: string): string | null {
   return m ? m[1].trim() : null;
 }
 
+/** Extrai sinais genéricos de vendedor a partir do texto/HTML.
+ *  Sobrescreve apenas campos ainda vazios em `parsed.seller`. */
+function inferSeller(parsed: ParsedListing, page: ScrapedPage): void {
+  const html = page.html || "";
+  const text = parsed.raw_signals.text || stripTags(html);
+  const s = parsed.seller;
+
+  // Nome da loja / vendedor
+  if (!s.store) {
+    const m =
+      html.match(/<meta[^>]+property=["']og:site_name["'][^>]+content=["']([^"']+)["']/i) ||
+      text.match(/(?:店铺|店铺名称|Shop(?:\s*Name)?|Store(?:\s*Name)?|Sold by|Vendido por)\s*[:：]\s*([^\n\r|·•]{2,60})/i);
+    if (m) s.store = m[1].trim();
+  }
+  if (!s.name) {
+    const m =
+      text.match(/(?:卖家|个人卖家|Seller|Vendedor)\s*[:：]\s*([^\n\r|·•]{2,60})/i) ||
+      text.match(/(?:by|By)\s+([A-Z][\w\s&.'-]{1,40})\s*(?:Store|Shop|Official)/);
+    if (m) s.name = m[1].trim();
+  }
+
+  // Localização
+  if (!s.location) {
+    const m =
+      text.match(/(?:发货地|所在地|宝贝所在地|Ships from|Location|Localização)\s*[:：]?\s*([^\n\r|·•]{2,60})/i) ||
+      text.match(/(?:Province|省|市)\s*[:：]?\s*([\u4e00-\u9fa5A-Za-z\s]{2,40})/);
+    if (m) s.location = m[1].trim();
+  }
+
+  // Tempo de atuação
+  if (!s.years_active) {
+    const m =
+      text.match(/(\d+)\s*(?:年|years?)\s*(?:老店|老铺|on\s+\w+|Store|selling)/i) ||
+      text.match(/(?:Established|Since|开店时间|注册于)\s*[:：]?\s*(\d{4})/i) ||
+      text.match(/(\d+)\s*(?:年|years?)\s*(?:of experience|经营)/i);
+    if (m) {
+      if (/^\d{4}$/.test(m[1])) {
+        const years = new Date().getFullYear() - Number(m[1]);
+        if (years >= 0 && years < 60) s.years_active = `${years} anos (desde ${m[1]})`;
+      } else {
+        s.years_active = `${m[1]} anos`;
+      }
+    }
+  }
+
+  // Reputação (score/avaliações do vendedor)
+  if (!s.reputation) {
+    const m =
+      text.match(/(?:卖家信用|信用等级|Seller Rating|Feedback|Positive)\s*[:：]?\s*([0-9.]+%?\s*(?:\/\s*5)?)/i) ||
+      text.match(/([0-9]{2,3}(?:\.[0-9]+)?%)\s*(?:positive|好评|好評)/i);
+    if (m) s.reputation = m[1].trim();
+  }
+
+  // Certificações / selos comuns
+  const badges = new Set(s.certifications);
+  const badgeChecks: [RegExp, string][] = [
+    [/Gold Supplier/i, "Gold Supplier"],
+    [/Verified Supplier/i, "Verified Supplier"],
+    [/Trade Assurance/i, "Trade Assurance"],
+    [/Official\s+Store/i, "Official Store"],
+    [/Power\s+Merchant|Preferred/i, "Preferred Seller"],
+    [/天猫|Tmall/i, "Tmall"],
+    [/实名认证|Verified/i, "Verified Account"],
+    [/超级卖家|Super Seller/i, "Super Seller"],
+  ];
+  for (const [re, label] of badgeChecks) if (re.test(text)) badges.add(label);
+  s.certifications = Array.from(badges);
+}
+
 /** Base compositor: genericParse + inferências + moeda default + platform id. */
 function build(
   page: ScrapedPage,
@@ -63,8 +132,10 @@ function build(
   inferPrice(parsed, text, opts.defaultCurrency);
   parsed.price.moq = parsed.price.moq || inferMOQ(text);
   opts.enrich?.(parsed, page);
+  inferSeller(parsed, page);
   return parsed;
 }
+
 
 export class GoofishParser implements PlatformParser {
   platform: Platform = "goofish";
