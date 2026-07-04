@@ -424,6 +424,50 @@ export type Database = {
         }
         Relationships: []
       }
+      session_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          ip_address: string | null
+          metadata: Json
+          result: string
+          session_id: string | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json
+          result?: string
+          session_id?: string | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json
+          result?: string
+          session_id?: string | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_events_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "user_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       shipments: {
         Row: {
           carrier: string
@@ -622,6 +666,75 @@ export type Database = {
           created_at?: string
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_sessions: {
+        Row: {
+          auth_method: string | null
+          browser: string | null
+          city: string | null
+          country: string | null
+          created_at: string
+          device: string | null
+          ended_at: string | null
+          expires_at: string | null
+          id: string
+          ip_address: string | null
+          ip_masked: string | null
+          last_activity_at: string
+          metadata: Json
+          os: string | null
+          session_token_hash: string | null
+          started_at: string
+          status: string
+          updated_at: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          auth_method?: string | null
+          browser?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          device?: string | null
+          ended_at?: string | null
+          expires_at?: string | null
+          id?: string
+          ip_address?: string | null
+          ip_masked?: string | null
+          last_activity_at?: string
+          metadata?: Json
+          os?: string | null
+          session_token_hash?: string | null
+          started_at?: string
+          status?: string
+          updated_at?: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          auth_method?: string | null
+          browser?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          device?: string | null
+          ended_at?: string | null
+          expires_at?: string | null
+          id?: string
+          ip_address?: string | null
+          ip_masked?: string | null
+          last_activity_at?: string
+          metadata?: Json
+          os?: string | null
+          session_token_hash?: string | null
+          started_at?: string
+          status?: string
+          updated_at?: string
+          user_agent?: string | null
           user_id?: string
         }
         Relationships: []
