@@ -14,7 +14,7 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const staticEntries: SitemapEntry[] = [
+        const entries: SitemapEntry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
           { path: "/sobre", changefreq: "monthly", priority: "0.7" },
           { path: "/blog", changefreq: "weekly", priority: "0.8" },
@@ -28,30 +28,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/reembolso", changefreq: "yearly", priority: "0.3" },
         ];
 
-        const dynamicEntries: SitemapEntry[] = [];
-        try {
-          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-          const { data } = await supabaseAdmin
-            .from("blog_posts" as never)
-            .select("slug, updated_at, published")
-            .eq("published", true);
-          if (Array.isArray(data)) {
-            for (const row of data as Array<{ slug?: string; updated_at?: string }>) {
-              if (row?.slug) {
-                dynamicEntries.push({
-                  path: `/blog/${row.slug}`,
-                  lastmod: row.updated_at,
-                  changefreq: "monthly",
-                  priority: "0.6",
-                });
-              }
-            }
-          }
-        } catch {
-          // Blog table may not exist yet; skip dynamic entries.
-        }
-
-        const urls = [...staticEntries, ...dynamicEntries].map((e) =>
+        const urls = entries.map((e) =>
           [
             `  <url>`,
             `    <loc>${BASE_URL}${e.path}</loc>`,
