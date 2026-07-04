@@ -90,6 +90,8 @@ function IntegrationsPage() {
   const doConnect = useServerFn(connectIntegration);
   const doDisconnect = useServerFn(disconnectIntegration);
   const doSync = useServerFn(syncIntegration);
+  const doTest = useServerFn(testConnection);
+  const doTriggerSync = useServerFn(triggerSync);
   const fetchLogs = useServerFn(listIntegrationEvents);
 
   const { data, isLoading } = useQuery({
@@ -104,6 +106,8 @@ function IntegrationsPage() {
 
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<string>("all");
+  const [authFilter, setAuthFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<"all" | "connected" | "disconnected" | "error">("all");
   const [dialogFor, setDialogFor] = useState<Integration | null>(null);
   const [apiKey, setApiKey] = useState("");
   const [label, setLabel] = useState("");
@@ -113,11 +117,26 @@ function IntegrationsPage() {
     () => ["all", ...Array.from(new Set(items.map((i) => i.category)))],
     [items],
   );
+  const authTypes = useMemo(
+    () => ["all", ...Array.from(new Set(items.map((i) => i.auth_type)))],
+    [items],
+  );
   const filtered = items.filter((i) => {
     const okCat = category === "all" || i.category === category;
+    const okAuth = authFilter === "all" || i.auth_type === authFilter;
+    const s = i.connection?.status ?? "disconnected";
+    const okStatus =
+      statusFilter === "all" ||
+      (statusFilter === "connected" && s === "connected") ||
+      (statusFilter === "disconnected" && (s === "disconnected" || s === "revoked" || s === "pending")) ||
+      (statusFilter === "error" && s === "error");
     const q = search.trim().toLowerCase();
-    const okSearch = !q || i.name.toLowerCase().includes(q) || i.category.toLowerCase().includes(q);
-    return okCat && okSearch;
+    const okSearch =
+      !q ||
+      i.name.toLowerCase().includes(q) ||
+      i.category.toLowerCase().includes(q) ||
+      (i.provider ?? "").toLowerCase().includes(q);
+    return okCat && okAuth && okStatus && okSearch;
   });
 
   const connectMut = useMutation({
