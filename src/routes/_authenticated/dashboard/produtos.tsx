@@ -204,7 +204,15 @@ function AnalysisResult({ data, onRefresh }: { data: ListingAnalysis; onRefresh:
           <div className="aspect-square overflow-hidden rounded-xl border bg-muted">
             {data.images.main ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={data.images.main} alt="Foto principal" className="h-full w-full object-cover" />
+              <img
+                src={data.images.main}
+                alt="Foto principal"
+                className="h-full w-full object-cover"
+                loading="lazy"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).style.display = "none";
+                }}
+              />
             ) : (
               <div className="flex h-full items-center justify-center text-muted-foreground">
                 <ImageIcon className="h-10 w-10" />
@@ -220,6 +228,11 @@ function AnalysisResult({ data, onRefresh }: { data: ListingAnalysis; onRefresh:
                   src={src}
                   alt={`Foto ${i + 2}`}
                   className="aspect-square rounded-md border object-cover"
+                  loading="lazy"
+                  onError={(e) => {
+                    const el = e.currentTarget as HTMLImageElement;
+                    el.parentElement?.removeChild(el);
+                  }}
                 />
               ))}
             </div>
