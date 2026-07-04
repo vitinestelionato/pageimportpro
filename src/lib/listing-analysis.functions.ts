@@ -214,7 +214,7 @@ Lembre-se: cada risk_alert precisa citar a evidência exata do JSON. Sem evidên
       method: "POST",
       headers: { "Lovable-API-Key": apiKey, "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "google/gemini-2.5-pro",
+        model: "google/gemini-3-flash-preview",
         messages: [
           { role: "system", content: system },
           { role: "user", content: user },
