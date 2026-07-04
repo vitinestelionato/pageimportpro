@@ -116,7 +116,7 @@ export const checkAlert = createServerFn({ method: "POST" })
     }
 
     const { error: e2 } = await context.supabase
-      .from("alerts").update(patch).eq("id", data.id).eq("user_id", context.userId);
+      .from("alerts").update(patch as never).eq("id", data.id).eq("user_id", context.userId);
     if (e2) throw new Error(e2.message);
     return { ok: true, triggered: patch.status === "triggered" };
   });
