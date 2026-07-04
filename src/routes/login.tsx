@@ -214,14 +214,6 @@ function LoginPage() {
                       onChange={(e) => setRemember(e.target.checked)}
                       className="h-3.5 w-3.5 rounded border-white/20 bg-background"
                     />
-                <div className="flex items-center justify-between text-xs">
-                  <label className="flex cursor-pointer items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={remember}
-                      onChange={(e) => setRemember(e.target.checked)}
-                      className="h-3.5 w-3.5 rounded border-white/20 bg-background"
-                    />
                     Lembrar meu acesso
                   </label>
                   <AccessHelpDialog />
