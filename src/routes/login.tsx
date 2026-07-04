@@ -94,22 +94,7 @@ function LoginPage() {
             </div>
 
             <div className="mt-8">
-              <button
-                type="button"
-                className="flex h-12 w-full items-center justify-center gap-3 rounded-xl border border-white/10 bg-card/70 text-sm font-medium backdrop-blur transition hover:bg-card"
-                onClick={() =>
-                  toast.info("Login com Google em breve. Use e-mail e senha por enquanto.")
-                }
-              >
-                <GoogleIcon />
-                Continuar com o Google
-              </button>
 
-              <div className="relative my-6 flex items-center">
-                <div className="h-px flex-1 bg-white/10" />
-                <span className="mx-3 text-xs uppercase text-muted-foreground">ou</span>
-                <div className="h-px flex-1 bg-white/10" />
-              </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
