@@ -239,9 +239,21 @@ function LoginPage() {
               </form>
 
               <p className="mt-6 text-center text-sm text-muted-foreground">
-                Ainda não tem conta?{" "}
-                <Link to="/" className="font-medium text-primary hover:underline">
-                  Garantir acesso
+                Ainda não comprou?{" "}
+                <a
+                  href={CAKTO_PURCHASE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 font-medium text-primary hover:underline"
+                >
+                  Garantir acesso na Cakto <ExternalLink className="h-3 w-3" />
+                </a>
+              </p>
+
+              <p className="mt-2 text-center text-xs text-muted-foreground">
+                Problemas para entrar?{" "}
+                <Link to="/suporte-acesso" className="font-medium text-primary hover:underline">
+                  Falar com o suporte
                 </Link>
               </p>
 
