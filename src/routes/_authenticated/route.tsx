@@ -7,21 +7,29 @@ export const Route = createFileRoute("/_authenticated")({
     // 1) Must have a valid Supabase session.
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) {
-      throw redirect({ to: "/login" });
+      throw redirect({ to: "/login", search: { reason: "session_expired" } });
     }
 
     // 2) Must have an ACTIVE profile row (created by the Cakto webhook).
-    //    RLS scopes profiles to auth.uid(), so this returns only the current user's row.
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
       .select("status")
       .eq("id", data.user.id)
       .maybeSingle();
 
-    if (profileError || !profile || profile.status !== "active") {
-      // Orphan session or deactivated account — sign out and bounce to login.
+    if (profileError) {
       await supabase.auth.signOut();
-      throw redirect({ to: "/login" });
+      throw redirect({ to: "/login", search: { reason: "unknown" } });
+    }
+
+    if (!profile) {
+      await supabase.auth.signOut();
+      throw redirect({ to: "/login", search: { reason: "not_purchased" } });
+    }
+
+    if (profile.status !== "active") {
+      await supabase.auth.signOut();
+      throw redirect({ to: "/login", search: { reason: "inactive" } });
     }
 
     return { user: data.user };

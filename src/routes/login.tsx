@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
-import { Eye, EyeOff, Loader2, Lock, Mail, TrendingUp, ArrowRight, Globe, ShieldAlert, HelpCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { z } from "zod";
+import { Eye, EyeOff, Loader2, Lock, Mail, TrendingUp, ArrowRight, Globe, ShieldAlert, HelpCircle, ExternalLink, LifeBuoy } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { ImportProLogo, ImportProWordmark } from "@/components/ImportProLogo";
@@ -21,6 +22,19 @@ import {
 } from "@/components/ui/accordion";
 import { checkLoginEligibility } from "@/lib/login-eligibility.functions";
 
+const CAKTO_PURCHASE_URL = "https://pay.cakto.com.br/himftma";
+
+const reasonSchema = z.enum([
+  "not_purchased",
+  "inactive",
+  "session_expired",
+  "unknown",
+]);
+
+const loginSearchSchema = z.object({
+  reason: reasonSchema.optional(),
+});
+
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
@@ -29,19 +43,35 @@ export const Route = createFileRoute("/login")({
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
+  validateSearch: (search) => loginSearchSchema.parse(search),
   component: LoginPage,
 });
 
-type BlockReason = "not_purchased" | "inactive" | "unknown";
+type BlockReason = z.infer<typeof reasonSchema>;
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { reason: initialReason } = Route.useSearch();
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
   const [remember, setRemember] = useState(true);
-  const [blocked, setBlocked] = useState<BlockReason | null>(null);
+  const [blocked, setBlocked] = useState<BlockReason | null>(initialReason ?? null);
+
+  // If we arrived from a protected-route redirect, pop a toast so the user
+  // understands the redirect even before reading the inline banner.
+  useEffect(() => {
+    if (!initialReason) return;
+    if (initialReason === "session_expired") {
+      toast.info("Faça login para continuar.");
+    } else if (initialReason === "inactive") {
+      toast.error("Sua conta está inativa.");
+    } else if (initialReason === "not_purchased") {
+      toast.error("Não encontramos sua conta.");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,6 +96,7 @@ function LoginPage() {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
@@ -133,35 +164,8 @@ function LoginPage() {
             </div>
 
             <div className="mt-6">
-              {blocked && (
-                <div className="mb-5 rounded-xl border border-amber-500/40 bg-amber-500/10 p-4 text-sm">
-                  <div className="flex items-start gap-3">
-                    <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-amber-400" />
-                    <div className="space-y-2">
-                      <p className="font-semibold text-amber-200">
-                        {blocked === "not_purchased" && "Não encontramos uma conta com esse e-mail."}
-                        {blocked === "inactive" && "Sua conta está inativa."}
-                        {blocked === "unknown" && "Não foi possível validar seu acesso agora."}
-                      </p>
-                      <p className="text-xs text-amber-100/80">
-                        {blocked === "not_purchased" && (
-                          <>
-                            O acesso à ImportPro é liberado automaticamente após a compra na Cakto.
-                            Verifique se você usou o mesmo e-mail da compra ou{" "}
-                            <Link to="/" className="underline">garanta seu acesso</Link>.
-                          </>
-                        )}
-                        {blocked === "inactive" && (
-                          <>Fale com o suporte para reativar sua assinatura.</>
-                        )}
-                        {blocked === "unknown" && (
-                          <>Tente novamente em instantes. Se persistir, contate o suporte.</>
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
+              {blocked && <BlockedBanner reason={blocked} />}
+
 
               <form onSubmit={handleSubmit} className="space-y-4">
 
@@ -235,9 +239,21 @@ function LoginPage() {
               </form>
 
               <p className="mt-6 text-center text-sm text-muted-foreground">
-                Ainda não tem conta?{" "}
-                <Link to="/" className="font-medium text-primary hover:underline">
-                  Garantir acesso
+                Ainda não comprou?{" "}
+                <a
+                  href={CAKTO_PURCHASE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 font-medium text-primary hover:underline"
+                >
+                  Garantir acesso na Cakto <ExternalLink className="h-3 w-3" />
+                </a>
+              </p>
+
+              <p className="mt-2 text-center text-xs text-muted-foreground">
+                Problemas para entrar?{" "}
+                <Link to="/suporte-acesso" className="font-medium text-primary hover:underline">
+                  Falar com o suporte
                 </Link>
               </p>
 
@@ -281,6 +297,112 @@ function FeatureRow({
       <div>
         <div className="font-semibold">{title}</div>
         <div className="text-xs text-muted-foreground">{subtitle}</div>
+      </div>
+    </div>
+  );
+}
+
+function BlockedBanner({ reason }: { reason: BlockReason }) {
+  const styles = {
+    not_purchased: {
+      wrap: "border-rose-500/40 bg-rose-500/10",
+      icon: "text-rose-400",
+      title: "text-rose-100",
+      body: "text-rose-100/85",
+      titleText: "Não encontramos uma conta com esse e-mail",
+    },
+    inactive: {
+      wrap: "border-amber-500/40 bg-amber-500/10",
+      icon: "text-amber-400",
+      title: "text-amber-100",
+      body: "text-amber-100/85",
+      titleText: "Sua conta está inativa",
+    },
+    session_expired: {
+      wrap: "border-primary/40 bg-primary/10",
+      icon: "text-primary",
+      title: "text-primary",
+      body: "text-foreground/80",
+      titleText: "Faça login para continuar",
+    },
+    unknown: {
+      wrap: "border-amber-500/40 bg-amber-500/10",
+      icon: "text-amber-400",
+      title: "text-amber-100",
+      body: "text-amber-100/85",
+      titleText: "Não conseguimos validar seu acesso",
+    },
+  }[reason];
+
+  return (
+    <div className={`mb-5 rounded-xl border p-4 text-sm ${styles.wrap}`}>
+      <div className="flex items-start gap-3">
+        <ShieldAlert className={`mt-0.5 h-5 w-5 shrink-0 ${styles.icon}`} />
+        <div className="space-y-3">
+          <p className={`font-semibold ${styles.title}`}>{styles.titleText}</p>
+
+          <div className={`space-y-2 text-xs leading-relaxed ${styles.body}`}>
+            {reason === "not_purchased" && (
+              <>
+                <p>
+                  O acesso à ImportPro é liberado <span className="font-semibold">automaticamente</span>{" "}
+                  pela Cakto após a confirmação do pagamento. Possíveis causas:
+                </p>
+                <ul className="list-inside list-disc space-y-1 pl-1">
+                  <li>Você usou um e-mail diferente na compra — confira o comprovante Cakto.</li>
+                  <li>O pagamento ainda não foi confirmado (Pix/boleto podem levar minutos).</li>
+                  <li>Você ainda não comprou o produto.</li>
+                </ul>
+              </>
+            )}
+
+            {reason === "inactive" && (
+              <>
+                <p>
+                  Encontramos sua conta, mas ela está <span className="font-semibold">inativa</span>.
+                  Isso costuma acontecer quando a assinatura foi cancelada, houve reembolso
+                  ou um chargeback na Cakto.
+                </p>
+                <p>Fale com o suporte para reativar seu acesso.</p>
+              </>
+            )}
+
+            {reason === "session_expired" && (
+              <p>
+                Sua sessão expirou ou você tentou abrir uma página que exige login.
+                Entre novamente com o e-mail da sua compra.
+              </p>
+            )}
+
+            {reason === "unknown" && (
+              <p>
+                Tivemos um problema para validar seu acesso agora. Tente novamente em instantes.
+                Se persistir, fale com o suporte.
+              </p>
+            )}
+          </div>
+
+          {(reason === "not_purchased" || reason === "inactive" || reason === "unknown") && (
+            <div className="flex flex-wrap gap-2 pt-1">
+              {reason === "not_purchased" && (
+                <a
+                  href={CAKTO_PURCHASE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:opacity-90"
+                >
+                  Comprar acesso na Cakto <ExternalLink className="h-3 w-3" />
+                </a>
+              )}
+              <Link
+                to="/suporte-acesso"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-background/40 px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-background/70"
+              >
+                <LifeBuoy className="h-3.5 w-3.5" /> Falar com o suporte
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
