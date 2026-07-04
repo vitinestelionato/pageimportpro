@@ -5,6 +5,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Package, Plus, Pencil, Trash2, ExternalLink, Search } from "lucide-react";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import { ShipmentTracker } from "@/components/dashboard/ShipmentTracker";
 import { listProducts, createProduct, updateProduct, deleteProduct } from "@/lib/products.functions";
 
 export const Route = createFileRoute("/_authenticated/dashboard/produtos")({
