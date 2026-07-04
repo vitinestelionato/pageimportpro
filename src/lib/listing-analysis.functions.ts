@@ -665,8 +665,8 @@ export const analyzeListing = createServerFn({ method: "POST" })
       page = await scraper.scrape(normalizedUrl, {
         country: "CN",
         locale: "zh-CN",
-        waitForMs: 4000,
-        timeoutMs: 45000,
+        waitForMs: 1800,
+        timeoutMs: 30000,
       });
       fetchedOk = !!page.html && page.statusCode < 400;
     } catch (err) {
