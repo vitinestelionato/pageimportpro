@@ -1,16 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
-import { ShipmentTracker } from "@/components/dashboard/ShipmentTracker";
+import { ComingSoon } from "@/components/dashboard/ComingSoon";
 
 export const Route = createFileRoute("/_authenticated/dashboard/produtos")({
-  head: () => ({ meta: [{ title: "Rastreamento · ImportPro" }, { name: "robots", content: "noindex,nofollow" }] }),
-  component: ProductsPage,
+  head: () => ({ meta: [{ title: "Gestão de Produtos · ImportPro" }, { name: "robots", content: "noindex,nofollow" }] }),
+  component: () => <ComingSoon slug="produtos" />,
 });
-
-function ProductsPage() {
-  return (
-    <DashboardShell breadcrumb="Rastreamento" title="Rastreamento de Encomendas">
-      <ShipmentTracker />
-    </DashboardShell>
-  );
-}
