@@ -286,6 +286,95 @@ function FeatureRow({
   );
 }
 
+function AccessHelpDialog() {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <button
+          type="button"
+          className="inline-flex items-center gap-1 font-medium text-primary hover:underline"
+        >
+          <HelpCircle className="h-3.5 w-3.5" />
+          Não consigo acessar
+        </button>
+      </DialogTrigger>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Não consigo acessar minha conta</DialogTitle>
+          <DialogDescription>
+            Sua conta é criada automaticamente pela Cakto assim que a compra é confirmada.
+            Se você não consegue entrar, confira as respostas abaixo.
+          </DialogDescription>
+        </DialogHeader>
+
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="q1">
+            <AccordionTrigger>Comprei e minha conta não aparece</AccordionTrigger>
+            <AccordionContent className="space-y-2 text-sm text-muted-foreground">
+              <p>
+                A criação pode levar até <span className="font-semibold text-foreground">5 minutos</span>{" "}
+                após a confirmação do pagamento pela Cakto.
+              </p>
+              <p>
+                Se passou desse tempo, verifique se o pagamento consta como{" "}
+                <span className="font-semibold text-foreground">aprovado</span> no e-mail que você
+                recebeu da Cakto. Boletos e Pix podem levar mais tempo para compensar.
+              </p>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="q2">
+            <AccordionTrigger>Não recebi o e-mail com a senha</AccordionTrigger>
+            <AccordionContent className="space-y-2 text-sm text-muted-foreground">
+              <p>
+                O e-mail de boas-vindas com a senha vai para o mesmo endereço usado na compra.
+                Confira as pastas <span className="font-semibold text-foreground">Spam</span>,{" "}
+                <span className="font-semibold text-foreground">Promoções</span> e{" "}
+                <span className="font-semibold text-foreground">Lixo eletrônico</span>.
+              </p>
+              <p>
+                Marque o remetente como confiável para receber as próximas mensagens normalmente.
+              </p>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="q3">
+            <AccordionTrigger>Estou usando o e-mail certo?</AccordionTrigger>
+            <AccordionContent className="space-y-2 text-sm text-muted-foreground">
+              <p>
+                O login precisa ser feito com o <span className="font-semibold text-foreground">mesmo e-mail</span>{" "}
+                informado no checkout da Cakto. Verifique o comprovante de compra para confirmar
+                qual endereço foi utilizado.
+              </p>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="q4">
+            <AccordionTrigger>Esqueci minha senha</AccordionTrigger>
+            <AccordionContent className="space-y-2 text-sm text-muted-foreground">
+              <p>
+                Em breve você poderá redefinir sua senha diretamente por aqui. Enquanto isso,
+                entre em contato com o suporte informando o e-mail da compra para gerar uma nova senha.
+              </p>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="q5">
+            <AccordionTrigger>Nada disso resolveu</AccordionTrigger>
+            <AccordionContent className="space-y-2 text-sm text-muted-foreground">
+              <p>
+                Fale com o suporte enviando o <span className="font-semibold text-foreground">e-mail da compra</span>{" "}
+                e o <span className="font-semibold text-foreground">ID do pedido Cakto</span>{" "}
+                (está no e-mail de confirmação). Nossa equipe libera o acesso rapidamente.
+              </p>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function GoogleIcon() {
   return (
     <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden>
