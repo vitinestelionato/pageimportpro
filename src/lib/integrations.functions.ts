@@ -303,7 +303,7 @@ export const triggerSync = createServerFn({ method: "POST" })
 
     const { data: conn } = await supabase
       .from("user_integrations")
-      .select("id, status")
+      .select("id, status, credentials, config")
       .eq("user_id", userId)
       .eq("integration_slug", data.slug)
       .maybeSingle();
@@ -332,7 +332,12 @@ export const triggerSync = createServerFn({ method: "POST" })
     try {
       if (adapter?.sync) {
         result = await adapter.sync(
-          { credentials: {}, config: {}, connectionId: conn.id, userId },
+          {
+            credentials: (conn.credentials ?? {}) as Record<string, string>,
+            config: (conn.config ?? {}) as Record<string, unknown>,
+            connectionId: conn.id,
+            userId,
+          },
           { mode: data.mode === "manual" ? "manual" : (data.mode as "full" | "incremental") },
         );
       }
