@@ -34,10 +34,12 @@ export async function sendBrevoEmail(input: SendEmailInput): Promise<{
     },
     body: JSON.stringify({
       sender: { name: senderName, email: senderEmail },
+      replyTo: { name: senderName, email: senderEmail },
       to: [{ email: input.to, name: input.toName ?? undefined }],
       subject: input.subject,
       htmlContent: input.html,
       textContent: input.text,
+      headers: { "X-Mailin-Tag": "activation" },
     }),
   });
 
@@ -59,7 +61,7 @@ export function renderActivationEmail(params: {
   plan?: string | null;
 }): { subject: string; html: string; text: string } {
   const firstName = (params.name ?? "").split(" ")[0] || "cliente";
-  const subject = "Ative sua conta ImportPro 🚀";
+  const subject = "Ative sua conta ImportPro";
   const plan = params.plan ? `<p style="margin:0 0 16px;color:#475569;font-size:14px;">Plano adquirido: <strong>${escapeHtml(params.plan)}</strong></p>` : "";
   const html = `<!doctype html>
 <html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ative sua conta</title></head>
