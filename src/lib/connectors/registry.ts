@@ -6,5 +6,6 @@
  * importá-lo aqui.
  */
 import "./adapters/cssbuy";
+import "./adapters/acbuy";
 
 export {}; // side-effect module
