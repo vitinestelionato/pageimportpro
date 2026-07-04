@@ -290,6 +290,112 @@ function FeatureRow({
   );
 }
 
+function BlockedBanner({ reason }: { reason: BlockReason }) {
+  const styles = {
+    not_purchased: {
+      wrap: "border-rose-500/40 bg-rose-500/10",
+      icon: "text-rose-400",
+      title: "text-rose-100",
+      body: "text-rose-100/85",
+      titleText: "Não encontramos uma conta com esse e-mail",
+    },
+    inactive: {
+      wrap: "border-amber-500/40 bg-amber-500/10",
+      icon: "text-amber-400",
+      title: "text-amber-100",
+      body: "text-amber-100/85",
+      titleText: "Sua conta está inativa",
+    },
+    session_expired: {
+      wrap: "border-primary/40 bg-primary/10",
+      icon: "text-primary",
+      title: "text-primary",
+      body: "text-foreground/80",
+      titleText: "Faça login para continuar",
+    },
+    unknown: {
+      wrap: "border-amber-500/40 bg-amber-500/10",
+      icon: "text-amber-400",
+      title: "text-amber-100",
+      body: "text-amber-100/85",
+      titleText: "Não conseguimos validar seu acesso",
+    },
+  }[reason];
+
+  return (
+    <div className={`mb-5 rounded-xl border p-4 text-sm ${styles.wrap}`}>
+      <div className="flex items-start gap-3">
+        <ShieldAlert className={`mt-0.5 h-5 w-5 shrink-0 ${styles.icon}`} />
+        <div className="space-y-3">
+          <p className={`font-semibold ${styles.title}`}>{styles.titleText}</p>
+
+          <div className={`space-y-2 text-xs leading-relaxed ${styles.body}`}>
+            {reason === "not_purchased" && (
+              <>
+                <p>
+                  O acesso à ImportPro é liberado <span className="font-semibold">automaticamente</span>{" "}
+                  pela Cakto após a confirmação do pagamento. Possíveis causas:
+                </p>
+                <ul className="list-inside list-disc space-y-1 pl-1">
+                  <li>Você usou um e-mail diferente na compra — confira o comprovante Cakto.</li>
+                  <li>O pagamento ainda não foi confirmado (Pix/boleto podem levar minutos).</li>
+                  <li>Você ainda não comprou o produto.</li>
+                </ul>
+              </>
+            )}
+
+            {reason === "inactive" && (
+              <>
+                <p>
+                  Encontramos sua conta, mas ela está <span className="font-semibold">inativa</span>.
+                  Isso costuma acontecer quando a assinatura foi cancelada, houve reembolso
+                  ou um chargeback na Cakto.
+                </p>
+                <p>Fale com o suporte para reativar seu acesso.</p>
+              </>
+            )}
+
+            {reason === "session_expired" && (
+              <p>
+                Sua sessão expirou ou você tentou abrir uma página que exige login.
+                Entre novamente com o e-mail da sua compra.
+              </p>
+            )}
+
+            {reason === "unknown" && (
+              <p>
+                Tivemos um problema para validar seu acesso agora. Tente novamente em instantes.
+                Se persistir, fale com o suporte.
+              </p>
+            )}
+          </div>
+
+          {(reason === "not_purchased" || reason === "inactive" || reason === "unknown") && (
+            <div className="flex flex-wrap gap-2 pt-1">
+              {reason === "not_purchased" && (
+                <a
+                  href={CAKTO_PURCHASE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:opacity-90"
+                >
+                  Comprar acesso na Cakto <ExternalLink className="h-3 w-3" />
+                </a>
+              )}
+              <Link
+                to="/suporte-acesso"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-background/40 px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-background/70"
+              >
+                <LifeBuoy className="h-3.5 w-3.5" /> Falar com o suporte
+              </Link>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function AccessHelpDialog() {
   return (
     <Dialog>
