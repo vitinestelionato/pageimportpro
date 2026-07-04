@@ -22,7 +22,6 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as ApiPublicTestResendRouteImport } from './routes/api/public/test-resend'
 import { Route as ApiPublicWebhooksCaktoRouteImport } from './routes/api/public/webhooks/cakto'
 
 const TermosRoute = TermosRouteImport.update({
@@ -89,11 +88,6 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const ApiPublicTestResendRoute = ApiPublicTestResendRouteImport.update({
-  id: '/api/public/test-resend',
-  path: '/api/public/test-resend',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiPublicWebhooksCaktoRoute = ApiPublicWebhooksCaktoRouteImport.update({
   id: '/api/public/webhooks/cakto',
   path: '/api/public/webhooks/cakto',
@@ -113,7 +107,6 @@ export interface FileRoutesByFullPath {
   '/termos': typeof TermosRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/blog/$slug': typeof BlogSlugRoute
-  '/api/public/test-resend': typeof ApiPublicTestResendRoute
   '/api/public/webhooks/cakto': typeof ApiPublicWebhooksCaktoRoute
 }
 export interface FileRoutesByTo {
@@ -129,7 +122,6 @@ export interface FileRoutesByTo {
   '/termos': typeof TermosRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/blog/$slug': typeof BlogSlugRoute
-  '/api/public/test-resend': typeof ApiPublicTestResendRoute
   '/api/public/webhooks/cakto': typeof ApiPublicWebhooksCaktoRoute
 }
 export interface FileRoutesById {
@@ -147,7 +139,6 @@ export interface FileRoutesById {
   '/termos': typeof TermosRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/blog/$slug': typeof BlogSlugRoute
-  '/api/public/test-resend': typeof ApiPublicTestResendRoute
   '/api/public/webhooks/cakto': typeof ApiPublicWebhooksCaktoRoute
 }
 export interface FileRouteTypes {
@@ -165,7 +156,6 @@ export interface FileRouteTypes {
     | '/termos'
     | '/dashboard'
     | '/blog/$slug'
-    | '/api/public/test-resend'
     | '/api/public/webhooks/cakto'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -181,7 +171,6 @@ export interface FileRouteTypes {
     | '/termos'
     | '/dashboard'
     | '/blog/$slug'
-    | '/api/public/test-resend'
     | '/api/public/webhooks/cakto'
   id:
     | '__root__'
@@ -198,7 +187,6 @@ export interface FileRouteTypes {
     | '/termos'
     | '/_authenticated/dashboard'
     | '/blog/$slug'
-    | '/api/public/test-resend'
     | '/api/public/webhooks/cakto'
   fileRoutesById: FileRoutesById
 }
@@ -214,7 +202,6 @@ export interface RootRouteChildren {
   SobreRoute: typeof SobreRoute
   SuporteRoute: typeof SuporteRoute
   TermosRoute: typeof TermosRoute
-  ApiPublicTestResendRoute: typeof ApiPublicTestResendRoute
   ApiPublicWebhooksCaktoRoute: typeof ApiPublicWebhooksCaktoRoute
 }
 
@@ -311,13 +298,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/api/public/test-resend': {
-      id: '/api/public/test-resend'
-      path: '/api/public/test-resend'
-      fullPath: '/api/public/test-resend'
-      preLoaderRoute: typeof ApiPublicTestResendRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/public/webhooks/cakto': {
       id: '/api/public/webhooks/cakto'
       path: '/api/public/webhooks/cakto'
@@ -361,7 +341,6 @@ const rootRouteChildren: RootRouteChildren = {
   SobreRoute: SobreRoute,
   SuporteRoute: SuporteRoute,
   TermosRoute: TermosRoute,
-  ApiPublicTestResendRoute: ApiPublicTestResendRoute,
   ApiPublicWebhooksCaktoRoute: ApiPublicWebhooksCaktoRoute,
 }
 export const routeTree = rootRouteImport
