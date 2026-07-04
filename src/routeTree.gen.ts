@@ -13,6 +13,7 @@ import { Route as TermosRouteImport } from './routes/termos'
 import { Route as SuporteAcessoRouteImport } from './routes/suporte-acesso'
 import { Route as SuporteRouteImport } from './routes/suporte'
 import { Route as SobreRouteImport } from './routes/sobre'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ReembolsoRouteImport } from './routes/reembolso'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as LoginRouteImport } from './routes/login'
@@ -59,6 +60,11 @@ const SuporteRoute = SuporteRouteImport.update({
 const SobreRoute = SobreRouteImport.update({
   id: '/sobre',
   path: '/sobre',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReembolsoRoute = ReembolsoRouteImport.update({
@@ -221,6 +227,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/privacidade': typeof PrivacidadeRoute
   '/reembolso': typeof ReembolsoRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
   '/suporte': typeof SuporteRoute
   '/suporte-acesso': typeof SuporteAcessoRoute
@@ -253,6 +260,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/privacidade': typeof PrivacidadeRoute
   '/reembolso': typeof ReembolsoRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
   '/suporte': typeof SuporteRoute
   '/suporte-acesso': typeof SuporteAcessoRoute
@@ -287,6 +295,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/privacidade': typeof PrivacidadeRoute
   '/reembolso': typeof ReembolsoRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
   '/suporte': typeof SuporteRoute
   '/suporte-acesso': typeof SuporteAcessoRoute
@@ -321,6 +330,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/privacidade'
     | '/reembolso'
+    | '/sitemap.xml'
     | '/sobre'
     | '/suporte'
     | '/suporte-acesso'
@@ -353,6 +363,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/privacidade'
     | '/reembolso'
+    | '/sitemap.xml'
     | '/sobre'
     | '/suporte'
     | '/suporte-acesso'
@@ -386,6 +397,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/privacidade'
     | '/reembolso'
+    | '/sitemap.xml'
     | '/sobre'
     | '/suporte'
     | '/suporte-acesso'
@@ -420,6 +432,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
   ReembolsoRoute: typeof ReembolsoRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SobreRoute: typeof SobreRoute
   SuporteRoute: typeof SuporteRoute
   SuporteAcessoRoute: typeof SuporteAcessoRoute
@@ -455,6 +468,13 @@ declare module '@tanstack/react-router' {
       path: '/sobre'
       fullPath: '/sobre'
       preLoaderRoute: typeof SobreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reembolso': {
@@ -715,6 +735,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   PrivacidadeRoute: PrivacidadeRoute,
   ReembolsoRoute: ReembolsoRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   SobreRoute: SobreRoute,
   SuporteRoute: SuporteRoute,
   SuporteAcessoRoute: SuporteAcessoRoute,
