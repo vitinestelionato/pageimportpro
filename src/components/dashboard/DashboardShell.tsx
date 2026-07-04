@@ -8,6 +8,7 @@ import {
   Image as ImageIcon,
   Calculator,
   DollarSign,
+  Wallet,
   Truck,
   FileText,
   StickyNote,
