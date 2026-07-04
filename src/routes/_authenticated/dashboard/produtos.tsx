@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
-  Search, Loader2, RefreshCw, Link as LinkIcon, FileText, Package, Tag, Building2,
+  Search, Loader2, RefreshCw, Link as LinkIcon, Package, Tag, Building2,
   Star, Shield, ShieldAlert, AlertTriangle, DollarSign, ImageIcon, Play, Info,
   CheckCircle2, XCircle, Boxes, Truck, Sparkles, Globe, User, MapPin, Award,
 } from "lucide-react";
