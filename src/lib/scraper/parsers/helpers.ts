@@ -33,15 +33,61 @@ export function absolutize(url: string | null, base: string): string | null {
 }
 
 export function extractImages(html: string, base: string, limit = 40): string[] {
+/**
+ * Padrões que indicam imagens NÃO-produto: logos do site, banners de UI,
+ * avatares, ícones, sprites, spacers, badges, placeholders, propagandas.
+ * Aplicado tanto ao path da URL quanto ao alt/aria adjacente.
+ */
+const NON_PRODUCT_URL_RE =
+  /\b(logo|favicon|sprite|icon|avatar|banner|header|footer|nav|menu|badge|spacer|blank|placeholder|default|watermark|share|social|qrcode|qr[-_]?code|download|appstore|googleplay|ads?|advert|promo|coupon|button|arrow|bg[-_]|background)\b/i;
+
+const XIANYU_ASSET_HOSTS = /gw\.alicdn\.com\/(imgextra\/i[0-9]+|tfs\/)/i; // hosts de produto reais
+const KNOWN_PRODUCT_CDN_RE = /(alicdn|taobaocdn|xianyu|aliexpress|1688|jdcdn|360buyimg|dhgate|pddpic|weidian|amazon|ssl-images-amazon|mia-img|shopee)/i;
+
+/** Descarta imagens que claramente não são fotos do produto. */
+function isLikelyProductImage(url: string): boolean {
+  if (/^data:/i.test(url)) return false;
+  const lower = url.toLowerCase();
+  if (NON_PRODUCT_URL_RE.test(lower)) return false;
+  // gif normalmente é sprite/animação de UI — bloqueia salvo se vier de CDN de produto
+  if (/\.gif(\?|$)/i.test(lower) && !KNOWN_PRODUCT_CDN_RE.test(lower)) return false;
+  // Dimensões declaradas na URL indicando ícones (ex: _40x40, 60x60, 100x100)
+  const dimMatch = lower.match(/[_-](\d{2,4})x(\d{2,4})\b/);
+  if (dimMatch) {
+    const w = Number(dimMatch[1]);
+    const h = Number(dimMatch[2]);
+    if (w < 200 || h < 200) return false;
+  }
+  return true;
+}
+
+export function extractImages(html: string, base: string, limit = 40): string[] {
   const urls = new Set<string>();
-  const re = /<img[^>]+(?:src|data-src|data-lazy-src|data-original)=["']([^"']+)["']/gi;
+  const re = /<img[^>]+(?:src|data-src|data-lazy-src|data-original|data-ks-lazyload)=["']([^"']+)["']/gi;
   let m;
   while ((m = re.exec(html)) && urls.size < limit) {
     const abs = absolutize(m[1], base);
-    if (abs && /\.(jpe?g|png|webp|gif|avif)(\?|$)/i.test(abs)) urls.add(abs);
+    if (!abs) continue;
+    if (!/\.(jpe?g|png|webp|gif|avif)(\?|$)/i.test(abs)) continue;
+    if (!isLikelyProductImage(abs)) continue;
+    urls.add(abs);
   }
   return Array.from(urls);
 }
+
+/** Ranqueia imagens: CDNs conhecidas de produto ganham prioridade. */
+export function rankProductImages(urls: string[]): string[] {
+  return [...urls].sort((a, b) => {
+    const aScore = KNOWN_PRODUCT_CDN_RE.test(a) ? 1 : 0;
+    const bScore = KNOWN_PRODUCT_CDN_RE.test(b) ? 1 : 0;
+    if (aScore !== bScore) return bScore - aScore;
+    // prefere imagens maiores (heurística: quanto maior a URL, mais provável ter query de resize/hash)
+    return b.length - a.length;
+  });
+}
+
+// suprimimos aviso de "unused" quando XIANYU_ASSET_HOSTS não for referenciado externamente
+void XIANYU_ASSET_HOSTS;
 
 export function extractVideos(html: string, base: string): string[] {
   const urls = new Set<string>();
