@@ -2,21 +2,25 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { getExchangeRates } from "./exchange.functions";
+import { getScraperService } from "./scraper";
+import { detectPlatform, parsePage } from "./scraper/parsers/registry";
+import type { ParsedListing, Platform } from "./scraper/parsers/types";
+import type { ScrapedPage } from "./scraper/types";
 
 /**
  * Módulo de análise de anúncios de marketplaces chineses e internacionais.
- * Regra de ouro: NUNCA inventar dados. Qualquer campo ausente no anúncio
- * deve retornar EXATAMENTE "Informação não encontrada no anúncio".
+ * PIPELINE:
+ *   URL → ScraperService → Provider (Firecrawl) → HTML renderizado
+ *       → Parser específico da plataforma → JSON estruturado (ParsedListing)
+ *       → Conversão de câmbio → IA (recebe SÓ o JSON) → Diagnóstico
+ *
+ * A IA NUNCA acessa a URL diretamente. NUNCA inventa dados.
+ * Campos ausentes retornam exatamente "Informação não encontrada no anúncio".
  */
 
 export const NOT_FOUND = "Informação não encontrada no anúncio";
 
 export type Currency = "CNY" | "USD" | "HKD" | "JPY" | "EUR" | "BRL" | "GBP" | "KRW";
-
-export type Platform =
-  | "goofish" | "xianyu" | "1688" | "taobao" | "tmall" | "alibaba"
-  | "jd" | "pinduoduo" | "weidian" | "aliexpress" | "dhgate"
-  | "made_in_china" | "global_sources" | "shopee" | "amazon" | "unknown";
 
 export type ListingAnalysis = {
   source: {
@@ -25,6 +29,11 @@ export type ListingAnalysis = {
     platform_label: string;
     fetched_ok: boolean;
     input_kind: "url" | "text";
+    scraper: {
+      provider: string | null;
+      elapsed_ms: number | null;
+      status_code: number | null;
+    };
   };
   product: {
     name_original: string;
@@ -95,145 +104,16 @@ export type ListingAnalysis = {
   };
 };
 
-// ---------------- Platform detection ----------------
+// ---------------- Enrichment via AI (grounded by ParsedListing) ----------------
 
-const PLATFORM_HOST_MAP: [RegExp, Platform, string][] = [
-  [/(?:^|\.)goofish\.com/i, "goofish", "Goofish"],
-  [/(?:^|\.)xianyu\.com|2\.taobao\.com/i, "xianyu", "Xianyu (闲鱼)"],
-  [/(?:^|\.)1688\.com/i, "1688", "1688"],
-  [/(?:^|\.)tmall\.com/i, "tmall", "Tmall"],
-  [/(?:^|\.)taobao\.com/i, "taobao", "Taobao"],
-  [/(?:^|\.)alibaba\.com/i, "alibaba", "Alibaba"],
-  [/(?:^|\.)jd\.com|jd\.hk/i, "jd", "JD.com"],
-  [/pinduoduo|yangkeduo|temu\.com/i, "pinduoduo", "Pinduoduo / Temu"],
-  [/weidian\.com/i, "weidian", "Weidian"],
-  [/aliexpress/i, "aliexpress", "AliExpress"],
-  [/dhgate/i, "dhgate", "DHGate"],
-  [/made-in-china/i, "made_in_china", "Made-in-China"],
-  [/globalsources/i, "global_sources", "Global Sources"],
-  [/shopee/i, "shopee", "Shopee"],
-  [/amazon\./i, "amazon", "Amazon"],
-];
-
-function detectPlatform(url: string | null, text: string): { id: Platform; label: string } {
-  if (url) {
-    try {
-      const host = new URL(url).hostname;
-      for (const [re, id, label] of PLATFORM_HOST_MAP) {
-        if (re.test(host)) return { id, label };
-      }
-    } catch { /* ignore */ }
-  }
-  for (const [re, id, label] of PLATFORM_HOST_MAP) {
-    if (re.test(text.slice(0, 4000))) return { id, label };
-  }
-  return { id: "unknown", label: "Marketplace não identificado" };
-}
-
-// ---------------- HTML helpers ----------------
-
-const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36";
-
-function decode(s: string): string {
-  return s
-    .replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, " ")
-    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
-    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCharCode(parseInt(n, 16)));
-}
-
-function stripTags(html: string): string {
-  return html
-    .replace(/<script[\s\S]*?<\/script>/gi, " ")
-    .replace(/<style[\s\S]*?<\/style>/gi, " ")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function pickMeta(html: string, patterns: RegExp[]): string | null {
-  for (const re of patterns) {
-    const m = html.match(re);
-    if (m && m[1]) return decode(m[1].trim());
-  }
-  return null;
-}
-
-function absolutize(url: string | null, base: string): string | null {
-  if (!url) return null;
-  try { return new URL(url, base).toString(); } catch { return null; }
-}
-
-function extractImages(html: string, base: string): string[] {
-  const urls = new Set<string>();
-  const re = /<img[^>]+(?:src|data-src|data-lazy-src|data-original)=["']([^"']+)["']/gi;
-  let m;
-  while ((m = re.exec(html)) && urls.size < 40) {
-    const abs = absolutize(m[1], base);
-    if (abs && /\.(jpe?g|png|webp|gif|avif)(\?|$)/i.test(abs)) urls.add(abs);
-  }
-  return Array.from(urls);
-}
-
-function extractVideos(html: string, base: string): string[] {
-  const urls = new Set<string>();
-  const re = /<(?:video|source)[^>]+src=["']([^"']+\.(?:mp4|webm|m3u8)[^"']*)["']/gi;
-  let m;
-  while ((m = re.exec(html))) {
-    const abs = absolutize(m[1], base);
-    if (abs) urls.add(abs);
-  }
-  return Array.from(urls);
-}
-
-async function fetchListing(url: string): Promise<{ ok: boolean; html: string; finalUrl: string }> {
-  try {
-    const res = await fetch(url, {
-      headers: {
-        "User-Agent": UA,
-        Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "zh-CN,zh;q=0.9,pt-BR;q=0.8,en;q=0.6",
-      },
-      redirect: "follow",
-    });
-    const html = await res.text();
-    return { ok: res.ok, html, finalUrl: res.url || url };
-  } catch {
-    return { ok: false, html: "", finalUrl: url };
-  }
-}
-
-// ---------------- AI grounded extraction ----------------
-
-type AiResult = {
-  name_original: string;
+type AiEnrichment = {
   name_translated: string;
   category: string;
-  brand: string;
-  model: string;
   description: string;
-  specs: { key: string; value: string }[];
   keywords: string[];
-  variations: string[];
-  stock_status: string;
-  moq: string;
-  price_value: number | null;
-  price_currency: string;
-  price_display: string;
-  price_range: string;
-  wholesale: string;
-  promotional: string;
-  price_history: string;
-  seller_name: string;
-  seller_store: string;
-  seller_location: string;
-  seller_years: string;
+  specs: { key: string; value: string }[];
   seller_type: string;
-  seller_certifications: string[];
   seller_reputation: string;
-  reviews_total: string;
-  reviews_average: string;
-  reviews_positive_pct: string;
   reviews_highlights: string[];
   reviews_complaints: string[];
   trust_score: number;
@@ -247,41 +127,34 @@ type AiResult = {
   tax_risk: string;
   shipping_estimate: string;
   viability: string;
-  main_image: string | null;
 };
 
-const AI_SCHEMA_HINT = `{
-  "name_original": string,
+async function aiDiagnose(structured: ParsedListing): Promise<AiEnrichment | null> {
+  const apiKey = process.env.LOVABLE_API_KEY;
+  if (!apiKey) return null;
+
+  const NF = NOT_FOUND;
+  const system = `Você é um analista sênior de sourcing internacional especializado em marketplaces chineses e globais.
+
+REGRAS INVIOLÁVEIS:
+1. Você receberá um JSON JÁ EXTRAÍDO do anúncio (produto, preço, vendedor, avaliações). NÃO invente informações fora dele.
+2. NÃO acesse URLs. NÃO use conhecimento externo sobre marcas ou lojas para preencher lacunas.
+3. Seu trabalho é: traduzir para pt-BR, categorizar, resumir specs, extrair sinais de confiança e sugerir viabilidade de importação.
+4. Se um campo não puder ser inferido do JSON, use EXATAMENTE "${NF}" (strings), [] (arrays) ou 0 (números).
+5. trust_score de 0 a 100 baseado APENAS em evidências no JSON (reviews, certifications, anos de loja, presença de dados).
+6. Retorne EXCLUSIVAMENTE JSON válido com o schema pedido, sem markdown.`;
+
+  const schema = `{
   "name_translated": string,
   "category": string,
-  "brand": string,
-  "model": string,
   "description": string,
-  "specs": [{"key": string, "value": string}],
   "keywords": [string],
-  "variations": [string],
-  "stock_status": string,
-  "moq": string,
-  "price_value": number | null,
-  "price_currency": "CNY"|"USD"|"HKD"|"JPY"|"EUR"|"BRL"|"GBP"|"KRW"|"",
-  "price_display": string,
-  "price_range": string,
-  "wholesale": string,
-  "promotional": string,
-  "price_history": string,
-  "seller_name": string,
-  "seller_store": string,
-  "seller_location": string,
-  "seller_years": string,
+  "specs": [{"key": string, "value": string}],
   "seller_type": string,
-  "seller_certifications": [string],
   "seller_reputation": string,
-  "reviews_total": string,
-  "reviews_average": string,
-  "reviews_positive_pct": string,
   "reviews_highlights": [string],
   "reviews_complaints": [string],
-  "trust_score": number (0-100),
+  "trust_score": number,
   "trust_label": string,
   "trust_positives": [string],
   "trust_negatives": [string],
@@ -291,51 +164,35 @@ const AI_SCHEMA_HINT = `{
   "tax_category": string,
   "tax_risk": string,
   "shipping_estimate": string,
-  "viability": string,
-  "main_image": string | null
+  "viability": string
 }`;
 
-async function aiAnalyze(input: {
-  url: string | null;
-  platform: string;
-  html_text: string;
-  raw_text: string;
-  image_hint: string | null;
-  image_urls: string[];
-}): Promise<AiResult | null> {
-  const apiKey = process.env.LOVABLE_API_KEY;
-  if (!apiKey) return null;
+  const user = `JSON estruturado extraído do anúncio (plataforma: ${structured.platform_label}):
 
-  const NF = NOT_FOUND;
+\`\`\`json
+${JSON.stringify(
+  {
+    title: structured.title,
+    brand: structured.brand,
+    model: structured.model,
+    category: structured.category,
+    description: structured.description,
+    specs: structured.specs,
+    variations: structured.variations,
+    price: structured.price,
+    seller: structured.seller,
+    reviews: structured.reviews,
+    text_excerpt: structured.raw_signals.text.slice(0, 6000),
+  },
+  null,
+  2,
+)}
+\`\`\`
 
-  const system = `Você é um analista sênior de sourcing internacional especializado em marketplaces chineses (Goofish/Xianyu, 1688, Taobao, Tmall, Alibaba, JD, Pinduoduo, Weidian, AliExpress, DHGate, Made-in-China, Global Sources).
+Retorne SOMENTE o JSON no schema:
+${schema}
 
-REGRAS INVIOLÁVEIS:
-1. NUNCA invente dados. Nunca use produtos similares como referência.
-2. Se um campo não estiver EXPLICITAMENTE presente no conteúdo fornecido, use EXATAMENTE a string "${NF}" (para strings) ou array vazio (para arrays) ou null (para números).
-3. NUNCA preencha campos com placeholders, exemplos ou dados genéricos.
-4. Extraia APENAS o que estiver comprovadamente no anúncio recebido.
-5. Ignore anúncios patrocinados, produtos recomendados e preços de outras variantes.
-6. Preserve nomes de modelos, siglas e códigos EXATAMENTE como aparecem.
-7. Traduza descrições e nome comercial para português brasileiro mantendo termos técnicos.
-8. trust_score deve refletir SOMENTE evidências reais extraídas (avaliações, tempo de loja, certificações). Se não houver evidência, use 0 e trust_label = "${NF}".
-9. Retorne EXCLUSIVAMENTE um JSON válido, sem markdown, sem comentários, seguindo o schema informado.
-10. Para "estimated_weight_kg", "estimated_volume", "tax_category", "tax_risk", "shipping_estimate", "viability": só preencha se o anúncio mencionar. Caso contrário use "${NF}".`;
-
-  const user = `PLATAFORMA DETECTADA: ${input.platform}
-URL: ${input.url ?? "(não fornecida)"}
-IMAGEM PRINCIPAL DETECTADA (og:image): ${input.image_hint ?? "(nenhuma)"}
-IMAGENS DA PÁGINA (primeiras 15): ${input.image_urls.slice(0, 15).join(" | ") || "(nenhuma)"}
-
-===== TEXTO EXTRAÍDO DA PÁGINA (pode estar em chinês/inglês) =====
-${input.raw_text.slice(0, 12000)}
-
-===== FIM DO TEXTO =====
-
-Retorne SOMENTE o JSON no seguinte schema (sem chaves extras, sem markdown):
-${AI_SCHEMA_HINT}
-
-Lembre-se: qualquer campo ausente na fonte acima → "${NF}" (string), [] (array) ou null (número).`;
+Regras: campos sem base no JSON acima → "${NF}", [], ou 0.`;
 
   try {
     const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
@@ -350,65 +207,42 @@ Lembre-se: qualquer campo ausente na fonte acima → "${NF}" (string), [] (array
         response_format: { type: "json_object" },
       }),
     });
-    if (!res.ok) return null;
+    if (!res.ok) {
+      console.warn(`[listing-analysis] AI HTTP ${res.status}`);
+      return null;
+    }
     const json = (await res.json()) as { choices?: { message?: { content?: string } }[] };
     const content = json.choices?.[0]?.message?.content;
     if (!content) return null;
-    const parsed = JSON.parse(content) as Partial<AiResult>;
-    return normalizeAi(parsed);
-  } catch {
+    const parsed = JSON.parse(content) as Partial<AiEnrichment>;
+    return normalizeEnrichment(parsed);
+  } catch (err) {
+    console.warn("[listing-analysis] AI enrichment falhou:", (err as Error).message);
     return null;
   }
 }
 
-function normalizeAi(p: Partial<AiResult>): AiResult {
-  const s = (v: unknown): string => {
-    if (typeof v === "string" && v.trim()) return v.trim();
-    return NOT_FOUND;
-  };
+function normalizeEnrichment(p: Partial<AiEnrichment>): AiEnrichment {
+  const s = (v: unknown): string => (typeof v === "string" && v.trim() ? v.trim() : NOT_FOUND);
   const arr = (v: unknown): string[] => (Array.isArray(v) ? v.map(String).filter(Boolean) : []);
   const specs = Array.isArray(p.specs)
-    ? p.specs.filter((x): x is { key: string; value: string } => !!x && typeof x === "object")
+    ? p.specs
+        .filter((x): x is { key: string; value: string } => !!x && typeof x === "object")
         .map((x) => ({ key: String(x.key || ""), value: String(x.value || "") }))
         .filter((x) => x.key && x.value)
     : [];
-  const priceValue =
-    typeof p.price_value === "number" && Number.isFinite(p.price_value) && p.price_value > 0
-      ? p.price_value
-      : null;
   const trustScore =
     typeof p.trust_score === "number" && Number.isFinite(p.trust_score)
       ? Math.max(0, Math.min(100, Math.round(p.trust_score)))
       : 0;
   return {
-    name_original: s(p.name_original),
     name_translated: s(p.name_translated),
     category: s(p.category),
-    brand: s(p.brand),
-    model: s(p.model),
     description: s(p.description),
-    specs,
     keywords: arr(p.keywords),
-    variations: arr(p.variations),
-    stock_status: s(p.stock_status),
-    moq: s(p.moq),
-    price_value: priceValue,
-    price_currency: typeof p.price_currency === "string" ? p.price_currency.toUpperCase() : "",
-    price_display: s(p.price_display),
-    price_range: s(p.price_range),
-    wholesale: s(p.wholesale),
-    promotional: s(p.promotional),
-    price_history: s(p.price_history),
-    seller_name: s(p.seller_name),
-    seller_store: s(p.seller_store),
-    seller_location: s(p.seller_location),
-    seller_years: s(p.seller_years),
+    specs,
     seller_type: s(p.seller_type),
-    seller_certifications: arr(p.seller_certifications),
     seller_reputation: s(p.seller_reputation),
-    reviews_total: s(p.reviews_total),
-    reviews_average: s(p.reviews_average),
-    reviews_positive_pct: s(p.reviews_positive_pct),
     reviews_highlights: arr(p.reviews_highlights),
     reviews_complaints: arr(p.reviews_complaints),
     trust_score: trustScore,
@@ -422,25 +256,19 @@ function normalizeAi(p: Partial<AiResult>): AiResult {
     tax_risk: s(p.tax_risk),
     shipping_estimate: s(p.shipping_estimate),
     viability: s(p.viability),
-    main_image: typeof p.main_image === "string" && p.main_image.startsWith("http") ? p.main_image : null,
   };
 }
 
 // ---------------- Currency conversion ----------------
 
-async function convert(value: number, currency: string): Promise<{ rate: number | null; brl: number | null; source: string }> {
+async function convert(
+  value: number,
+  currency: string,
+): Promise<{ rate: number | null; brl: number | null; source: string }> {
   const cur = currency.toUpperCase();
   if (cur === "BRL") return { rate: 1, brl: value, source: "n/a" };
   const rates = await getExchangeRates();
-  const map: Record<string, number | undefined> = {
-    USD: rates.USD, EUR: rates.EUR, CNY: rates.CNY,
-    // Sub-derivations from USD when direct pair não disponível.
-    HKD: rates.USD ? rates.USD * 0.128 : undefined,
-    JPY: rates.USD ? rates.USD * 0.0064 : undefined,
-    GBP: rates.USD ? rates.USD * 1.27 : undefined,
-    KRW: rates.USD ? rates.USD * 0.00072 : undefined,
-  };
-  const rate = map[cur];
+  const rate = rates.rates[cur as keyof typeof rates.rates];
   if (!rate) return { rate: null, brl: null, source: rates.source };
   return { rate, brl: Number((value * rate).toFixed(2)), source: rates.source };
 }
@@ -451,16 +279,119 @@ type CacheEntry = { data: ListingAnalysis; expiresAt: number };
 const cache = new Map<string, CacheEntry>();
 const CACHE_TTL_MS = 30 * 60 * 1000;
 
-function cacheKey(url: string | null, text: string): string {
-  if (url) return `url:${url}`;
-  return `txt:${text.slice(0, 120)}`;
+function cacheKey(url: string): string {
+  return `url:${url}`;
+}
+
+// ---------------- Merge: ParsedListing + AiEnrichment → ListingAnalysis ----------------
+
+function orNF(v: string | null | undefined): string {
+  return v && v.trim() ? v.trim() : NOT_FOUND;
+}
+
+function mergeToAnalysis(args: {
+  parsed: ParsedListing;
+  enrichment: AiEnrichment | null;
+  page: ScrapedPage | null;
+  fetchedOk: boolean;
+  warnings: string[];
+  conversion: { rate: number | null; brl: number | null; source: string };
+}): ListingAnalysis {
+  const { parsed, enrichment, page, fetchedOk, warnings, conversion } = args;
+  const enr = enrichment;
+
+  const description = enr?.description && enr.description !== NOT_FOUND
+    ? enr.description
+    : orNF(parsed.description);
+
+  return {
+    source: {
+      url: parsed.url || null,
+      platform: parsed.platform,
+      platform_label: parsed.platform_label,
+      fetched_ok: fetchedOk,
+      input_kind: "url",
+      scraper: {
+        provider: page?.providerName ?? null,
+        elapsed_ms: page?.elapsedMs ?? null,
+        status_code: page?.statusCode ?? null,
+      },
+    },
+    product: {
+      name_original: orNF(parsed.title),
+      name_translated: enr ? enr.name_translated : NOT_FOUND,
+      category: enr?.category && enr.category !== NOT_FOUND ? enr.category : orNF(parsed.category),
+      brand: orNF(parsed.brand),
+      model: orNF(parsed.model),
+      description,
+      specs: enr && enr.specs.length > 0 ? enr.specs : parsed.specs,
+      keywords: enr ? enr.keywords : [],
+      variations: parsed.variations,
+      stock_status: orNF(parsed.stock_status),
+      moq: orNF(parsed.price.moq),
+    },
+    images: {
+      main: parsed.images.main,
+      gallery: parsed.images.gallery,
+      videos: parsed.images.videos,
+    },
+    price: {
+      original_value: parsed.price.value,
+      original_currency: parsed.price.currency || NOT_FOUND,
+      original_display: orNF(parsed.price.display),
+      price_range: orNF(parsed.price.range),
+      wholesale: orNF(parsed.price.wholesale),
+      promotional: orNF(parsed.price.promotional),
+      exchange_rate: conversion.rate,
+      exchange_source: conversion.source || NOT_FOUND,
+      converted_brl: conversion.brl,
+      converted_display:
+        conversion.brl != null ? `R$ ${conversion.brl.toFixed(2).replace(".", ",")}` : NOT_FOUND,
+      history: NOT_FOUND,
+    },
+    seller: {
+      name: orNF(parsed.seller.name),
+      store: orNF(parsed.seller.store),
+      location: orNF(parsed.seller.location),
+      years_active: orNF(parsed.seller.years_active),
+      type: enr ? enr.seller_type : NOT_FOUND,
+      certifications: parsed.seller.certifications,
+      reputation: enr ? enr.seller_reputation : orNF(parsed.seller.reputation),
+    },
+    reviews: {
+      total: orNF(parsed.reviews.total),
+      average: orNF(parsed.reviews.average),
+      positive_pct: orNF(parsed.reviews.positive_pct),
+      highlights: enr && enr.reviews_highlights.length > 0 ? enr.reviews_highlights : parsed.reviews.highlights,
+      complaints: enr && enr.reviews_complaints.length > 0 ? enr.reviews_complaints : parsed.reviews.complaints,
+    },
+    trust: {
+      score: enr ? enr.trust_score : 0,
+      label: enr ? enr.trust_label : NOT_FOUND,
+      positives: enr ? enr.trust_positives : [],
+      negatives: enr ? enr.trust_negatives : [],
+      risk_alerts: enr ? enr.risk_alerts : [],
+    },
+    import: {
+      estimated_weight_kg: enr ? enr.estimated_weight_kg : NOT_FOUND,
+      estimated_volume: enr ? enr.estimated_volume : NOT_FOUND,
+      tax_category: enr ? enr.tax_category : NOT_FOUND,
+      tax_risk: enr ? enr.tax_risk : NOT_FOUND,
+      shipping_estimate: enr ? enr.shipping_estimate : NOT_FOUND,
+      viability: enr ? enr.viability : NOT_FOUND,
+    },
+    meta: {
+      cached: false,
+      analyzed_at: new Date().toISOString(),
+      warnings,
+    },
+  };
 }
 
 // ---------------- Server function ----------------
 
 const inputSchema = z.object({
-  url: z.string().trim().max(2000).optional().nullable(),
-  raw: z.string().trim().max(200000).optional().nullable(),
+  url: z.string().trim().min(1).max(2000),
   refresh: z.boolean().default(false),
 });
 
@@ -468,188 +399,102 @@ export const analyzeListing = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => inputSchema.parse(data))
   .handler(async ({ data }): Promise<ListingAnalysis> => {
-    const rawUrl = data.url?.trim() || null;
-    const rawText = data.raw?.trim() || "";
-
-    if (!rawUrl && !rawText) {
-      throw new Error("Envie o link do anúncio ou cole o texto/HTML da página.");
+    // 1) Validar URL
+    let normalizedUrl: string;
+    try {
+      normalizedUrl = new URL(data.url.trim()).toString();
+    } catch {
+      throw new Error("URL inválida. Envie o link completo do anúncio.");
     }
 
-    let url: string | null = null;
-    if (rawUrl) {
-      try {
-        url = new URL(rawUrl).toString();
-      } catch {
-        throw new Error("URL inválida. Envie o link completo do anúncio.");
-      }
-    }
-
-    const key = cacheKey(url, rawText);
+    // 2) Cache (revalidando somente preço/câmbio quando quente)
+    const key = cacheKey(normalizedUrl);
     if (!data.refresh) {
       const hit = cache.get(key);
       if (hit && hit.expiresAt > Date.now()) {
-        // Atualiza apenas câmbio.
-        if (hit.data.price.original_value && hit.data.price.original_currency && hit.data.price.original_currency !== NOT_FOUND) {
-          const conv = await convert(hit.data.price.original_value, String(hit.data.price.original_currency));
+        if (hit.data.price.original_value && typeof hit.data.price.original_currency === "string") {
+          const conv = await convert(
+            hit.data.price.original_value,
+            String(hit.data.price.original_currency),
+          );
           hit.data.price.exchange_rate = conv.rate;
           hit.data.price.exchange_source = conv.source;
           hit.data.price.converted_brl = conv.brl;
-          hit.data.price.converted_display = conv.brl != null ? `R$ ${conv.brl.toFixed(2).replace(".", ",")}` : NOT_FOUND;
+          hit.data.price.converted_display =
+            conv.brl != null ? `R$ ${conv.brl.toFixed(2).replace(".", ",")}` : NOT_FOUND;
         }
         hit.data.meta.cached = true;
         return hit.data;
       }
     }
 
-    // 1) Buscar conteúdo
-    let html = "";
-    let finalUrl = url ?? "";
-    let fetchedOk = false;
-    if (url) {
-      const fetched = await fetchListing(url);
-      html = fetched.html;
-      finalUrl = fetched.finalUrl;
-      fetchedOk = fetched.ok && html.length > 0;
-    }
-    const combinedText = html
-      ? `${stripTags(html)}\n\n${rawText}`.trim()
-      : rawText;
+    // 3) Detectar plataforma (pré-scrape, para logs/labels)
+    const platformInfo = detectPlatform(normalizedUrl);
 
-    // 2) Plataforma
-    const platform = detectPlatform(url, combinedText);
-
-    // 3) Sinais HTML
-    const ogImage = html
-      ? absolutize(
-          pickMeta(html, [
-            /<meta[^>]+property=["']og:image:secure_url["'][^>]+content=["']([^"']+)["']/i,
-            /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i,
-          ]),
-          finalUrl,
-        )
-      : null;
-    const images = html ? extractImages(html, finalUrl) : [];
-    const videos = html ? extractVideos(html, finalUrl) : [];
-
-    // 4) IA (grounded)
+    // 4) ScraperService → HTML renderizado
     const warnings: string[] = [];
-    const ai = await aiAnalyze({
-      url: finalUrl || null,
-      platform: platform.label,
-      html_text: html,
-      raw_text: combinedText,
-      image_hint: ogImage,
-      image_urls: images,
-    });
-
-    if (!ai) {
-      warnings.push("Análise por IA indisponível — dados podem estar incompletos.");
+    const scraper = getScraperService();
+    if (!scraper.isAvailable()) {
+      throw new Error(
+        "Serviço de scraping indisponível: nenhum provider configurado. Ative o conector Firecrawl.",
+      );
     }
 
-    const base: AiResult = ai ?? normalizeAi({});
-
-    // 5) Validação de consistência mínima
-    if (base.name_original === NOT_FOUND && base.name_translated === NOT_FOUND && !fetchedOk && !rawText) {
-      warnings.push("Não foi possível ler o anúncio. Cole o texto/HTML ou tente novamente.");
+    let page: ScrapedPage | null = null;
+    let fetchedOk = false;
+    try {
+      page = await scraper.scrape(normalizedUrl, {
+        country: "CN",
+        locale: "zh-CN",
+        waitForMs: 4000,
+        timeoutMs: 45000,
+      });
+      fetchedOk = !!page.html && page.statusCode < 400;
+    } catch (err) {
+      const e = err as { code?: string; message?: string };
+      console.error("[listing-analysis] scrape falhou:", e);
+      warnings.push(
+        `Não foi possível carregar a página (${e.code ?? "erro"}): ${e.message ?? "desconhecido"}`,
+      );
     }
 
-    // 6) Conversão
-    let convertedBrl: number | null = null;
-    let exchangeRate: number | null = null;
-    let exchangeSource = "";
-    let convertedDisplay: string = NOT_FOUND;
-    if (base.price_value && base.price_currency) {
-      const conv = await convert(base.price_value, base.price_currency);
-      exchangeRate = conv.rate;
-      convertedBrl = conv.brl;
-      exchangeSource = conv.source;
-      if (convertedBrl != null) {
-        convertedDisplay = `R$ ${convertedBrl.toFixed(2).replace(".", ",")}`;
-      }
-    }
+    // 5) Parser específico da plataforma → JSON estruturado
+    const parsed: ParsedListing = page
+      ? parsePage(page)
+      : {
+          platform: platformInfo.platform,
+          platform_label: platformInfo.label,
+          url: normalizedUrl,
+          title: null, brand: null, model: null, category: null, description: null,
+          specs: [], variations: [], stock_status: null,
+          price: { value: null, currency: null, display: null, range: null, promotional: null, wholesale: null, moq: null },
+          images: { main: null, gallery: [], videos: [] },
+          seller: { name: null, store: null, location: null, years_active: null, type: null, certifications: [], reputation: null },
+          reviews: { total: null, average: null, positive_pct: null, highlights: [], complaints: [] },
+          raw_signals: { text: "", html_title: null, og_image: null, jsonld: [] },
+        };
 
-    // 7) Montar resultado
-    const mainImage = base.main_image || ogImage || images[0] || null;
-    const gallery = Array.from(new Set([mainImage, ...images].filter((x): x is string => !!x))).filter(
-      (x) => x !== mainImage,
-    );
-
-    const result: ListingAnalysis = {
-      source: {
-        url: finalUrl || null,
-        platform: platform.id,
-        platform_label: platform.label,
-        fetched_ok: fetchedOk,
-        input_kind: url ? "url" : "text",
-      },
-      product: {
-        name_original: base.name_original,
-        name_translated: base.name_translated,
-        category: base.category,
-        brand: base.brand,
-        model: base.model,
-        description: base.description,
-        specs: base.specs,
-        keywords: base.keywords,
-        variations: base.variations,
-        stock_status: base.stock_status,
-        moq: base.moq,
-      },
-      images: {
-        main: mainImage,
-        gallery: gallery.slice(0, 24),
-        videos,
-      },
-      price: {
-        original_value: base.price_value,
-        original_currency: base.price_currency || NOT_FOUND,
-        original_display: base.price_display,
-        price_range: base.price_range,
-        wholesale: base.wholesale,
-        promotional: base.promotional,
-        exchange_rate: exchangeRate,
-        exchange_source: exchangeSource || NOT_FOUND,
-        converted_brl: convertedBrl,
-        converted_display: convertedDisplay,
-        history: base.price_history,
-      },
-      seller: {
-        name: base.seller_name,
-        store: base.seller_store,
-        location: base.seller_location,
-        years_active: base.seller_years,
-        type: base.seller_type,
-        certifications: base.seller_certifications,
-        reputation: base.seller_reputation,
-      },
-      reviews: {
-        total: base.reviews_total,
-        average: base.reviews_average,
-        positive_pct: base.reviews_positive_pct,
-        highlights: base.reviews_highlights,
-        complaints: base.reviews_complaints,
-      },
-      trust: {
-        score: base.trust_score,
-        label: base.trust_label,
-        positives: base.trust_positives,
-        negatives: base.trust_negatives,
-        risk_alerts: base.risk_alerts,
-      },
-      import: {
-        estimated_weight_kg: base.estimated_weight_kg,
-        estimated_volume: base.estimated_volume,
-        tax_category: base.tax_category,
-        tax_risk: base.tax_risk,
-        shipping_estimate: base.shipping_estimate,
-        viability: base.viability,
-      },
-      meta: {
-        cached: false,
-        analyzed_at: new Date().toISOString(),
-        warnings,
-      },
+    // 6) Conversão de câmbio (antes da IA, para dar mais contexto na saída)
+    let conversion: { rate: number | null; brl: number | null; source: string } = {
+      rate: null,
+      brl: null,
+      source: "",
     };
+    if (parsed.price.value && parsed.price.currency) {
+      conversion = await convert(parsed.price.value, parsed.price.currency);
+    }
+
+    // 7) IA — recebe SOMENTE o JSON estruturado, nunca a URL
+    const enrichment = fetchedOk ? await aiDiagnose(parsed) : null;
+    if (fetchedOk && !enrichment) {
+      warnings.push("Diagnóstico por IA indisponível — dados estruturais preservados.");
+    }
+    if (!fetchedOk && !parsed.title) {
+      warnings.push("Não foi possível ler o anúncio. Verifique o link ou tente novamente.");
+    }
+
+    // 8) Montar resultado final
+    const result = mergeToAnalysis({ parsed, enrichment, page, fetchedOk, warnings, conversion });
 
     cache.set(key, { data: result, expiresAt: Date.now() + CACHE_TTL_MS });
     return result;
