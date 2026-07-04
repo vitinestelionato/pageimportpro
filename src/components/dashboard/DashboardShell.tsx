@@ -15,6 +15,7 @@ import {
   Layers,
   BarChart3,
   AlertTriangle,
+  Plug,
   Bell,
   Eye,
   Moon,
