@@ -101,8 +101,6 @@ export function DashboardShell({
         .maybeSingle();
       setProfile(data);
     })();
-    // Registra/atualiza a sessão no gerenciador (RLS por usuário)
-    import("@/lib/session-tracker").then((m) => m.trackSession());
   }, []);
 
   const firstName = (profile?.full_name?.split(" ")[0] ?? profile?.email?.split("@")[0] ?? "importador").trim();
