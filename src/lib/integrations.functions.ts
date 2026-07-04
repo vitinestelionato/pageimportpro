@@ -25,7 +25,7 @@ export const listIntegrations = createServerFn({ method: "GET" })
         .order("sort_order", { ascending: true }),
       supabase
         .from("user_integrations")
-        .select("id, integration_slug, status, account_label, last_sync_at, last_error, expires_at, updated_at")
+        .select("id, integration_slug, status, account_label, last_sync_at, last_error, expires_at, updated_at, health_status, avg_response_ms, last_test_at")
         .eq("user_id", userId),
     ]);
 
