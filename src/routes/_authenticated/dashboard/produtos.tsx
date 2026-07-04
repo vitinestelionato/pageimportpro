@@ -201,7 +201,7 @@ function AnalysisResult({ data, onRefresh }: { data: ListingAnalysis; onRefresh:
       {/* Produto + Imagens */}
       <div className="grid gap-6 lg:grid-cols-[300px,1fr]">
         <div className="space-y-3">
-          <div className="aspect-square overflow-hidden rounded-xl border bg-muted">
+          <div className="mx-auto aspect-square w-full max-w-[300px] overflow-hidden rounded-xl border bg-muted">
             {data.images.main ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -209,6 +209,12 @@ function AnalysisResult({ data, onRefresh }: { data: ListingAnalysis; onRefresh:
                 alt="Foto principal"
                 className="h-full w-full object-cover"
                 loading="lazy"
+                onLoad={(e) => {
+                  const el = e.currentTarget as HTMLImageElement;
+                  if (el.naturalWidth < 150 || el.naturalHeight < 150) {
+                    el.style.display = "none";
+                  }
+                }}
                 onError={(e) => {
                   (e.currentTarget as HTMLImageElement).style.display = "none";
                 }}
@@ -220,20 +226,27 @@ function AnalysisResult({ data, onRefresh }: { data: ListingAnalysis; onRefresh:
             )}
           </div>
           {data.images.gallery.length > 0 && (
-            <div className="grid grid-cols-4 gap-1.5">
+            <div className="mx-auto grid w-full max-w-[300px] grid-cols-4 gap-1.5">
               {data.images.gallery.slice(0, 8).map((src, i) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  key={i}
-                  src={src}
-                  alt={`Foto ${i + 2}`}
-                  className="aspect-square rounded-md border object-cover"
-                  loading="lazy"
-                  onError={(e) => {
-                    const el = e.currentTarget as HTMLImageElement;
-                    el.parentElement?.removeChild(el);
-                  }}
-                />
+                <div key={i} className="aspect-square overflow-hidden rounded-md border bg-muted">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={src}
+                    alt={`Foto ${i + 2}`}
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                    onLoad={(e) => {
+                      const el = e.currentTarget as HTMLImageElement;
+                      if (el.naturalWidth < 150 || el.naturalHeight < 150) {
+                        el.parentElement?.remove();
+                      }
+                    }}
+                    onError={(e) => {
+                      const el = e.currentTarget as HTMLImageElement;
+                      el.parentElement?.remove();
+                    }}
+                  />
+                </div>
               ))}
             </div>
           )}
@@ -244,6 +257,7 @@ function AnalysisResult({ data, onRefresh }: { data: ListingAnalysis; onRefresh:
             </div>
           )}
         </div>
+
 
         <div className="space-y-4">
           <div className="rounded-xl border bg-card p-5">
