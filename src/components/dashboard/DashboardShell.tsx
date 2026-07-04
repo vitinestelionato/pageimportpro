@@ -16,6 +16,7 @@ import {
   BarChart3,
   AlertTriangle,
   Plug,
+  ShieldCheck,
   Bell,
   Eye,
   Moon,
