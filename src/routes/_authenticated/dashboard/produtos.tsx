@@ -59,6 +59,9 @@ function ProductsPage() {
   const enrichMut = useMutation({
     mutationFn: (url: string) => enrich({ data: { url } }),
     onSuccess: (r) => {
+      const conv = r.converted_price_brl != null && r.origin_currency && r.origin_currency !== "BRL"
+        ? `\n\n💱 Valor convertido: R$ ${r.converted_price_brl.toFixed(2)} (cotação ${r.origin_currency}/BRL: ${r.exchange_rate?.toFixed(4) ?? "-"})`
+        : "";
       setForm((f) => ({
         ...f,
         name: r.name ?? f.name,
@@ -68,9 +71,13 @@ function ProductsPage() {
         origin_currency: (r.origin_currency ?? f.origin_currency) as FormState["origin_currency"],
         weight_kg: r.weight_kg != null ? String(r.weight_kg) : f.weight_kg,
         category: r.category ?? f.category,
-        notes: r.notes ?? f.notes,
+        notes: (r.notes ?? f.notes) + conv,
       }));
-      toast.success("Dados preenchidos automaticamente. Revise e salve.");
+      toast.success(
+        r.converted_price_brl != null
+          ? `Dados preenchidos. Valor convertido: R$ ${r.converted_price_brl.toFixed(2)}`
+          : "Dados preenchidos automaticamente. Revise e salve.",
+      );
     },
     onError: (e: Error) => toast.error(e.message),
   });
