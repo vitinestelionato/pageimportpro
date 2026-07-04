@@ -200,64 +200,8 @@ function AnalysisResult({ data, onRefresh }: { data: ListingAnalysis; onRefresh:
       )}
 
       {/* Produto + Imagens */}
-      <div className="grid gap-6 lg:grid-cols-[300px,1fr]">
-        <div className="space-y-3">
-          <div className="mx-auto aspect-square w-full max-w-[300px] overflow-hidden rounded-xl border bg-muted">
-            {data.images.main ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={data.images.main}
-                alt="Foto principal"
-                className="h-full w-full object-cover"
-                loading="lazy"
-                onLoad={(e) => {
-                  const el = e.currentTarget as HTMLImageElement;
-                  if (el.naturalWidth < 150 || el.naturalHeight < 150) {
-                    el.style.display = "none";
-                  }
-                }}
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).style.display = "none";
-                }}
-              />
-            ) : (
-              <div className="flex h-full items-center justify-center text-muted-foreground">
-                <ImageIcon className="h-10 w-10" />
-              </div>
-            )}
-          </div>
-          {data.images.gallery.length > 0 && (
-            <div className="mx-auto grid w-full max-w-[300px] grid-cols-4 gap-1.5">
-              {data.images.gallery.slice(0, 8).map((src, i) => (
-                <div key={i} className="aspect-square overflow-hidden rounded-md border bg-muted">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={src}
-                    alt={`Foto ${i + 2}`}
-                    className="h-full w-full object-cover"
-                    loading="lazy"
-                    onLoad={(e) => {
-                      const el = e.currentTarget as HTMLImageElement;
-                      if (el.naturalWidth < 150 || el.naturalHeight < 150) {
-                        el.parentElement?.remove();
-                      }
-                    }}
-                    onError={(e) => {
-                      const el = e.currentTarget as HTMLImageElement;
-                      el.parentElement?.remove();
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
-          )}
-          {data.images.videos.length > 0 && (
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Play className="h-3.5 w-3.5" />
-              {data.images.videos.length} vídeo(s) detectado(s)
-            </div>
-          )}
-        </div>
+      <ProductImages images={data.images} />
+
 
 
         <div className="space-y-4">
