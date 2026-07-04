@@ -25,6 +25,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
 import { Route as AuthenticatedDashboardProdutosRouteImport } from './routes/_authenticated/dashboard/produtos'
 import { Route as AuthenticatedDashboardPerfilRouteImport } from './routes/_authenticated/dashboard/perfil'
+import { Route as AuthenticatedDashboardCatalogoRouteImport } from './routes/_authenticated/dashboard/catalogo'
 import { Route as AuthenticatedDashboardCambioRouteImport } from './routes/_authenticated/dashboard/cambio'
 import { Route as AuthenticatedDashboardCalculadoraRouteImport } from './routes/_authenticated/dashboard/calculadora'
 import { Route as AuthenticatedDashboardAnotacoesRouteImport } from './routes/_authenticated/dashboard/anotacoes'
@@ -112,6 +113,12 @@ const AuthenticatedDashboardPerfilRoute =
     path: '/perfil',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardCatalogoRoute =
+  AuthenticatedDashboardCatalogoRouteImport.update({
+    id: '/catalogo',
+    path: '/catalogo',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardCambioRoute =
   AuthenticatedDashboardCambioRouteImport.update({
     id: '/cambio',
@@ -152,6 +159,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/anotacoes': typeof AuthenticatedDashboardAnotacoesRoute
   '/dashboard/calculadora': typeof AuthenticatedDashboardCalculadoraRoute
   '/dashboard/cambio': typeof AuthenticatedDashboardCambioRoute
+  '/dashboard/catalogo': typeof AuthenticatedDashboardCatalogoRoute
   '/dashboard/perfil': typeof AuthenticatedDashboardPerfilRoute
   '/dashboard/produtos': typeof AuthenticatedDashboardProdutosRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
@@ -172,6 +180,7 @@ export interface FileRoutesByTo {
   '/dashboard/anotacoes': typeof AuthenticatedDashboardAnotacoesRoute
   '/dashboard/calculadora': typeof AuthenticatedDashboardCalculadoraRoute
   '/dashboard/cambio': typeof AuthenticatedDashboardCambioRoute
+  '/dashboard/catalogo': typeof AuthenticatedDashboardCatalogoRoute
   '/dashboard/perfil': typeof AuthenticatedDashboardPerfilRoute
   '/dashboard/produtos': typeof AuthenticatedDashboardProdutosRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
@@ -195,6 +204,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/anotacoes': typeof AuthenticatedDashboardAnotacoesRoute
   '/_authenticated/dashboard/calculadora': typeof AuthenticatedDashboardCalculadoraRoute
   '/_authenticated/dashboard/cambio': typeof AuthenticatedDashboardCambioRoute
+  '/_authenticated/dashboard/catalogo': typeof AuthenticatedDashboardCatalogoRoute
   '/_authenticated/dashboard/perfil': typeof AuthenticatedDashboardPerfilRoute
   '/_authenticated/dashboard/produtos': typeof AuthenticatedDashboardProdutosRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
@@ -218,6 +228,7 @@ export interface FileRouteTypes {
     | '/dashboard/anotacoes'
     | '/dashboard/calculadora'
     | '/dashboard/cambio'
+    | '/dashboard/catalogo'
     | '/dashboard/perfil'
     | '/dashboard/produtos'
     | '/dashboard/'
@@ -238,6 +249,7 @@ export interface FileRouteTypes {
     | '/dashboard/anotacoes'
     | '/dashboard/calculadora'
     | '/dashboard/cambio'
+    | '/dashboard/catalogo'
     | '/dashboard/perfil'
     | '/dashboard/produtos'
     | '/dashboard'
@@ -260,6 +272,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/anotacoes'
     | '/_authenticated/dashboard/calculadora'
     | '/_authenticated/dashboard/cambio'
+    | '/_authenticated/dashboard/catalogo'
     | '/_authenticated/dashboard/perfil'
     | '/_authenticated/dashboard/produtos'
     | '/_authenticated/dashboard/'
@@ -395,6 +408,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardPerfilRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/catalogo': {
+      id: '/_authenticated/dashboard/catalogo'
+      path: '/catalogo'
+      fullPath: '/dashboard/catalogo'
+      preLoaderRoute: typeof AuthenticatedDashboardCatalogoRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/cambio': {
       id: '/_authenticated/dashboard/cambio'
       path: '/cambio'
@@ -430,6 +450,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardAnotacoesRoute: typeof AuthenticatedDashboardAnotacoesRoute
   AuthenticatedDashboardCalculadoraRoute: typeof AuthenticatedDashboardCalculadoraRoute
   AuthenticatedDashboardCambioRoute: typeof AuthenticatedDashboardCambioRoute
+  AuthenticatedDashboardCatalogoRoute: typeof AuthenticatedDashboardCatalogoRoute
   AuthenticatedDashboardPerfilRoute: typeof AuthenticatedDashboardPerfilRoute
   AuthenticatedDashboardProdutosRoute: typeof AuthenticatedDashboardProdutosRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
@@ -441,6 +462,7 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardCalculadoraRoute:
       AuthenticatedDashboardCalculadoraRoute,
     AuthenticatedDashboardCambioRoute: AuthenticatedDashboardCambioRoute,
+    AuthenticatedDashboardCatalogoRoute: AuthenticatedDashboardCatalogoRoute,
     AuthenticatedDashboardPerfilRoute: AuthenticatedDashboardPerfilRoute,
     AuthenticatedDashboardProdutosRoute: AuthenticatedDashboardProdutosRoute,
     AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
