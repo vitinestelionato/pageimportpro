@@ -332,19 +332,20 @@ export async function assembleExchangeRates(): Promise<ExchangeRates> {
 // SERVER FN
 // =====================================================================
 
-export const getExchangeRates = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown): { refresh?: boolean } => {
-    if (data && typeof data === "object" && "refresh" in data) {
-      return { refresh: Boolean((data as { refresh?: unknown }).refresh) };
-    }
-    return { refresh: false };
-  })
-  .handler(async ({ data }): Promise<ExchangeRates> => {
-    const now = Date.now();
-    if (!data.refresh && cache && cache.expiresAt > now) return cache.data;
+async function getOrFetch(forceRefresh: boolean): Promise<ExchangeRates> {
+  const now = Date.now();
+  if (!forceRefresh && cache && cache.expiresAt > now) return cache.data;
+  const rates = await assembleExchangeRates();
+  const ttl = rates.stale ? FALLBACK_TTL_MS : TTL_MS;
+  cache = { data: rates, expiresAt: now + ttl };
+  return rates;
+}
 
-    const rates = await assembleExchangeRates();
-    const ttl = rates.stale ? FALLBACK_TTL_MS : TTL_MS;
-    cache = { data: rates, expiresAt: now + ttl };
-    return rates;
-  });
+export const getExchangeRates = createServerFn({ method: "GET" }).handler(
+  async (): Promise<ExchangeRates> => getOrFetch(false),
+);
+
+/** Força buscar do provedor ignorando o cache — usado pelo botão "Atualizar agora". */
+export const refreshExchangeRates = createServerFn({ method: "POST" }).handler(
+  async (): Promise<ExchangeRates> => getOrFetch(true),
+);
