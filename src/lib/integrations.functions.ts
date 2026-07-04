@@ -325,6 +325,7 @@ export const triggerSync = createServerFn({ method: "POST" })
       .single();
     if (jobErr || !job) throw new Error("Não foi possível enfileirar a sincronização.");
 
+    await import("@/lib/connectors/registry");
     const { getConnector } = await import("@/lib/connectors/types");
     const adapter = getConnector(data.slug);
     let result = { ok: true, items_processed: 0, message: "Sincronização registrada." };
