@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
-import { Eye, EyeOff, Loader2, Lock, Mail, TrendingUp, ArrowRight, Globe, ShieldAlert, HelpCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { z } from "zod";
+import { Eye, EyeOff, Loader2, Lock, Mail, TrendingUp, ArrowRight, Globe, ShieldAlert, HelpCircle, ExternalLink, LifeBuoy } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { ImportProLogo, ImportProWordmark } from "@/components/ImportProLogo";
@@ -21,6 +22,19 @@ import {
 } from "@/components/ui/accordion";
 import { checkLoginEligibility } from "@/lib/login-eligibility.functions";
 
+const CAKTO_PURCHASE_URL = "https://pay.cakto.com.br/himftma";
+
+const reasonSchema = z.enum([
+  "not_purchased",
+  "inactive",
+  "session_expired",
+  "unknown",
+]);
+
+const loginSearchSchema = z.object({
+  reason: reasonSchema.optional(),
+});
+
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
@@ -29,19 +43,35 @@ export const Route = createFileRoute("/login")({
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
+  validateSearch: (search) => loginSearchSchema.parse(search),
   component: LoginPage,
 });
 
-type BlockReason = "not_purchased" | "inactive" | "unknown";
+type BlockReason = z.infer<typeof reasonSchema>;
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { reason: initialReason } = Route.useSearch();
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
   const [remember, setRemember] = useState(true);
-  const [blocked, setBlocked] = useState<BlockReason | null>(null);
+  const [blocked, setBlocked] = useState<BlockReason | null>(initialReason ?? null);
+
+  // If we arrived from a protected-route redirect, pop a toast so the user
+  // understands the redirect even before reading the inline banner.
+  useEffect(() => {
+    if (!initialReason) return;
+    if (initialReason === "session_expired") {
+      toast.info("Faça login para continuar.");
+    } else if (initialReason === "inactive") {
+      toast.error("Sua conta está inativa.");
+    } else if (initialReason === "not_purchased") {
+      toast.error("Não encontramos sua conta.");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,6 +96,7 @@ function LoginPage() {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
