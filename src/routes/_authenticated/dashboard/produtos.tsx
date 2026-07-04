@@ -125,7 +125,7 @@ function ProductsPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const openNew = () => { setForm(emptyForm()); setModalOpen(true); };
+  const openNew = () => { setForm(emptyForm()); setAutoUrl(""); setModalOpen(true); };
   const openEdit = (p: Product) => {
     setForm({
       id: p.id, name: p.name, supplier_url: p.supplier_url ?? "",
