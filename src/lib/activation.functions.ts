@@ -121,7 +121,7 @@ export const resendActivation = createServerFn({ method: "POST" })
     });
     if (insertError) throw new Error("Não foi possível gerar um novo link");
 
-    const baseUrl = process.env.PUBLIC_APP_URL?.replace(/\\/$/, "");
+    const baseUrl = process.env.PUBLIC_APP_URL?.replace(/\/$/, "");
     if (!baseUrl) throw new Error("PUBLIC_APP_URL não configurada");
     const activationUrl = `${baseUrl}/ativar?token=${newToken}`;
 
