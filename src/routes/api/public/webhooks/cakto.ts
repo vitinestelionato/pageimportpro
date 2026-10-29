@@ -255,7 +255,7 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
           event_type: event || "approved",
           external_id: externalId,
           status: "processed",
-          message: `Ativação enviada (${emailStatus})${emailError ? ` | ${emailError}` : ""} | ${activationUrl}`,
+          message: `Ativação enviada (${emailStatus})${emailError ? ` | ${emailError}` : ""}`,
         });
 
         return json(200, {
