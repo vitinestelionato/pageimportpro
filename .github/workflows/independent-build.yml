@@ -1,0 +1,29 @@
+name: Independent build checks
+
+on:
+  push:
+    branches: [chatgpt-independent-build]
+  pull_request:
+    branches: [main, chatgpt-independent-build]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install dependencies
+        run: bun install
+      - name: Type check
+        run: bunx tsc --noEmit
+      - name: Lint
+        run: bun run lint
+      - name: Production build
+        run: bun run build
