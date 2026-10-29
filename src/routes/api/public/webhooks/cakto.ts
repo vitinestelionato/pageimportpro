@@ -154,7 +154,7 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
 
         if (existingProfile) {
           userId = existingProfile.id;
-          await supabaseAdmin
+          const { error: profileUpdateError } = await supabaseAdmin
             .from("profiles")
             .update({
               plan: productName,
@@ -165,6 +165,10 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
               phone: phone ?? undefined,
             })
             .eq("id", userId);
+          if (profileUpdateError) {
+            console.error("[Cakto webhook] Failed to update existing profile:", profileUpdateError.message);
+            return json(500, { error: "profile update failed" });
+          }
         } else {
           const created = await supabaseAdmin.auth.admin.createUser({
             email,
@@ -189,7 +193,7 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
             return json(500, { error: "create user failed" });
           }
           userId = created.data.user.id;
-          await supabaseAdmin
+          const { error: profileUpdateError } = await supabaseAdmin
             .from("profiles")
             .update({
               plan: productName,
@@ -197,6 +201,10 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
               purchase_date: purchaseDate,
             })
             .eq("id", userId);
+          if (profileUpdateError) {
+            console.error("[Cakto webhook] Failed to update new profile:", profileUpdateError.message);
+            return json(500, { error: "profile update failed" });
+          }
         }
 
         // Generate activation token
