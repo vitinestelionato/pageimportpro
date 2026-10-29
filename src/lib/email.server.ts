@@ -88,7 +88,7 @@ export function renderActivationEmail(params: {
     </td></tr>
   </table>
 </body></html>`;
-  const text = `Olá, ${firstName}!\\n\\nSua compra na ImportPro foi aprovada.\\nAtive sua conta definindo sua senha: ${params.activationUrl}\\n\\nEste link expira em 48 horas.`;
+  const text = `Olá, ${firstName}!\n\nSua compra na ImportPro foi aprovada.\nAtive sua conta definindo sua senha: ${params.activationUrl}\n\nEste link expira em 48 horas.`;
   return { subject, html, text };
 }
 
