@@ -148,7 +148,6 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
           .maybeSingle();
 
         const purchaseDate = new Date().toISOString();
-        const expiresAt = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString();
 
         let userId: string;
         let activationUrl: string | null = null;
@@ -160,7 +159,7 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
             .update({
               plan: productName,
               purchase_date: purchaseDate,
-              subscription_expires_at: expiresAt,
+              subscription_expires_at: null,
               status: "active",
               full_name: name ?? undefined,
               phone: phone ?? undefined,
@@ -194,7 +193,7 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
             .from("profiles")
             .update({
               plan: productName,
-              subscription_expires_at: expiresAt,
+              subscription_expires_at: null,
               purchase_date: purchaseDate,
             })
             .eq("id", userId);
@@ -212,11 +211,22 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
           .eq("user_id", userId)
           .is("used_at", null);
 
-        await supabaseAdmin.from("activation_tokens").insert({
+        const { error: tokenInsertError } = await supabaseAdmin.from("activation_tokens").insert({
           user_id: userId,
           token_hash: tokenHash,
           expires_at: tokenExpires,
         });
+        if (tokenInsertError) {
+          console.error("[Cakto webhook] Failed to create activation token:", tokenInsertError.message);
+          await supabaseAdmin.from("webhook_logs").insert({
+            provider: "cakto",
+            event_type: event || "approved",
+            external_id: externalId,
+            status: "error",
+            message: "Falha ao gerar token de ativação",
+          });
+          return json(500, { error: "activation token creation failed" });
+        }
 
         // Prioriza URL pública fixa (secret PUBLIC_APP_URL); só usa host da request como fallback
         const hostHeader = request.headers.get("host") ?? "";
