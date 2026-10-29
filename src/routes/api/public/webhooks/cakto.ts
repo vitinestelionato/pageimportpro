@@ -97,10 +97,8 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
         const phone = customer.phone ?? null;
         const rawProductName =
           payload.data?.product?.name ?? payload.product?.name ?? payload.data?.offer?.name ?? null;
-        // Normaliza qualquer variação vinda da Cakto ("Anual", "Mensal", etc.) para "Permanente"
-        const productName = rawProductName
-          ? rawProductName.replace(/\b(anual|mensal|trimestral|semestral|vital[íi]cio)\b/gi, "Permanente")
-          : "ImportPro Permanente";
+        // Preserve the purchased product/offer name; never convert a paid term into lifetime access.
+        const productName = rawProductName?.trim() || "ImportPro";
         const externalId =
           payload.data?.id ?? payload.data?.ref ?? (payload as { id?: string }).id ?? null;
 
@@ -148,6 +146,9 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
           .maybeSingle();
 
         const purchaseDate = new Date().toISOString();
+        // Keep the original entitlement policy: one year unless a future plan-specific
+        // entitlement mapping is explicitly configured and verified.
+        const subscriptionExpiresAt = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString();
 
         let userId: string;
         let activationUrl: string | null = null;
@@ -159,7 +160,7 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
             .update({
               plan: productName,
               purchase_date: purchaseDate,
-              subscription_expires_at: null,
+              subscription_expires_at: subscriptionExpiresAt,
               status: "active",
               full_name: name ?? undefined,
               phone: phone ?? undefined,
@@ -197,7 +198,7 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
             .from("profiles")
             .update({
               plan: productName,
-              subscription_expires_at: null,
+              subscription_expires_at: subscriptionExpiresAt,
               purchase_date: purchaseDate,
             })
             .eq("id", userId);
@@ -211,13 +212,6 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
         const rawToken = randomBytes(32).toString("hex");
         const tokenHash = createHash("sha256").update(rawToken).digest("hex");
         const tokenExpires = new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString();
-
-        // Invalidate previous unused tokens for this user
-        await supabaseAdmin
-          .from("activation_tokens")
-          .update({ used_at: new Date().toISOString() })
-          .eq("user_id", userId)
-          .is("used_at", null);
 
         const { error: tokenInsertError } = await supabaseAdmin.from("activation_tokens").insert({
           user_id: userId,
@@ -268,12 +262,25 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
           emailError = e instanceof Error ? e.message : String(e);
         }
 
+        // Keep earlier valid links alive unless the replacement email was delivered.
+        if (emailStatus === "sent") {
+          const { error: invalidateError } = await supabaseAdmin
+            .from("activation_tokens")
+            .update({ used_at: new Date().toISOString() })
+            .eq("user_id", userId)
+            .is("used_at", null)
+            .neq("token_hash", tokenHash);
+          if (invalidateError) {
+            console.error("[Cakto webhook] Could not invalidate previous activation tokens:", invalidateError.message);
+          }
+        }
+
         await supabaseAdmin.from("webhook_logs").insert({
           provider: "cakto",
           event_type: event || "approved",
           external_id: externalId,
           status: "processed",
-          message: `Ativação enviada (${emailStatus})${emailError ? ` | ${emailError}` : ""}`,
+          message: `Payment processed; activation email ${emailStatus}${emailError ? ` | ${emailError}` : ""}`,
         });
 
         return json(200, {
