@@ -114,13 +114,6 @@ export const resendActivation = createServerFn({ method: "POST" })
     const newHash = createHash("sha256").update(newToken).digest("hex");
     const expires = new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString();
 
-    const { error: invalidateError } = await supabaseAdmin
-      .from("activation_tokens")
-      .update({ used_at: new Date().toISOString() })
-      .eq("user_id", row.user_id)
-      .is("used_at", null);
-    if (invalidateError) throw new Error("Não foi possível invalidar o link anterior");
-
     const { error: insertError } = await supabaseAdmin.from("activation_tokens").insert({
       user_id: row.user_id,
       token_hash: newHash,
@@ -145,6 +138,17 @@ export const resendActivation = createServerFn({ method: "POST" })
     if (!sent.ok) {
       console.error("[activation] resend email failed", sent.status, sent.error);
       throw new Error("Não foi possível enviar o e-mail de ativação");
+    }
+
+    const { error: invalidateError } = await supabaseAdmin
+      .from("activation_tokens")
+      .update({ used_at: new Date().toISOString() })
+      .eq("user_id", row.user_id)
+      .is("used_at", null)
+      .neq("token_hash", newHash);
+    if (invalidateError) {
+      console.error("[activation] old token invalidation failed", invalidateError.message);
+      // The new token was delivered, so keep it usable even if cleanup of older tokens fails.
     }
 
     await supabaseAdmin.from("webhook_logs").insert({
