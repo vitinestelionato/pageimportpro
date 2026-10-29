@@ -65,13 +65,16 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
         const secret = process.env.CAKTO_WEBHOOK_SECRET;
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-        // Optional signature verification (skipped if secret not configured yet, to allow setup)
-        if (secret && !verifySignature(rawBody, signature, secret)) {
+        // Fail closed: never process a payment webhook without a configured secret.
+        if (!secret) {
+          console.error("[Cakto webhook] CAKTO_WEBHOOK_SECRET is not configured");
+          return json(503, { error: "webhook is not configured" });
+        }
+        if (!verifySignature(rawBody, signature, secret)) {
           await supabaseAdmin.from("webhook_logs").insert({
             provider: "cakto",
             status: "invalid_signature",
             message: "Assinatura inválida",
-            payload: safeParse(rawBody) as any,
           });
           return json(401, { error: "invalid signature" });
         }
@@ -108,7 +111,6 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
             external_id: externalId,
             status: "ignored",
             message: "Evento não é de pagamento aprovado",
-            payload: payload as any,
           });
           return json(200, { ok: true, ignored: true });
         }
@@ -120,7 +122,6 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
             external_id: externalId,
             status: "error",
             message: "E-mail do cliente ausente",
-            payload: payload as any,
           });
           return json(400, { error: "missing customer email" });
         }
@@ -185,8 +186,7 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
               external_id: externalId,
               status: "error",
               message: `Falha ao criar usuário: ${created.error?.message ?? "unknown"}`,
-              payload: payload as any,
-            });
+              });
             return json(500, { error: "create user failed" });
           }
           userId = created.data.user.id;
@@ -256,13 +256,11 @@ export const Route = createFileRoute("/api/public/webhooks/cakto")({
           external_id: externalId,
           status: "processed",
           message: `Ativação enviada (${emailStatus})${emailError ? ` | ${emailError}` : ""} | ${activationUrl}`,
-          payload: payload as any,
         });
 
         return json(200, {
           ok: true,
           user_id: userId,
-          activation_url: activationUrl,
         });
       },
     },
