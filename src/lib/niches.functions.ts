@@ -40,7 +40,7 @@ export const listHotNiches = createServerFn({ method: "POST" })
     }).parse(data),
   )
   .handler(async ({ data }): Promise<HotNiche[]> => {
-    const apiKey = process.env.LOVABLE_API_KEY;
+    const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) throw new Error("Serviço de IA indisponível no momento");
 
     const segmentHint = data.segment === "Todos"
@@ -88,14 +88,14 @@ Retorne JSON exatamente neste formato:
   ]
 }`;
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: "gpt-4o-mini",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
