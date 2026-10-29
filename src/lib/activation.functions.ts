@@ -94,33 +94,64 @@ export const resendActivation = createServerFn({ method: "POST" })
 
     const { data: row } = await supabaseAdmin
       .from("activation_tokens")
-      .select("user_id")
+      .select("user_id,expires_at,used_at")
       .eq("token_hash", token_hash)
       .maybeSingle();
 
     if (!row) throw new Error("Token inválido");
 
-    await supabaseAdmin
-      .from("activation_tokens")
-      .update({ used_at: new Date().toISOString() })
-      .eq("user_id", row.user_id)
-      .is("used_at", null);
+    const { data: profile } = await supabaseAdmin
+      .from("profiles")
+      .select("email,full_name,first_access")
+      .eq("id", row.user_id)
+      .maybeSingle();
+
+    if (!profile?.email || !profile.first_access) {
+      throw new Error("Esta conta já foi ativada ou não pode receber um novo link");
+    }
 
     const newToken = randomBytes(32).toString("hex");
     const newHash = createHash("sha256").update(newToken).digest("hex");
     const expires = new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString();
 
-    await supabaseAdmin.from("activation_tokens").insert({
+    const { error: invalidateError } = await supabaseAdmin
+      .from("activation_tokens")
+      .update({ used_at: new Date().toISOString() })
+      .eq("user_id", row.user_id)
+      .is("used_at", null);
+    if (invalidateError) throw new Error("Não foi possível invalidar o link anterior");
+
+    const { error: insertError } = await supabaseAdmin.from("activation_tokens").insert({
       user_id: row.user_id,
       token_hash: newHash,
       expires_at: expires,
     });
+    if (insertError) throw new Error("Não foi possível gerar um novo link");
+
+    const baseUrl = process.env.PUBLIC_APP_URL?.replace(/\\/$/, "");
+    if (!baseUrl) throw new Error("PUBLIC_APP_URL não configurada");
+    const activationUrl = `${baseUrl}/ativar?token=${newToken}`;
+
+    const { sendBrevoEmail, renderActivationEmail } = await import("@/lib/email.server");
+    const emailContent = renderActivationEmail({
+      name: profile.full_name,
+      activationUrl,
+    });
+    const sent = await sendBrevoEmail({
+      to: profile.email,
+      toName: profile.full_name,
+      ...emailContent,
+    });
+    if (!sent.ok) {
+      console.error("[activation] resend email failed", sent.status, sent.error);
+      throw new Error("Não foi possível enviar o e-mail de ativação");
+    }
 
     await supabaseAdmin.from("webhook_logs").insert({
       provider: "cakto",
       event_type: "resend_activation",
       status: "processed",
-      message: `Novo link: /ativar?token=${newToken}`,
+      message: "Novo e-mail de ativação enviado",
     });
 
     return { ok: true };
