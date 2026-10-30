@@ -1,36 +1,49 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { Sparkles, ArrowLeft } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
+import { toast } from "sonner";
+import { Package, Plus, Search, Pencil, Trash2, ExternalLink, X } from "lucide-react";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import { createProduct, deleteProduct, listProducts, updateProduct } from "@/lib/products.functions";
 
 export const Route = createFileRoute("/_authenticated/dashboard/produtos")({
-  head: () => ({
-    meta: [
-      { title: "Gestão de Produtos · ImportPro" },
-      { name: "robots", content: "noindex,nofollow" },
-    ],
-  }),
-  component: ProdutosComingSoon,
+  head: () => ({ meta: [{ title: "Gestão de Produtos · ImportPro" }, { name: "robots", content: "noindex,nofollow" }] }),
+  component: ProductsPage,
 });
-
-function ProdutosComingSoon() {
-  return (
-    <DashboardShell breadcrumb="Gestão de Produtos" title="Gestão de Produtos">
-      <section className="rounded-2xl border border-dashed border-primary/30 bg-gradient-to-br from-primary/5 to-transparent p-12 text-center">
-        <Sparkles className="mx-auto h-12 w-12 text-primary" />
-        <h2 className="mt-4 font-display text-2xl font-bold">Em desenvolvimento</h2>
-        <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-          O módulo de Gestão de Produtos está sendo preparado. Enquanto isso, use a
-          Análise de Anúncios em Ferramentas para diagnosticar anúncios reais.
-        </p>
-        <div className="mt-6 flex items-center justify-center gap-2">
-          <Link to="/dashboard" className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-4 py-2 text-sm hover:border-primary/40">
-            <ArrowLeft className="h-4 w-4" /> Voltar ao Dashboard
-          </Link>
-          <Link to="/dashboard/analise-anuncios" className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90">
-            Ir para Análise de Anúncios
-          </Link>
-        </div>
-      </section>
-    </DashboardShell>
-  );
+type Product = { id: string; name: string; supplier_url: string | null; origin_price: number; origin_currency: string; weight_kg: number; category: string | null; image_url: string | null; status: "analise" | "importado" | "arquivado"; notes: string | null; };
+type Form = { name: string; supplier_url: string; origin_price: string; origin_currency: "USD" | "EUR" | "CNY" | "BRL"; weight_kg: string; category: string; image_url: string; status: Product["status"]; notes: string; };
+const empty = (): Form => ({ name: "", supplier_url: "", origin_price: "0", origin_currency: "USD", weight_kg: "0", category: "", image_url: "", status: "analise", notes: "" });
+const labels = { analise: "Em análise", importado: "Importado", arquivado: "Arquivado" };
+function ProductsPage() {
+  const qc = useQueryClient();
+  const fetch = useServerFn(listProducts); const add = useServerFn(createProduct); const edit = useServerFn(updateProduct); const remove = useServerFn(deleteProduct);
+  const { data: products = [], isLoading, isError } = useQuery({ queryKey: ["products"], queryFn: () => fetch() as Promise<Product[]> });
+  const [query, setQuery] = useState(""); const [status, setStatus] = useState("todos"); const [open, setOpen] = useState(false); const [current, setCurrent] = useState<Product | null>(null); const [form, setForm] = useState<Form>(empty);
+  const filtered = useMemo(() => products.filter(p => (status === "todos" || p.status === status) && [p.name, p.category || "", p.notes || ""].join(" ").toLowerCase().includes(query.toLowerCase())), [products, status, query]);
+  const close = () => { setOpen(false); setCurrent(null); setForm(empty()); };
+  const startEdit = (p: Product) => { setCurrent(p); setForm({ name: p.name, supplier_url: p.supplier_url || "", origin_price: String(p.origin_price || 0), origin_currency: p.origin_currency as Form["origin_currency"], weight_kg: String(p.weight_kg || 0), category: p.category || "", image_url: p.image_url || "", status: p.status, notes: p.notes || "" }); setOpen(true); };
+  const save = useMutation({ mutationFn: () => { const payload = { name: form.name.trim(), supplier_url: form.supplier_url || null, origin_price: Number(form.origin_price), origin_currency: form.origin_currency, weight_kg: Number(form.weight_kg), category: form.category || null, image_url: form.image_url || null, status: form.status, notes: form.notes || null }; return current ? edit({ data: { id: current.id, patch: payload } }) : add({ data: payload }); }, onSuccess: () => { qc.invalidateQueries({ queryKey: ["products"] }); toast.success("Produto salvo"); close(); }, onError: (e: Error) => toast.error(e.message) });
+  const del = useMutation({ mutationFn: (id: string) => remove({ data: { id } }), onSuccess: () => { qc.invalidateQueries({ queryKey: ["products"] }); toast.success("Produto removido"); }, onError: (e: Error) => toast.error(e.message) });
+  const count = (s: string) => products.filter(p => p.status === s).length;
+  return <DashboardShell breadcrumb="Gestão de Produtos" title="Gestão de Produtos">
+    <div className="flex flex-wrap items-center justify-between gap-3"><p className="text-sm text-muted-foreground">Centralize produtos, custos, fornecedores e status de importação.</p><button onClick={() => { setCurrent(null); setForm(empty()); setOpen(true); }} className="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground"><Plus className="h-4 w-4" /> Novo produto</button></div>
+    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">{[["Total", products.length], ["Em análise", count("analise")], ["Importados", count("importado")], ["Arquivados", count("arquivado")]].map(([l, n]) => <div key={String(l)} className="rounded-xl border border-white/5 bg-card/60 p-4"><div className="text-xs text-muted-foreground">{l}</div><div className="mt-2 text-2xl font-bold">{n}</div></div>)}</div>
+    <div className="flex flex-wrap gap-3 rounded-xl border border-white/5 bg-card/60 p-4"><div className="relative min-w-[220px] flex-1"><Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" /><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Buscar produto, categoria ou observação..." className="h-10 w-full rounded-lg border border-white/10 bg-black/20 pl-9 pr-3 text-sm" /></div><select value={status} onChange={e => setStatus(e.target.value)} className="h-10 rounded-lg border border-white/10 bg-card px-3 text-sm"><option value="todos">Todos os status</option><option value="analise">Em análise</option><option value="importado">Importados</option><option value="arquivado">Arquivados</option></select></div>
+    {isLoading ? <div className="p-12 text-center text-muted-foreground">Carregando produtos...</div> : isError ? <div className="p-8 text-center text-destructive">Não foi possível carregar os produtos.</div> : filtered.length === 0 ? <div className="rounded-xl border border-dashed border-white/10 p-12 text-center"><Package className="mx-auto h-10 w-10 text-muted-foreground" /><h3 className="mt-4 font-semibold">{products.length ? "Nenhum resultado encontrado" : "Sua lista está vazia"}</h3><p className="mt-1 text-sm text-muted-foreground">Cadastre um produto ou importe pelo Catálogo.</p></div> : <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{filtered.map(p => <article key={p.id} className="overflow-hidden rounded-xl border border-white/5 bg-card/60"><div className="flex h-36 items-center justify-center bg-black/20">{p.image_url ? <img src={p.image_url} alt={p.name} className="h-full w-full object-cover" /> : <Package className="h-10 w-10 text-muted-foreground" />}</div><div className="space-y-3 p-4"><div className="flex justify-between gap-2"><div><h3 className="font-semibold">{p.name}</h3><p className="text-xs text-muted-foreground">{p.category || "Sem categoria"}</p></div><span className="text-xs text-primary">{labels[p.status]}</span></div><div className="grid grid-cols-2 rounded-lg bg-black/20 p-3 text-sm"><div><div className="text-[10px] text-muted-foreground">Custo</div><b>{p.origin_currency} {Number(p.origin_price).toFixed(2)}</b></div><div><div className="text-[10px] text-muted-foreground">Peso</div><b>{Number(p.weight_kg).toLocaleString("pt-BR")} kg</b></div></div>{p.notes && <p className="line-clamp-2 text-xs text-muted-foreground">{p.notes}</p>}<div className="flex gap-2">{p.supplier_url && <a href={p.supplier_url} target="_blank" rel="noreferrer" className="inline-flex h-9 flex-1 items-center justify-center gap-1 rounded-lg border border-white/10 text-xs"><ExternalLink className="h-3 w-3" /> Fornecedor</a>}<button onClick={() => startEdit(p)} className="inline-flex h-9 flex-1 items-center justify-center gap-1 rounded-lg border border-white/10 text-xs"><Pencil className="h-3 w-3" /> Editar</button><button onClick={() => { if (confirm("Excluir este produto?")) del.mutate(p.id); }} aria-label="Excluir produto" className="h-9 w-9 rounded-lg border border-white/10"><Trash2 className="mx-auto h-4 w-4" /></button></div></div></article>)}</div>}
+    {open && <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/70 p-4" onMouseDown={e => { if (e.target === e.currentTarget) close(); }}><section role="dialog" aria-modal="true" className="my-8 w-full max-w-2xl rounded-2xl border border-white/10 bg-card p-6"><div className="mb-5 flex justify-between"><h2 className="text-xl font-bold">{current ? "Editar produto" : "Novo produto"}</h2><button onClick={close} aria-label="Fechar"><X /></button></div><form onSubmit={e => { e.preventDefault(); save.mutate(); }} className="grid gap-4 sm:grid-cols-2">
+      <Field label="Nome do produto"><input required maxLength={200} value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="field" /></Field>
+      <Field label="Categoria"><input maxLength={80} value={form.category} onChange={e => setForm({ ...form, category: e.target.value })} className="field" /></Field>
+      <Field label="Preço de origem"><input type="number" min="0" step="0.01" value={form.origin_price} onChange={e => setForm({ ...form, origin_price: e.target.value })} className="field" /></Field>
+      <Field label="Moeda"><select value={form.origin_currency} onChange={e => setForm({ ...form, origin_currency: e.target.value as Form["origin_currency"] })} className="field"><option>USD</option><option>EUR</option><option>CNY</option><option>BRL</option></select></Field>
+      <Field label="Peso (kg)"><input type="number" min="0" step="0.001" value={form.weight_kg} onChange={e => setForm({ ...form, weight_kg: e.target.value })} className="field" /></Field>
+      <Field label="Status"><select value={form.status} onChange={e => setForm({ ...form, status: e.target.value as Product["status"] })} className="field"><option value="analise">Em análise</option><option value="importado">Importado</option><option value="arquivado">Arquivado</option></select></Field>
+      <Field label="Link do fornecedor"><input type="url" value={form.supplier_url} onChange={e => setForm({ ...form, supplier_url: e.target.value })} className="field" placeholder="https://" /></Field>
+      <Field label="URL da imagem"><input type="url" value={form.image_url} onChange={e => setForm({ ...form, image_url: e.target.value })} className="field" placeholder="https://" /></Field>
+      <div className="sm:col-span-2"><Field label="Observações"><textarea rows={3} maxLength={2000} value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} className="field h-auto py-2" /></Field></div>
+      <div className="sm:col-span-2 flex justify-end gap-2"><button type="button" onClick={close} className="rounded-lg border border-white/10 px-4 py-2 text-sm">Cancelar</button><button disabled={save.isPending} className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground">{save.isPending ? "Salvando..." : "Salvar produto"}</button></div>
+    </form></section></div>}
+    <style>{`.field{width:100%;min-height:40px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.2);padding:0 12px;font-size:14px;outline:none}`}</style>
+  </DashboardShell>;
 }
+function Field({ label, children }: { label: string; children: React.ReactNode }) { return <label className="block"><span className="mb-1 block text-xs font-semibold uppercase text-muted-foreground">{label}</span>{children}</label>; }
