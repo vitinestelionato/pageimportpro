@@ -163,6 +163,8 @@ function DashParticles({ count = 90 }: { count?: number }) {
   );
 }
 
+const CAKTO_PURCHASE_URL = "https://pay.cakto.com.br/himftma";
+
 const PLAN_FEATURES = [
   "Fornecedores da China verificados",
   "Calculadora de impostos completa",
@@ -212,11 +214,14 @@ function PricingBlock() {
 
             {/* CTA */}
             <Button
+              asChild
               size="lg"
               className="group mt-5 h-12 w-full rounded-xl bg-gradient-to-r from-brand to-brand-glow text-sm font-semibold text-primary-foreground shadow-lg shadow-brand/30 transition-all hover:-translate-y-0.5 hover:shadow-brand/50"
             >
-              Garantir acesso
-              <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              <a href={CAKTO_PURCHASE_URL}>
+                Garantir acesso
+                <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </a>
             </Button>
 
             {/* Features */}
